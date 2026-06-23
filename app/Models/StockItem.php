@@ -21,4 +21,9 @@ class StockItem extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
 }

@@ -14,26 +14,58 @@
         }
     }" class="space-y-6">
 
+        <!-- Date Filter Form -->
+        <form method="GET" action="{{ route('cashier.orders') }}" class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
+            @if($currentStatus)
+                <input type="hidden" name="status" value="{{ $currentStatus }}">
+            @endif
+            <div class="space-y-1">
+                <label for="start_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Mulai') }}</label>
+                <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
+                       class="bg-surface border border-border rounded-xl px-4 py-2 t-size3 text-text focus:outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1">
+                <label for="end_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Selesai') }}</label>
+                <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
+                       class="bg-surface border border-border rounded-xl px-4 py-2 t-size3 text-text focus:outline-none focus:border-primary">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="bg-primary hover:bg-primary-strong text-white font-extrabold px-5 py-2 rounded-xl t-size3 transition cursor-pointer shadow-xs">
+                    {{ __('Filter') }}
+                </button>
+                @if($startDate || $endDate)
+                    <a href="{{ route('cashier.orders', array_filter(['status' => $currentStatus])) }}" 
+                       class="bg-surface hover:bg-surface-alt border border-border text-text font-bold px-4 py-2 rounded-xl t-size3 transition flex items-center justify-center">
+                        {{ __('Reset') }}
+                    </a>
+                @endif
+            </div>
+        </form>
+
         <!-- Status Filter Bar -->
         <div class="flex flex-wrap gap-2 items-center justify-between bg-card border border-border rounded-2xl p-4 shadow-xs">
             <div class="flex flex-wrap gap-2">
-                <a href="{{ route('cashier.orders') }}" 
+                <a href="{{ route('cashier.orders', array_filter(['start_date' => $startDate, 'end_date' => $endDate])) }}" 
                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ is_null($currentStatus) ? 'bg-primary text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
                     {{ __('Semua') }}
                 </a>
-                <a href="{{ route('cashier.orders', ['status' => 'pending']) }}" 
+                <a href="{{ route('cashier.orders', array_filter(['status' => 'pending', 'start_date' => $startDate, 'end_date' => $endDate])) }}" 
                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'pending' ? 'bg-warning text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
                     {{ __('Pending') }}
                 </a>
-                <a href="{{ route('cashier.orders', ['status' => 'confirmed']) }}" 
+                <a href="{{ route('cashier.orders', array_filter(['status' => 'confirmed', 'start_date' => $startDate, 'end_date' => $endDate])) }}" 
                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'confirmed' ? 'bg-info text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
                     {{ __('Confirmed') }}
                 </a>
-                <a href="{{ route('cashier.orders', ['status' => 'completed']) }}" 
+                <a href="{{ route('cashier.orders', array_filter(['status' => 'in_process', 'start_date' => $startDate, 'end_date' => $endDate])) }}" 
+                   class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'in_process' ? 'bg-accent text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
+                    {{ __('In Process') }}
+                </a>
+                <a href="{{ route('cashier.orders', array_filter(['status' => 'completed', 'start_date' => $startDate, 'end_date' => $endDate])) }}" 
                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'completed' ? 'bg-success text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
                     {{ __('Completed') }}
                 </a>
-                <a href="{{ route('cashier.orders', ['status' => 'cancelled']) }}" 
+                <a href="{{ route('cashier.orders', array_filter(['status' => 'cancelled', 'start_date' => $startDate, 'end_date' => $endDate])) }}" 
                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'cancelled' ? 'bg-danger text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
                     {{ __('Cancelled') }}
                 </a>

@@ -8,6 +8,7 @@ class Menu extends Model
 {
     protected $fillable = [
         'category_id',
+        'stock_item_id',
         'name',
         'description',
         'price',
@@ -23,6 +24,11 @@ class Menu extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function stockItem()
+    {
+        return $this->belongsTo(StockItem::class);
     }
 
     public function orderItems()

@@ -113,6 +113,47 @@
                 </div>
             </div>
 
+            <!-- Order Timeline Card -->
+            <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
+                <h3 class="font-bold t-size4 font-heading text-accent border-b border-border pb-3">
+                    {{ __('Riwayat Aktivitas Pesanan') }}
+                </h3>
+
+                <div class="relative pl-6 border-l-2 border-primary-soft/50 space-y-6">
+                    @forelse($order->histories as $history)
+                        <div class="relative">
+                            <!-- Icon/Bullet indicator -->
+                            <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
+                                @if($history->status === 'pending') bg-warning
+                                @elseif($history->status === 'confirmed') bg-info
+                                @elseif($history->status === 'in_process') bg-primary
+                                @elseif($history->status === 'completed') bg-success
+                                @else bg-danger
+                                @endif"></span>
+                            
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-extrabold text-text t-size3">
+                                        {{ ucfirst(str_replace('_', ' ', $history->status)) }}
+                                    </span>
+                                    <span class="text-text-muted text-[11px]">
+                                        {{ $history->created_at->format('H:i') }} ({{ $history->created_at->diffForHumans() }})
+                                    </span>
+                                </div>
+                                <p class="text-text-muted t-size2 mt-0.5">{{ $history->notes }}</p>
+                                @if($history->user)
+                                    <span class="text-[10px] text-text-muted/60 mt-1 block">
+                                        👤 {{ __('Diperbarui oleh') }}: {{ $history->user->name }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-text-muted t-size2 py-2">{{ __('Belum ada riwayat aktivitas tercatat.') }}</p>
+                    @endforelse
+                </div>
+            </div>
+
         </div>
 
         <!-- Column 3: Payment Section -->
@@ -304,6 +345,53 @@
 
                 </div>
             @endif
+
+            <!-- Status Management Card -->
+            <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
+                <div class="border-b border-border pb-3">
+                    <h3 class="font-bold t-size4 font-heading text-text">{{ __('Kelola Status Pesanan') }}</h3>
+                    <p class="text-text-muted t-size2 mt-0.5">{{ __('Perbarui progres pengerjaan pesanan.') }}</p>
+                </div>
+
+                @if($order->status === 'confirmed')
+                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="in_process">
+                        <button type="submit" class="w-full bg-accent hover:bg-accent/90 text-white font-extrabold py-3.5 rounded-xl t-size3 transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                            ⚙️ {{ __('Mulai Proses Masak') }}
+                        </button>
+                    </form>
+                @elseif($order->status === 'in_process')
+                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="completed">
+                        <button type="submit" class="w-full bg-success hover:bg-success-strong text-white font-extrabold py-3.5 rounded-xl t-size3 transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                            ✅ {{ __('Selesaikan & Sajikan') }}
+                        </button>
+                    </form>
+                @endif
+
+                @if(in_array($order->status, ['pending', 'confirmed', 'in_process']))
+                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?');">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" class="w-full bg-danger/10 hover:bg-danger/25 text-danger border border-danger/30 font-bold py-2.5 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer">
+                            ❌ {{ __('Batalkan Pesanan') }}
+                        </button>
+                    </form>
+                @else
+                    <div class="text-center py-2 text-text-muted t-size3">
+                        @if($order->status === 'completed')
+                            🎉 {{ __('Pesanan selesai sepenuhnya.') }}
+                        @else
+                            🚫 {{ __('Pesanan ini dibatalkan.') }}
+                        @endif
+                    </div>
+                @endif
+            </div>
 
         </div>
 

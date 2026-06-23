@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Receipt;
+use App\Models\StockItem;
 use App\Services\BranchContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,8 @@ class CashierController extends Controller
     public function orders(Request $request)
     {
         $status = $request->input('status');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
         $query = Order::query()->with(['orderItems.menu']);
 
@@ -24,8 +27,21 @@ class CashierController extends Controller
             $query->where('status', $status);
         }
 
-        // Sort: pending first, then confirmed, then others, sorted by creation time
-        $orders = $query->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        // Sort: pending first, then confirmed, then in_process, then others, sorted by creation time
+        $orders = $query->orderByRaw("CASE 
+                WHEN status = 'pending' THEN 0 
+                WHEN status = 'confirmed' THEN 1 
+                WHEN status = 'in_process' THEN 2 
+                ELSE 3 
+            END")
             ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();
@@ -33,6 +49,8 @@ class CashierController extends Controller
         return view('cashiers.orders.index', [
             'orders' => $orders,
             'currentStatus' => $status,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 
@@ -47,11 +65,71 @@ class CashierController extends Controller
             abort(404, __('Pesanan tidak ditemukan di cabang ini.'));
         }
 
-        $order->load(['orderItems.menu', 'payments.receipts']);
+        $order->load(['orderItems.menu', 'payments.receipts', 'histories.user']);
 
         return view('cashiers.orders.show', [
             'order' => $order,
         ]);
+    }
+
+    /**
+     * Update the order status.
+     */
+    public function updateStatus(Request $request, Order $order)
+    {
+        $branchId = app(BranchContext::class)->getBranchId();
+
+        if ($branchId && $order->branch_id !== $branchId) {
+            abort(404, __('Pesanan tidak ditemukan di cabang ini.'));
+        }
+
+        $request->validate([
+            'status' => 'required|in:in_process,completed,cancelled',
+        ]);
+
+        $newStatus = $request->input('status');
+        $currentStatus = $order->status;
+
+        // Validate state transitions
+        if ($newStatus === 'in_process' && $currentStatus !== 'confirmed') {
+            return redirect()->back()->with('error', __('Pesanan harus berstatus Confirmed sebelum diproses.'));
+        }
+
+        if ($newStatus === 'completed' && $currentStatus !== 'in_process') {
+            return redirect()->back()->with('error', __('Pesanan harus berstatus In Process sebelum diselesaikan.'));
+        }
+
+        if ($newStatus === 'cancelled' && in_array($currentStatus, ['completed', 'cancelled'])) {
+            return redirect()->back()->with('error', __('Pesanan yang sudah selesai atau dibatalkan tidak dapat dibatalkan lagi.'));
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Restore stock if transitioning to cancelled and stock was already deducted (status was confirmed or in process)
+            if ($newStatus === 'cancelled' && in_array($currentStatus, ['confirmed', 'in_process'])) {
+                $order->load('orderItems.menu');
+                foreach ($order->orderItems as $item) {
+                    if ($item->menu && $item->menu->stock_item_id) {
+                        StockItem::withoutGlobalScopes()
+                            ->where('id', $item->menu->stock_item_id)
+                            ->increment('quantity', $item->quantity);
+                    }
+                }
+            }
+
+            $order->update(['status' => $newStatus]);
+
+            DB::commit();
+
+            return redirect()->route('cashier.orders.show', $order->id)
+                ->with('success', __("Status pesanan berhasil diperbarui menjadi {$newStatus}."));
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->with('error', __('Gagal memperbarui status pesanan: ').$e->getMessage());
+        }
     }
 
     /**
@@ -97,6 +175,16 @@ class CashierController extends Controller
         try {
             // Update order status
             $order->update(['status' => 'confirmed']);
+
+            // Deduct stock for each order item
+            $order->load('orderItems.menu');
+            foreach ($order->orderItems as $item) {
+                if ($item->menu && $item->menu->stock_item_id) {
+                    StockItem::withoutGlobalScopes()
+                        ->where('id', $item->menu->stock_item_id)
+                        ->decrement('quantity', $item->quantity);
+                }
+            }
 
             // Create Payment
             // Note: ScopedToBranch is applied on Payment, but it doesn't have a branch_id column.
