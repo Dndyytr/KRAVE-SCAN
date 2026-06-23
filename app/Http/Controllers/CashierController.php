@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPaid;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Receipt;
@@ -196,23 +197,13 @@ class CashierController extends Controller
                 'status' => 'success',
             ]);
 
-            // Generate receipt number: REC-{KODE_CABANG}-{YYYYMMDD}-{ID_PEMBAYARAN}
-            $branchCode = $order->branch ? $order->branch->code : 'HQ';
-            $date = now()->format('Ymd');
-            $paddedPaymentId = str_pad($payment->id, 4, '0', STR_PAD_LEFT);
-            $receiptNumber = "REC-{$branchCode}-{$date}-{$paddedPaymentId}";
-
-            // Create Receipt
-            $receipt = Receipt::create([
-                'payment_id' => $payment->id,
-                'receipt_number' => $receiptNumber,
-                'printed_at' => now(),
-            ]);
+            // Trigger RPA automations
+            event(new OrderPaid($order, $payment));
 
             DB::commit();
 
-            return redirect()->route('cashier.receipts.show', $receipt->id)
-                ->with('success', __('Pembayaran berhasil dikonfirmasi!'))
+            return redirect()->route('cashier.orders.show', $order->id)
+                ->with('success', __('Pembayaran berhasil dikonfirmasi! Penerbitan struk sedang diproses secara otomatis di latar belakang.'))
                 ->with('cash_received', $amountPaid)
                 ->with('change', $change);
 

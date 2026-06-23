@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AIImageSearchLog;
 use App\Models\Category;
 use App\Models\Menu;
 use App\Models\Order;
+use App\Services\AiImageRecognitionService;
 use App\Services\BranchContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -242,5 +246,89 @@ class CustomerController extends Controller
             'branch' => $branch ? $branch->name : strtoupper($branch_code),
             'order' => $order,
         ]);
+    }
+
+    /**
+     * Identify a menu item from an uploaded image.
+     */
+    public function identifyMenu(Request $request, $branch_code, AiImageRecognitionService $aiService)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Validasi gagal.'),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $path = null;
+        try {
+            // Store the uploaded image in the public disk under 'ai_searches'
+            $path = $request->file('image')->store('ai_searches', 'public');
+
+            // Get original filename
+            $filename = $request->file('image')->getClientOriginalName();
+
+            // Run recognition via Python AI microservice
+            $result = $aiService->recognize($path, $filename);
+
+            if ($result['success'] && ! empty($result['prediction'])) {
+                // Find matching menu in our database (case-insensitive partial match)
+                $menu = Menu::where('is_active', true)
+                    ->where('name', 'like', '%'.$result['prediction'].'%')
+                    ->first();
+
+                if ($menu) {
+                    // Log search success in database
+                    AIImageSearchLog::create([
+                        'image_path' => $path,
+                        'matched_menu_id' => $menu->id,
+                        'confidence_score' => $result['confidence'],
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'menu_id' => $menu->id,
+                        'menu_name' => $menu->name,
+                        'confidence' => $result['confidence'],
+                        'image_url' => asset('storage/'.$path),
+                    ]);
+                }
+            }
+
+            // Log search with no match
+            AIImageSearchLog::create([
+                'image_path' => $path,
+                'matched_menu_id' => null,
+                'confidence_score' => $result['confidence'] ?? null,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('Menu tidak dikenali atau tidak aktif di cabang ini.'),
+                'image_url' => asset('storage/'.$path),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('AI Menu Identification controller error: '.$e->getMessage());
+
+            // Still log the attempt if image was stored
+            if ($path) {
+                AIImageSearchLog::create([
+                    'image_path' => $path,
+                    'matched_menu_id' => null,
+                    'confidence_score' => null,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => __('Layanan AI sedang tidak tersedia. Silakan gunakan pencarian manual.'),
+            ], 503);
+        }
     }
 }

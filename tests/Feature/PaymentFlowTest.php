@@ -198,7 +198,7 @@ class PaymentFlowTest extends TestCase
         $this->assertEquals($expectedReceiptNumber, $receipt->receipt_number);
 
         // Verify Redirection & Session
-        $response->assertRedirect(route('cashier.receipts.show', $receipt->id));
+        $response->assertRedirect(route('cashier.orders.show', $order->id));
         $response->assertSessionHas('success');
         $response->assertSessionHas('cash_received', 100000);
         $response->assertSessionHas('change', 50000);
@@ -239,7 +239,7 @@ class PaymentFlowTest extends TestCase
         $this->assertNotNull($receipt);
         $this->assertEquals($payment->id, $receipt->payment_id);
 
-        $response->assertRedirect(route('cashier.receipts.show', $receipt->id));
+        $response->assertRedirect(route('cashier.orders.show', $order->id));
         $response->assertSessionHas('success');
     }
 }

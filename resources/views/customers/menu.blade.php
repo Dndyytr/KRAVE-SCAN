@@ -4,10 +4,11 @@
         search: '',
         showToast: false,
         toastMessage: '',
+        isUploading: false,
         triggerToast(message) {
             this.toastMessage = message;
             this.showToast = true;
-            setTimeout(() => { this.showToast = false; }, 3000);
+            setTimeout(() => { this.showToast = false; }, 3500);
         },
         addToCart(menuId) {
             fetch('{{ route('customer.cart.add', ['branch_code' => $branch_code]) }}', {
@@ -32,6 +33,45 @@
                 console.error(err);
                 this.triggerToast('Terjadi kesalahan koneksi.');
             });
+        },
+        uploadImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            this.isUploading = true;
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('{{ route('customer.menu.identify', ['branch_code' => $branch_code]) }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.message || 'Layanan AI sedang gangguan.'); });
+                }
+                return res.json();
+            })
+            .then(data => {
+                this.isUploading = false;
+                if (data.success) {
+                    this.search = data.menu_name;
+                    this.triggerToast(`Menu terdeteksi: ${data.menu_name} (${Math.round(data.confidence * 100)}% akurasi)`);
+                } else {
+                    this.triggerToast(data.message || 'Menu tidak berhasil dikenali.');
+                }
+            })
+            .catch(err => {
+                this.isUploading = false;
+                console.error(err);
+                this.triggerToast(err.message || 'Terjadi kesalahan saat memproses gambar.');
+            })
+            .finally(() => {
+                event.target.value = '';
+            });
         }
     }" class="space-y-6">
 
@@ -44,12 +84,13 @@
             
             <div class="flex gap-2">
                 <input type="text" x-model="search" placeholder="Cari kopi, donat, nasi..." class="flex-grow bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-2xl px-4 py-2.5 t-size4 outline-hidden transition">
-                <button class="bg-primary hover:bg-primary-strong text-white font-bold p-2.5 rounded-2xl flex items-center justify-center transition shadow-xs">
+                <button @click="$refs.cameraInput.click()" type="button" class="bg-primary hover:bg-primary-strong text-white font-bold p-2.5 rounded-2xl flex items-center justify-center transition shadow-xs cursor-pointer" title="Cari dengan Foto Makanan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
                 </button>
+                <input type="file" x-ref="cameraInput" accept="image/*" class="hidden" @change="uploadImage($event)">
             </div>
         </div>
 
@@ -120,6 +161,25 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <span x-text="toastMessage"></span>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div x-show="isUploading" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center" 
+             style="display: none;">
+            <div class="bg-card rounded-3xl p-6 max-w-xs w-full text-center border border-border shadow-lg space-y-4">
+                <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <div>
+                    <p class="font-bold text-accent t-size4">Menganalisis Foto...</p>
+                    <p class="text-text-muted t-size2 mt-1">Mencocokkan dengan menu lezat kami</p>
+                </div>
+            </div>
         </div>
         
     </div>

@@ -32,4 +32,33 @@ class Branch extends Model
     {
         return $this->hasMany(FinancialReport::class);
     }
+
+    public function automationRules()
+    {
+        return $this->hasMany(AutomationRule::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Branch $branch) {
+            $branch->automationRules()->createMany([
+                [
+                    'name' => 'Generate Receipt (Cetak Struk)',
+                    'trigger_event' => 'App\Events\OrderPaid',
+                    'condition_type' => 'always',
+                    'condition_value' => null,
+                    'action_job' => 'App\Jobs\GenerateReceiptJob',
+                    'is_active' => true,
+                ],
+                [
+                    'name' => 'Check Stock Levels (Cek Stok Rendah)',
+                    'trigger_event' => 'App\Events\OrderPaid',
+                    'condition_type' => 'always',
+                    'condition_value' => null,
+                    'action_job' => 'App\Jobs\CheckStockLevelsJob',
+                    'is_active' => true,
+                ],
+            ]);
+        });
+    }
 }

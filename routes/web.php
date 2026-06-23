@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AutomationController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReportController;
@@ -49,6 +50,14 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::get('/reports/sales', [ReportController::class, 'sales'])->name('admin.reports.sales');
         Route::get('/reports/menus', [ReportController::class, 'menus'])->name('admin.reports.menus');
         Route::get('/reports/payments', [ReportController::class, 'payments'])->name('admin.reports.payments');
+        Route::get('/automations', [AutomationController::class, 'index'])->name('admin.automations.index');
+        Route::get('/automations/rules', [AutomationController::class, 'indexRules'])->name('admin.automations.rules.index');
+        Route::get('/automations/rules/create', [AutomationController::class, 'createRule'])->name('admin.automations.rules.create');
+        Route::post('/automations/rules', [AutomationController::class, 'storeRule'])->name('admin.automations.rules.store');
+        Route::get('/automations/rules/{rule}/edit', [AutomationController::class, 'editRule'])->name('admin.automations.rules.edit');
+        Route::put('/automations/rules/{rule}', [AutomationController::class, 'updateRule'])->name('admin.automations.rules.update');
+        Route::delete('/automations/rules/{rule}', [AutomationController::class, 'destroyRule'])->name('admin.automations.rules.destroy');
+        Route::patch('/automations/rules/{rule}/toggle', [AutomationController::class, 'toggleRule'])->name('admin.automations.rules.toggle');
     });
 
     // Cashiers Group
@@ -70,6 +79,7 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     });
 
     Route::get('/table/{table_number}', [CustomerController::class, 'menu'])->name('customer.menu');
+    Route::post('/menu/identify', [CustomerController::class, 'identifyMenu'])->name('customer.menu.identify');
     Route::get('/cart', [CustomerController::class, 'cart'])->name('customer.cart');
     Route::post('/cart/add', [CustomerController::class, 'addToCart'])->name('customer.cart.add');
     Route::post('/cart/update', [CustomerController::class, 'updateCart'])->name('customer.cart.update');
