@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="bowlGrad" x1="220" y1="560" x2="804" y2="860" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8C7D5"/>
+      <stop offset="1" stop-color="#E88CA2"/>
+    </linearGradient>
+    <linearGradient id="soupGrad" x1="290" y1="360" x2="734" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D2B08A"/>
+      <stop offset="1" stop-color="#B98B63"/>
+    </linearGradient>
+    <linearGradient id="meatballGrad" x1="380" y1="360" x2="650" y2="670" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E3D3"/>
+      <stop offset="1" stop-color="#D8C4B2"/>
+    </linearGradient>
+    <linearGradient id="tofuGrad" x1="260" y1="310" x2="390" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE9B8"/>
+      <stop offset="1" stop-color="#F5C96E"/>
+    </linearGradient>
+    <filter id="softShadow" x="150" y="250" width="724" height="650" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#9C5B73" flood-opacity="0.18"/>
+    </filter>
+    <filter id="glow" x="300" y="110" width="420" height="420" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="0" stdDeviation="24" flood-color="#F5B7C5" flood-opacity="0.9"/>
+    </filter>
+  </defs>
+
+  <!-- Heart glow -->
+  <g filter="url(#glow)">
+    <path d="M512 198C475 142 390 145 355 201C325 249 336 313 379 348L512 461L645 348C688 313 699 249 669 201C634 145 549 142 512 198Z" fill="#F59AB2"/>
+  </g>
+
+  <!-- Bowl shadow base -->
+  <ellipse cx="512" cy="806" rx="250" ry="54" fill="#C98CA0" opacity="0.18"/>
+
+  <!-- Bowl -->
+  <g filter="url(#softShadow)">
+    <path d="M260 540C260 670 373 778 512 778C651 778 764 670 764 540V512H260V540Z" fill="url(#bowlGrad)"/>
+    <path d="M228 500C228 457 263 422 306 422H718C761 422 796 457 796 500C796 543 761 578 718 578H306C263 578 228 543 228 500Z" fill="#F8D7E0"/>
+    <path d="M260 540C260 670 373 778 512 778C651 778 764 670 764 540" stroke="#D77C96" stroke-width="16" stroke-linecap="round"/>
+    <path d="M304 786C304 844 397 886 512 886C627 886 720 844 720 786" stroke="#D77C96" stroke-width="22" stroke-linecap="round"/>
+    <path d="M304 786H720" stroke="#D77C96" stroke-width="18" stroke-linecap="round"/>
+  </g>
+
+  <!-- Soup -->
+  <path d="M291 512C291 423 390 356 512 356C634 356 733 423 733 512C733 521 732 530 731 539C692 566 607 586 512 586C417 586 332 566 293 539C292 530 291 521 291 512Z" fill="url(#soupGrad)"/>
+
+  <!-- Garnish -->
+  <g opacity="0.92">
+    <circle cx="405" cy="490" r="10" fill="#67B96E"/>
+    <circle cx="448" cy="470" r="8" fill="#67B96E"/>
+    <circle cx="545" cy="485" r="9" fill="#67B96E"/>
+    <circle cx="600" cy="518" r="8" fill="#67B96E"/>
+    <circle cx="650" cy="495" r="7" fill="#67B96E"/>
+    <circle cx="362" cy="540" r="8" fill="#67B96E"/>
+    <circle cx="610" cy="560" r="9" fill="#67B96E"/>
+    <circle cx="497" cy="552" r="7" fill="#67B96E"/>
+    <circle cx="473" cy="518" r="7" fill="#D98B3E"/>
+    <circle cx="566" cy="540" r="6" fill="#D98B3E"/>
+  </g>
+
+  <!-- Meatballs -->
+  <g>
+    <circle cx="509" cy="451" r="112" fill="url(#meatballGrad)"/>
+    <circle cx="612" cy="545" r="70" fill="url(#meatballGrad)"/>
+    <circle cx="417" cy="560" r="92" fill="url(#meatballGrad)"/>
+    <circle cx="676" cy="610" r="56" fill="url(#meatballGrad)"/>
+    <circle cx="560" cy="640" r="62" fill="url(#meatballGrad)"/>
+    <circle cx="365" cy="632" r="48" fill="url(#meatballGrad)"/>
+    <circle cx="460" cy="666" r="46" fill="url(#meatballGrad)"/>
+
+    <circle cx="478" cy="420" r="26" fill="#FFFFFF" opacity="0.22"/>
+    <circle cx="588" cy="524" r="16" fill="#FFFFFF" opacity="0.18"/>
+    <circle cx="392" cy="530" r="18" fill="#FFFFFF" opacity="0.18"/>
+  </g>
+
+  <!-- Tofu / crackers -->
+  <g transform="translate(0 0) rotate(-10 330 412)">
+    <rect x="286" y="347" width="154" height="126" rx="20" fill="url(#tofuGrad)"/>
+    <path d="M300 377H426M300 409H426M300 441H426" stroke="#E9B34B" stroke-width="12" stroke-linecap="round" opacity="0.55"/>
+    <path d="M304 361C334 379 352 390 392 429" stroke="#FFF3C7" stroke-width="12" stroke-linecap="round" opacity="0.5"/>
+  </g>
+
+  <!-- Pink heart symbol overlay -->
+  <g transform="translate(0 0)">
+    <path d="M512 255C486 215 430 217 408 251C390 279 395 318 422 339L512 414L602 339C629 318 634 279 616 251C594 217 538 215 512 255Z" fill="#F6A2B7"/>
+    <path d="M512 266C491 235 447 237 430 264C416 286 420 315 442 333L512 393L582 333C604 315 608 286 594 264C577 237 533 235 512 266Z" fill="#FFFFFF" opacity="0.34"/>
+  </g>
+</svg>

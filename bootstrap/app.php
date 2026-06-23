@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\SetCustomerBranchContext;
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\SetStaffBranchContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
+        $middleware->alias([
+            'role' => RoleMiddleware::class,
+            'branch.customer' => SetCustomerBranchContext::class,
+            'branch.staff' => SetStaffBranchContext::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

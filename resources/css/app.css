@@ -1,3 +1,205 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap");
+@import "tailwindcss";
+
+@plugin '@tailwindcss/forms';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans:
+        "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-heading: "Plus Jakarta Sans", sans-serif;
+    --font-brand: "Poppins", sans-serif;
+
+    --breakpoint-bp360: 360px;
+    --breakpoint-bp400: 400px;
+
+    --color-bg: #fffdf9;
+    --color-surface: #fff7f0;
+    --color-surface-alt: #f8efe8;
+    --color-card: #ffffff;
+
+    --color-primary: #e88ca2;
+    --color-primary-strong: #d96b87;
+    --color-primary-soft: #f5b7c5;
+
+    --color-secondary: #f5e6da;
+    --color-accent: #b86b7a;
+
+    --color-text: #3a2e2e;
+    --color-text-muted: #7d6e6e;
+    --color-border: #e9d9d0;
+
+    --color-success: #8ccf9b;
+    --color-warning: #f4c26b;
+    --color-danger: #f08a8a;
+    --color-info: #88c7e8;
+
+    --color-input-bg: #fffdfb;
+    --color-input-border: #e6d6cb;
+    --color-input-focus: #e88ca2;
+
+    --color-shadow: rgba(215, 156, 170, 0.14);
+}
+
+:root {
+    --color-bg: #fffdf9;
+    --color-surface: #fff7f0;
+    --color-surface-alt: #f8efe8;
+    --color-card: #ffffff;
+
+    --color-primary: #e88ca2;
+    --color-primary-strong: #d96b87;
+    --color-primary-soft: #f5b7c5;
+
+    --color-secondary: #f5e6da;
+    --color-accent: #b86b7a;
+
+    --color-text: #3a2e2e;
+    --color-text-muted: #7d6e6e;
+    --color-border: #e9d9d0;
+
+    --color-success: #8ccf9b;
+    --color-warning: #f4c26b;
+    --color-danger: #f08a8a;
+    --color-info: #88c7e8;
+
+    --color-input-bg: #fffdfb;
+    --color-input-border: #e6d6cb;
+    --color-input-focus: #e88ca2;
+
+    --color-shadow: rgba(215, 156, 170, 0.14);
+}
+
+@layer base {
+    body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-sans);
+        font-weight: 500;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+        color: var(--color-text);
+    }
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-border);
+    }
+
+    html,
+    body {
+        overflow-x: hidden;
+    }
+}
+
+@layer components {
+    /* Custom Responsive Typography Classes */
+    /* text size */
+    .t-size1 {
+        @apply text-[0.6rem] bp360:text-[0.7rem] bp400:text-xs md:text-[0.8rem] lg:text-[0.83rem] xl:text-[0.85rem] 2xl:text-sm;
+    }
+
+    .t-size2 {
+        @apply text-[0.7rem] bp360:text-xs bp400:text-[0.8rem] md:text-[0.83rem] lg:text-[0.85rem] xl:text-sm 2xl:text-base;
+    }
+
+    .t-size3 {
+        @apply text-xs bp360:text-[0.8rem] bp400:text-[0.83rem] md:text-sm lg:text-[0.9rem] xl:text-base 2xl:text-lg;
+    }
+
+    .t-size4 {
+        @apply text-[0.8rem] bp360:text-[0.83rem] bp400:text-sm md:text-base lg:text-[1.05rem] xl:text-lg 2xl:text-xl;
+    }
+    .t-size5 {
+        @apply text-[0.83rem] bp360:text-sm bp400:text-base md:text-lg lg:text-[1.2rem] xl:text-xl 2xl:text-[1.3rem];
+    }
+    .t-size6 {
+        @apply text-sm bp360:text-base bp400:text-lg md:text-xl lg:text-[1.3rem] xl:text-[1.4rem] 2xl:text-2xl;
+    }
+    .t-size7 {
+        @apply text-base bp360:text-lg bp400:text-xl md:text-[1.3rem] lg:text-[1.4rem] xl:text-2xl 2xl:text-[1.6rem];
+    }
+    .t-size7 {
+        @apply text-lg bp360:text-xl bp400:text-[1.3rem] md:text-[1.4rem] lg:text-2xl xl:text-[1.6rem] 2xl:text-3xl;
+    }
+    .t-size8 {
+        @apply text-xl bp360:text-[1.3rem] bp400:text-2xl md:text-[1.6rem] lg:text-[1.7rem] xl:text-3xl 2xl:text-[2rem];
+    }
+    .t-size9 {
+        @apply text-[1.3rem] bp360:text-2xl bp400:text-[1.6rem] md:text-[1.7rem] lg:text-3xl xl:text-[2rem] 2xl:text-4xl;
+    }
+    .t-size10 {
+        @apply text-2xl bp360:text-[1.6rem] bp400:text-[1.7rem] md:text-3xl lg:text-[2rem] xl:text-4xl 2xl:text-[2.5rem];
+    }
+}
+
+/* ── Animasi masuk halaman login ── */
+@keyframes fadeSlideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-2rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(2rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(1.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@layer components {
+    .anim-slide-left {
+        animation: fadeSlideLeft 0.6s ease-out both;
+    }
+    .anim-slide-right {
+        animation: fadeSlideRight 0.6s ease-out both;
+    }
+    .anim-slide-up {
+        animation: fadeSlideUp 0.6s ease-out both;
+    }
+    .anim-fade {
+        animation: fadeIn 0.5s ease-out both;
+    }
+}
