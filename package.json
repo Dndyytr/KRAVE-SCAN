@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.3.1",
+        "echarts": "^6.1.0",
         "tailwindcss": "^4.3.1"
     }
 }

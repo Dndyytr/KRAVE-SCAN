@@ -154,8 +154,10 @@ class ReportManagementTest extends TestCase
         $order1 = Order::create(['branch_id' => $this->branch1->id, 'table_number' => 1, 'status' => 'completed', 'total_amount' => 50000]);
         $order2 = Order::create(['branch_id' => $this->branch2->id, 'table_number' => 2, 'status' => 'completed', 'total_amount' => 100000]);
 
-        $menu1 = Menu::create(['category_id' => $this->category->id, 'name' => 'Bakso Cinta', 'price' => 25000, 'description' => 'Enak', 'is_active' => true]);
-        $menu2 = Menu::create(['category_id' => $this->category->id, 'name' => 'Mie Bakso', 'price' => 20000, 'description' => 'Lezat', 'is_active' => true]);
+        $category2 = Category::create(['branch_id' => $this->branch2->id, 'name' => 'Makanan Utama', 'slug' => 'makanan-utama']);
+
+        $menu1 = Menu::create(['branch_id' => $this->branch1->id, 'category_id' => $this->category->id, 'name' => 'Bakso Cinta', 'price' => 25000, 'description' => 'Enak', 'is_active' => true]);
+        $menu2 = Menu::create(['branch_id' => $this->branch2->id, 'category_id' => $category2->id, 'name' => 'Mie Bakso', 'price' => 20000, 'description' => 'Lezat', 'is_active' => true]);
 
         OrderItem::create(['order_id' => $order1->id, 'menu_id' => $menu1->id, 'quantity' => 2, 'price' => 25000, 'subtotal' => 50000]);
         OrderItem::create(['order_id' => $order2->id, 'menu_id' => $menu2->id, 'quantity' => 5, 'price' => 20000, 'subtotal' => 100000]);

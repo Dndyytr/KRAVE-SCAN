@@ -31,4 +31,14 @@ class BranchContext
     {
         return $this->branch?->id;
     }
+
+    /**
+     * Get branch-isolated cache key.
+     */
+    public function cacheKey(string $key): string
+    {
+        $branchId = $this->getBranchId() ?? 'global';
+
+        return "branch_{$branchId}_{$key}";
+    }
 }

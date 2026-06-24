@@ -2,14 +2,19 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Middleware\BranchContextMiddleware;
 use App\Models\AutomationLog;
 use App\Models\Order;
+use App\Models\Role;
 use App\Models\StockItem;
+use App\Models\User;
+use App\Notifications\LowStockNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Notification;
 
 class CheckStockLevelsJob implements ShouldQueue
 {
@@ -19,6 +24,8 @@ class CheckStockLevelsJob implements ShouldQueue
 
     protected ?int $automationLogId;
 
+    public ?int $branchId;
+
     /**
      * Create a new job instance.
      */
@@ -26,6 +33,15 @@ class CheckStockLevelsJob implements ShouldQueue
     {
         $this->order = $order;
         $this->automationLogId = $automationLogId;
+        $this->branchId = $order->branch_id;
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     */
+    public function middleware(): array
+    {
+        return [new BranchContextMiddleware($this->branchId)];
     }
 
     /**
@@ -40,8 +56,7 @@ class CheckStockLevelsJob implements ShouldQueue
 
         foreach ($order->orderItems as $item) {
             if ($item->menu && $item->menu->stock_item_id) {
-                $stockItem = StockItem::withoutGlobalScopes()
-                    ->where('id', $item->menu->stock_item_id)
+                $stockItem = StockItem::where('id', $item->menu->stock_item_id)
                     ->first();
 
                 if ($stockItem && $stockItem->quantity <= $stockItem->minimum_quantity) {
@@ -52,6 +67,21 @@ class CheckStockLevelsJob implements ShouldQueue
                         'minimum_quantity' => $stockItem->minimum_quantity,
                         'unit' => $stockItem->unit,
                     ];
+
+                    // Dispatch LowStockNotification to Admin of this branch and Super Admin
+                    $adminRole = Role::where('name', 'admin')->first();
+                    if ($adminRole) {
+                        $users = User::withoutGlobalScopes()
+                            ->where(function ($query) use ($order) {
+                                $query->where('branch_id', $order->branch_id)
+                                    ->orWhereNull('branch_id');
+                            })
+                            ->where('role_id', $adminRole->id)
+                            ->where('is_active', true)
+                            ->get();
+
+                        Notification::send($users, new LowStockNotification($stockItem));
+                    }
                 }
             }
         }
@@ -63,7 +93,7 @@ class CheckStockLevelsJob implements ShouldQueue
             ];
 
             if ($this->automationLogId) {
-                $log = AutomationLog::withoutGlobalScopes()->find($this->automationLogId);
+                $log = AutomationLog::find($this->automationLogId);
                 if ($log) {
                     $log->update([
                         'status' => 'warning',
@@ -81,7 +111,7 @@ class CheckStockLevelsJob implements ShouldQueue
         } else {
             // Update log to success if no items are low stock
             if ($this->automationLogId) {
-                $log = AutomationLog::withoutGlobalScopes()->find($this->automationLogId);
+                $log = AutomationLog::find($this->automationLogId);
                 if ($log) {
                     $log->update([
                         'status' => 'success',

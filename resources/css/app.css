@@ -33,9 +33,13 @@
     --color-border: #e9d9d0;
 
     --color-success: #8ccf9b;
+    --color-success-soft: #d4f0db;
     --color-warning: #f4c26b;
+    --color-warning-soft: #fce8c3;
     --color-danger: #f08a8a;
+    --color-danger-soft: #fcd4d4;
     --color-info: #88c7e8;
+    --color-info-soft: #cfe8f6;
 
     --color-input-bg: #fffdfb;
     --color-input-border: #e6d6cb;
@@ -62,9 +66,13 @@
     --color-border: #e9d9d0;
 
     --color-success: #8ccf9b;
+    --color-success-soft: #d4f0db;
     --color-warning: #f4c26b;
+    --color-warning-soft: #fce8c3;
     --color-danger: #f08a8a;
+    --color-danger-soft: #fcd4d4;
     --color-info: #88c7e8;
+    --color-info-soft: #cfe8f6;
 
     --color-input-bg: #fffdfb;
     --color-input-border: #e6d6cb;
@@ -103,11 +111,45 @@
     body {
         overflow-x: hidden;
     }
+
+    /* ── Smooth global transitions on interactive elements ── */
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"] {
+        transition: all 0.2s ease;
+    }
+
+    /* ── Custom pastel scrollbar ── */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--color-surface);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-primary-soft);
+        border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+
+    /* ── Focus ring consistency ── */
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--color-primary) !important;
+        box-shadow: 0 0 0 2px rgba(232, 140, 162, 0.2) !important;
+        outline: none !important;
+    }
 }
 
 @layer components {
-    /* Custom Responsive Typography Classes */
-    /* text size */
+    /* ═══ Custom Responsive Typography Classes ═══ */
     .t-size1 {
         @apply text-[0.6rem] bp360:text-[0.7rem] bp400:text-xs md:text-[0.8rem] lg:text-[0.83rem] xl:text-[0.85rem] 2xl:text-sm;
     }
@@ -130,9 +172,6 @@
         @apply text-sm bp360:text-base bp400:text-lg md:text-xl lg:text-[1.3rem] xl:text-[1.4rem] 2xl:text-2xl;
     }
     .t-size7 {
-        @apply text-base bp360:text-lg bp400:text-xl md:text-[1.3rem] lg:text-[1.4rem] xl:text-2xl 2xl:text-[1.6rem];
-    }
-    .t-size7 {
         @apply text-lg bp360:text-xl bp400:text-[1.3rem] md:text-[1.4rem] lg:text-2xl xl:text-[1.6rem] 2xl:text-3xl;
     }
     .t-size8 {
@@ -146,7 +185,7 @@
     }
 }
 
-/* ── Animasi masuk halaman login ── */
+/* ═══ Keyframe Animations ═══ */
 @keyframes fadeSlideLeft {
     from {
         opacity: 0;
@@ -189,6 +228,35 @@
     }
 }
 
+@keyframes pulseSoft {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @layer components {
     .anim-slide-left {
         animation: fadeSlideLeft 0.6s ease-out both;
@@ -201,5 +269,28 @@
     }
     .anim-fade {
         animation: fadeIn 0.5s ease-out both;
+    }
+    .anim-pulse-soft {
+        animation: pulseSoft 2s ease-in-out infinite;
+    }
+    .anim-shimmer {
+        background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-alt) 50%, var(--color-surface) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+    .anim-slide-down {
+        animation: slideDown 0.3s ease-out both;
+    }
+}
+
+/* ── Print media query ── */
+@media print {
+    nav, aside, header, footer,
+    .no-print, button, .notification-bell {
+        display: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
     }
 }

@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
+use App\Traits\ScopedToBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
+    use LogsActivity, ScopedToBranch;
+
     protected $fillable = [
+        'branch_id',
         'category_id',
         'stock_item_id',
         'name',
@@ -15,6 +20,11 @@ class Menu extends Model
         'image_path',
         'is_active',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

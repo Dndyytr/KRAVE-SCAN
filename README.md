@@ -1,58 +1,71 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# KraveScan — QR-Code Based Ordering & Management System with AI and RPA
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+KraveScan adalah sistem manajemen restoran dan pemesanan makanan berbasis QR-Code modern yang dirancang untuk mendukung ekspansi multi-cabang secara seamless. Aplikasi ini dilengkapi dengan asisten pencarian menu berbasis kecerdasan buatan (AI) serta sistem otomatisasi proses (RPA) untuk efisiensi operasional.
 
-## About Laravel
+Sistem ini dikembangkan menggunakan **Laravel 13** di bagian backend, dipadukan dengan **Alpine.js** dan **Tailwind CSS v4** untuk antarmuka pengguna (UI/UX) bertema pastel yang estetik dan premium.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama (Key Features)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Isolasi Multi-Cabang (Multi-Branch Scope)
+- Isolasi data menu, stok, transaksi, dan laporan untuk tiap cabang melalui global scope `ScopedToBranch`.
+- Fitur *Branch Switcher* instan bagi Super Admin/Owner untuk memantau data cabang mana pun dari navbar atas.
+- Partisi file storage terisolasi untuk masing-masing cabang (`storage/app/public/branches/{branch_id}/`).
 
-## Learning Laravel
+### 2. Pemesanan Pelanggan Responsif (QR-Code Customer Ordering)
+- Pemindaian QR-Code meja pelanggan untuk langsung membuka menu cabang terkait secara instan.
+- Keranjang belanja interaktif bertenaga Alpine.js yang responsif dan cepat tanpa *page-reload*.
+- Halaman status pelacakan pesanan dinamis bagi pelanggan.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Pencarian Menu Berbasis AI (AI Image Recognition)
+- Layanan pengenalan gambar makanan/minuman bertenaga **FastAPI** (Python).
+- Mendukung klasifikasi gambar menggunakan model *pre-trained* **MobileNetV2** (ImageNet).
+- Dilengkapi sistem *fallback* cerdas berupa pencocokan kata kunci nama file (*filename keywords*) dan *random fallback*.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Otomatisasi RPA Event-Driven (Automation Layer)
+- *Automation Engine* yang membaca aturan dinamis (`automation_rules`) di database untuk memicu pekerjaan latar belakang.
+- Pembuatan file PDF struk pembayaran otomatis saat transaksi dibayar (`GenerateReceiptJob`).
+- Pemeriksaan berkala stok bahan kritis secara otomatis (`CheckStockLevelsJob`).
+- Sistem proteksi eksekusi ganda menggunakan **Idempotency Key** pada log audit otomatisasi.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 5. Dasbor Interaktif & Desain Premium
+- Visualisasi metrik keuangan dan penjualan interaktif menggunakan library grafik **Apache ECharts**.
+- Sparkline mini-charts pada kartu metrik dashboard utama.
+- Komponen visual UI/UX pastel yang konsisten dengan efek transisi halus.
 
-## Agentic Development
+### 6. Notifikasi & Log Audit
+- Lonceng notifikasi in-app pada navbar kasir bertenaga Alpine.js Polling.
+- Pengiriman email paralel melalui driver **SMTP** untuk notifikasi stok kritis dan laporan harian.
+- Log aktivitas staf yang lengkap untuk audit trail dengan retensi pembersihan otomatis selama 30 hari.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## 📂 Dokumentasi Teknis & Panduan Pengguna
 
-php artisan boost:install
-```
+Untuk mempermudah setup dan operasional di komputer lokal, kami telah menyediakan panduan mendalam secara terpisah:
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+1. ⚙️ **[Panduan Setup Lokal & Konfigurasi (docs/LOCAL_SETUP.md)](docs/LOCAL_SETUP.md)**  
+   *Panduan instalasi dari nol, konfigurasi database MySQL, pengaturan SMTP email lokal (Mailpit/Mailtrap), daftar akun default seeder, dan cara menjalankan server lokal.*
+   
+2. 🤖 **[Dokumentasi AI & Otomatisasi RPA (docs/AI_RPA_GUIDE.md)](docs/AI_RPA_GUIDE.md)**  
+   *Penjelasan teknis detail mengenai cara kerja FastAPI, model MobileNetV2, pemicuan event, background queue, dan troubleshooting idempotensi.*
+   
+3. 📖 **[Panduan Pengguna / User Guide (docs/USER_GUIDE.md)](docs/USER_GUIDE.md)**  
+   *Manual singkat operasional sistem bagi Super Admin (Owner), Admin Cabang, Kasir, dan alur pelanggan.*
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠️ Stack Teknologi
 
-## Code of Conduct
+- **Backend**: Laravel 13 (PHP 8.3+)
+- **Frontend**: Blade + Alpine.js, Tailwind CSS v4 (Vite plugin)
+- **Database**: MySQL (Pengembangan Lokal), SQLite (Testing)
+- **AI Microservice**: FastAPI, Python 3.10+, Uvicorn, MobileNetV2 (PyTorch)
+- **Package Tambahan**: Laravel Breeze (Auth), Maatwebsite Excel (Ekspor Laporan)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 📄 Lisensi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+KraveScan dikembangkan sebagai proyek proprietary berlisensi tertutup. Seluruh aset grafis, desain, dan kode sumber adalah hak cipta terdaftar.

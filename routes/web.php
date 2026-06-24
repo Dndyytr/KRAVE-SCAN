@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AutomationController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,12 +33,18 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware(['auth', 'branch.staff'])->group(function () {
+    // Notifications API
+    Route::get('/api/notifications', [NotificationController::class, 'index'])->name('api.notifications.index');
+    Route::post('/api/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('api.notifications.mark-as-read');
+    Route::post('/api/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.mark-all-as-read');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Admins Group
     Route::prefix('admin')->middleware('role:admin')->group(function () {
+        Route::post('/switch-branch', [DashboardController::class, 'switchBranch'])->name('admin.switch-branch');
         Route::patch('/menus/{menu}/toggle-active', [MenuController::class, 'toggleActive'])->name('admin.menus.toggle-active');
         Route::resource('menus', MenuController::class)->names('admin.menus');
 
@@ -58,6 +66,8 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::put('/automations/rules/{rule}', [AutomationController::class, 'updateRule'])->name('admin.automations.rules.update');
         Route::delete('/automations/rules/{rule}', [AutomationController::class, 'destroyRule'])->name('admin.automations.rules.destroy');
         Route::patch('/automations/rules/{rule}/toggle', [AutomationController::class, 'toggleRule'])->name('admin.automations.rules.toggle');
+
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs.index');
     });
 
     // Cashiers Group

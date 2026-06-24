@@ -16,11 +16,6 @@
     </x-slot>
 
     <div class="space-y-6 anim-fade" x-data="rulesManager()">
-        @if(session('success'))
-            <div class="bg-success/10 border border-success/30 text-success rounded-xl p-4 t-size3 font-semibold">
-                {{ session('success') }}
-            </div>
-        @endif
 
         <!-- Filter & Header Card -->
         <div class="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">

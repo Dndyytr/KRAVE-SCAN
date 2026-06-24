@@ -17,18 +17,6 @@
         <!-- Column 1 & 2: Order Info & Items -->
         <div class="lg:col-span-2 space-y-6">
             
-            <!-- Alert Session Messages -->
-            @if(session('success'))
-                <div class="bg-success/15 border border-success/30 text-success px-4 py-3 rounded-xl t-size3 font-semibold">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="bg-danger/15 border border-danger/30 text-danger px-4 py-3 rounded-xl t-size3 font-semibold">
-                    {{ session('error') }}
-                </div>
-            @endif
 
             <!-- Order General Card -->
             <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
@@ -40,23 +28,9 @@
                         </span>
                     </div>
                     <div>
-                        <span class="text-text-muted t-size2 font-semibold uppercase tracking-wider block text-right">{{ __('Status') }}</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full t-size2 font-bold border mt-1
-                            @if($order->status === 'pending') bg-warning/15 text-warning border-warning/30
-                            @elseif($order->status === 'confirmed') bg-info/15 text-info border-info/30
-                            @elseif($order->status === 'in_process') bg-primary-soft/40 text-accent border-primary-soft
-                            @elseif($order->status === 'completed') bg-success/15 text-success border-success/30
-                            @else bg-danger/15 text-danger border-danger/30
-                            @endif">
-                            <span class="w-1.5 h-1.5 rounded-full 
-                                @if($order->status === 'pending') bg-warning
-                                @elseif($order->status === 'confirmed') bg-info
-                                @elseif($order->status === 'in_process') bg-primary
-                                @elseif($order->status === 'completed') bg-success
-                                @else bg-danger
-                                @endif"></span>
-                            {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                        </span>
+                        <div class="mt-1">
+                            <x-status-badge :status="$order->status" />
+                        </div>
                     </div>
                 </div>
 
@@ -309,9 +283,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-muted">{{ __('Status') }}</span>
-                                <span class="font-bold text-success uppercase">
-                                    {{ $payment->status }}
-                                </span>
+                                <x-status-badge :status="$payment->status" />
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-muted">{{ __('Nominal Transaksi') }}</span>

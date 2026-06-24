@@ -124,6 +124,39 @@ class RpaAutomationTest extends TestCase
         ]);
     }
 
+    public function test_generate_receipt_job_logs_failure_when_order_is_missing(): void
+    {
+        $order = Order::create([
+            'branch_id' => $this->branch->id,
+            'table_number' => 5,
+            'status' => 'pending',
+            'total_amount' => 15000,
+        ]);
+
+        $payment = Payment::create([
+            'order_id' => $order->id,
+            'amount' => 15000,
+            'method' => 'cash',
+            'status' => 'success',
+        ]);
+
+        // Delete the order to force a failure
+        $order->delete();
+
+        // Run the Job directly
+        $job = new GenerateReceiptJob($payment);
+        $job->handle();
+
+        $this->assertDatabaseMissing('receipts', [
+            'payment_id' => $payment->id,
+        ]);
+
+        $this->assertDatabaseHas('automation_logs', [
+            'task_name' => 'Generate Receipt',
+            'status' => 'failed',
+        ]);
+    }
+
     public function test_check_stock_levels_job_triggers_warning_on_low_stock(): void
     {
         // Create stock item at or below minimum threshold

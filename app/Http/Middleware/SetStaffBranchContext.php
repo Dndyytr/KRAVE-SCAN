@@ -28,7 +28,12 @@ class SetStaffBranchContext
                 abort(403, 'Akun Anda telah ditangguhkan.');
             }
 
-            $branch = $user->branch_id ? Branch::find($user->branch_id) : null;
+            $branchId = $user->branch_id;
+            if (is_null($branchId) && session()->has('active_branch_id')) {
+                $branchId = session('active_branch_id');
+            }
+
+            $branch = $branchId ? Branch::find($branchId) : null;
             app(BranchContext::class)->setBranch($branch);
         }
 

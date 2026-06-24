@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Middleware\BranchContextMiddleware;
 use App\Models\AutomationLog;
 use App\Models\Payment;
 use App\Models\Receipt;
@@ -20,6 +21,8 @@ class GenerateReceiptJob implements ShouldQueue
 
     protected ?int $automationLogId;
 
+    public ?int $branchId;
+
     /**
      * Create a new job instance.
      */
@@ -27,6 +30,15 @@ class GenerateReceiptJob implements ShouldQueue
     {
         $this->payment = $payment;
         $this->automationLogId = $automationLogId;
+        $this->branchId = $payment->order?->branch_id;
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     */
+    public function middleware(): array
+    {
+        return [new BranchContextMiddleware($this->branchId)];
     }
 
     /**
@@ -39,7 +51,7 @@ class GenerateReceiptJob implements ShouldQueue
 
         if (! $order) {
             if ($this->automationLogId) {
-                $log = AutomationLog::withoutGlobalScopes()->find($this->automationLogId);
+                $log = AutomationLog::find($this->automationLogId);
                 if ($log) {
                     $log->update([
                         'status' => 'failed',
@@ -84,7 +96,7 @@ class GenerateReceiptJob implements ShouldQueue
             ];
 
             if ($this->automationLogId) {
-                $log = AutomationLog::withoutGlobalScopes()->find($this->automationLogId);
+                $log = AutomationLog::find($this->automationLogId);
                 if ($log) {
                     $log->update([
                         'status' => 'success',
@@ -111,7 +123,7 @@ class GenerateReceiptJob implements ShouldQueue
             ];
 
             if ($this->automationLogId) {
-                $log = AutomationLog::withoutGlobalScopes()->find($this->automationLogId);
+                $log = AutomationLog::find($this->automationLogId);
                 if ($log) {
                     $log->update([
                         'status' => 'failed',

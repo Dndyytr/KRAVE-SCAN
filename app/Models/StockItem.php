@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use App\Traits\ScopedToBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class StockItem extends Model
 {
-    use ScopedToBranch;
+    use LogsActivity, ScopedToBranch;
 
     protected $fillable = [
         'branch_id',

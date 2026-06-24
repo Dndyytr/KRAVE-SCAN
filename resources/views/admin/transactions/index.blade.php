@@ -213,18 +213,7 @@
                                         Rp {{ number_format($tx->amount, 0, ',', '.') }}
                                     </td>
                                     <td class="py-4 px-6">
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full t-size1 font-bold border
-                                            @if($tx->status === 'pending') bg-warning/15 text-warning border-warning/30
-                                            @elseif($tx->status === 'success') bg-success/15 text-success border-success/30
-                                            @else bg-danger/15 text-danger border-danger/30
-                                            @endif">
-                                            <span class="w-1.5 h-1.5 rounded-full 
-                                                @if($tx->status === 'pending') bg-warning
-                                                @elseif($tx->status === 'success') bg-success
-                                                @else bg-danger
-                                                @endif"></span>
-                                            {{ ucfirst($tx->status) }}
-                                        </span>
+                                        <x-status-badge :status="$tx->status" />
                                     </td>
                                     <td class="py-4 px-6 t-size2 text-text-muted">
                                         {{ $tx->created_at->format('H:i') }}

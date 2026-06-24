@@ -7,10 +7,14 @@ use App\Models\Branch;
 use App\Models\FinancialReport;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Role;
 use App\Models\SalesReport;
+use App\Models\User;
+use App\Notifications\DailyReportNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class AggregateDailyReports extends Command
 {
@@ -74,6 +78,21 @@ class AggregateDailyReports extends Command
                         'total_revenue' => $totalRevenue,
                     ]
                 );
+
+                // Dispatch DailyReportNotification to Admin of this branch and Super Admin
+                $adminRole = Role::where('name', 'admin')->first();
+                if ($adminRole) {
+                    $users = User::withoutGlobalScopes()
+                        ->where(function ($query) use ($branch) {
+                            $query->where('branch_id', $branch->id)
+                                ->orWhereNull('branch_id');
+                        })
+                        ->where('role_id', $adminRole->id)
+                        ->where('is_active', true)
+                        ->get();
+
+                    Notification::send($users, new DailyReportNotification($salesReport));
+                }
 
                 // 3. Create or Update Financial Report for Income
                 if ($totalRevenue > 0) {

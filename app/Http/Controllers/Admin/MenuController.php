@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Menu;
 use App\Models\StockItem;
+use App\Services\BranchContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -67,7 +68,8 @@ class MenuController extends Controller
         $data['is_active'] = $request->has('is_active') ? (bool) $request->input('is_active') : false;
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('menus', 'public');
+            $branchId = app(BranchContext::class)->getBranchId() ?? 'global';
+            $path = $request->file('image')->store("branches/{$branchId}/menus", 'public');
             $data['image_path'] = 'storage/'.$path;
         }
 
@@ -112,7 +114,8 @@ class MenuController extends Controller
                 Storage::disk('public')->delete($relativeOldPath);
             }
 
-            $path = $request->file('image')->store('menus', 'public');
+            $branchId = app(BranchContext::class)->getBranchId() ?? 'global';
+            $path = $request->file('image')->store("branches/{$branchId}/menus", 'public');
             $data['image_path'] = 'storage/'.$path;
         }
 

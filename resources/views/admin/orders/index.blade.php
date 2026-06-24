@@ -128,22 +128,7 @@
                                         Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                                     </td>
                                     <td class="py-4 px-6">
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full t-size1 font-bold border
-                                            @if($order->status === 'pending') bg-warning/15 text-warning border-warning/30
-                                            @elseif($order->status === 'confirmed') bg-info/15 text-info border-info/30
-                                            @elseif($order->status === 'in_process') bg-primary-soft/40 text-accent border-primary-soft
-                                            @elseif($order->status === 'completed') bg-success/15 text-success border-success/30
-                                            @else bg-danger/15 text-danger border-danger/30
-                                            @endif">
-                                            <span class="w-1.5 h-1.5 rounded-full 
-                                                @if($order->status === 'pending') bg-warning
-                                                @elseif($order->status === 'confirmed') bg-info
-                                                @elseif($order->status === 'in_process') bg-primary
-                                                @elseif($order->status === 'completed') bg-success
-                                                @else bg-danger
-                                                @endif"></span>
-                                            {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                                        </span>
+                                        <x-status-badge :status="$order->status" />
                                     </td>
                                     <td class="py-4 px-6 t-size2 text-text-muted">
                                         {{ $order->created_at->format('H:i') }}

@@ -10,3 +10,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('orders:cancel-stale')->everyMinute();
 Schedule::command('reports:aggregate-daily')->dailyAt('00:00');
+Schedule::command('notifications:clean')->daily();
+Schedule::command('activity-logs:clean')->daily();

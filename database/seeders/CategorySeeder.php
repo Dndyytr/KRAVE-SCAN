@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 
@@ -12,9 +13,13 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::create(['name' => 'Coffee']);
-        Category::create(['name' => 'Non-Coffee']);
-        Category::create(['name' => 'Food']);
-        Category::create(['name' => 'Dessert']);
+        $branches = Branch::all();
+
+        foreach ($branches as $branch) {
+            Category::create(['name' => 'Coffee', 'branch_id' => $branch->id]);
+            Category::create(['name' => 'Non-Coffee', 'branch_id' => $branch->id]);
+            Category::create(['name' => 'Food', 'branch_id' => $branch->id]);
+            Category::create(['name' => 'Dessert', 'branch_id' => $branch->id]);
+        }
     }
 }

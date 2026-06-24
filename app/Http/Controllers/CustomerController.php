@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
 use App\Models\AIImageSearchLog;
 use App\Models\Category;
 use App\Models\Menu;
@@ -206,6 +207,8 @@ class CustomerController extends Controller
             $order->update(['total_amount' => $totalAmount]);
 
             DB::commit();
+
+            event(new OrderCreated($order));
 
             // Save order ID to session for status page link in layout navigation
             session(['latest_order_id' => $order->id]);
