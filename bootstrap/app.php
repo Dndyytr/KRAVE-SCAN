@@ -32,22 +32,22 @@ return Application::configure(basePath: dirname(__DIR__))
         );
 
         // Debug: Bypass view rendering to capture the exact root exception
-        $exceptions->render(function (\Throwable $e) {
+        $exceptions->render(function (Throwable $e) {
             if (app()->runningUnitTests()) {
                 return;
             }
             header('HTTP/1.1 500 Internal Server Error');
             header('Content-Type: text/plain; charset=utf-8');
             echo "ROOT EXCEPTION CAUGHT BY BOOTSTRAP:\n";
-            echo get_class($e) . ": " . $e->getMessage() . "\n";
-            echo "File: " . $e->getFile() . " on line " . $e->getLine() . "\n\n";
-            echo "Stack Trace:\n" . $e->getTraceAsString() . "\n";
+            echo get_class($e).': '.$e->getMessage()."\n";
+            echo 'File: '.$e->getFile().' on line '.$e->getLine()."\n\n";
+            echo "Stack Trace:\n".$e->getTraceAsString()."\n";
             if ($prev = $e->getPrevious()) {
                 echo "\n=========================================\n";
                 echo "PREVIOUS EXCEPTION:\n";
-                echo get_class($prev) . ": " . $prev->getMessage() . "\n";
-                echo "File: " . $prev->getFile() . " on line " . $prev->getLine() . "\n\n";
-                echo "Stack Trace:\n" . $prev->getTraceAsString() . "\n";
+                echo get_class($prev).': '.$prev->getMessage()."\n";
+                echo 'File: '.$prev->getFile().' on line '.$prev->getLine()."\n\n";
+                echo "Stack Trace:\n".$prev->getTraceAsString()."\n";
             }
             exit;
         });

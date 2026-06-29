@@ -15,8 +15,8 @@ use App\Services\ActivityLogger;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
 
             // Ensure compiled view path exists in writable serverless /tmp
             $compiledPath = config('view.compiled');
-            if ($compiledPath && !is_dir($compiledPath)) {
+            if ($compiledPath && ! is_dir($compiledPath)) {
                 @mkdir($compiledPath, 0755, true);
             }
         }
