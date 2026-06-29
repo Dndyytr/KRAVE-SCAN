@@ -15,10 +15,17 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/run-migration', function () {
+    Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+    return "Database migrated and seeded successfully!";
+});
+
 
 // Locale Switcher
 Route::get('/locale/{lang}', function (string $lang) {
@@ -99,4 +106,4 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     Route::get('/order/{order}', [CustomerController::class, 'orderStatus'])->name('customer.order.status');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
