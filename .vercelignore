@@ -1,0 +1,10 @@
+# Exclude local dev and backend dependencies
+/node_modules
+/vendor
+.env
+.git
+.github
+/tests
+
+# Exclude AI python service (will be hosted separately)
+/ai_service

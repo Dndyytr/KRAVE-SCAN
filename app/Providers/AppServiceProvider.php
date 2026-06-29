@@ -61,9 +61,9 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        // testing ngrok
-        // if (config('app.env') === 'local') {
-        //     URL::forceScheme('https');
-        // }
+        // Force HTTPS in production (like Vercel)
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
     }
 }
