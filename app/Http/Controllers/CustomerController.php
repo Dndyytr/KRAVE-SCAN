@@ -257,13 +257,13 @@ class CustomerController extends Controller
     public function identifyMenu(Request $request, $branch_code, AiImageRecognitionService $aiService)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => __('Validasi gagal.'),
+                'message' => __('Validasi gagal: ').$validator->errors()->first('image'),
                 'errors' => $validator->errors(),
             ], 422);
         }
