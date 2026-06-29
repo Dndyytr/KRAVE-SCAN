@@ -42,7 +42,7 @@ return [
             'driver' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')),
             'root' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')) === 's3' ? '' : storage_path('app/public'),
             'url' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')) === 's3'
-                ? env('AWS_URL', str_replace('/s3', '/object/public/'.env('AWS_BUCKET'), env('AWS_ENDPOINT')))
+                ? env('AWS_URL', str_replace(['.storage.supabase.co', '/s3'], ['.supabase.co', '/object/public/'.env('AWS_BUCKET')], env('AWS_ENDPOINT')))
                 : env('PUBLIC_FILESYSTEM_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
             'visibility' => 'public',
             'throw' => false,
