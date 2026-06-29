@@ -40,8 +40,10 @@ return [
 
         'public' => [
             'driver' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')),
-            'root' => storage_path('app/public'),
-            'url' => env('PUBLIC_FILESYSTEM_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
+            'root' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')) === 's3' ? '' : storage_path('app/public'),
+            'url' => env('PUBLIC_FILESYSTEM_DRIVER', env('FILESYSTEM_DISK', 'local')) === 's3'
+                ? env('AWS_URL', str_replace('/s3', '/object/public/'.env('AWS_BUCKET'), env('AWS_ENDPOINT')))
+                : env('PUBLIC_FILESYSTEM_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
