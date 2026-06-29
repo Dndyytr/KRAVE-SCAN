@@ -64,6 +64,12 @@ class AppServiceProvider extends ServiceProvider
         // Force HTTPS in production (like Vercel)
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
+
+            // Ensure compiled view path exists in writable serverless /tmp
+            $compiledPath = config('view.compiled');
+            if ($compiledPath && !is_dir($compiledPath)) {
+                @mkdir($compiledPath, 0755, true);
+            }
         }
     }
 }
