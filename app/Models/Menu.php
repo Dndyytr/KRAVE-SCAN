@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\LogsActivity;
 use App\Traits\ScopedToBranch;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Menu extends Model
 {
@@ -49,5 +50,29 @@ class Menu extends Model
     public function aiImageSearchLogs()
     {
         return $this->hasMany(AIImageSearchLog::class, 'matched_menu_id');
+    }
+
+    /**
+     * Get the menu's image URL dynamically.
+     */
+    public function getImagePathAttribute($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        // If it's already a full URL, return it
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+
+        // If the public disk uses the S3/Supabase driver, return the S3 URL
+        if (config('filesystems.disks.public.driver') === 's3') {
+            $path = preg_replace('/^storage\//', '', $value);
+
+            return Storage::disk('public')->url($path);
+        }
+
+        return $value;
     }
 }

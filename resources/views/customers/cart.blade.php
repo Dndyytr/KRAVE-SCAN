@@ -78,7 +78,7 @@
                     <div class="bg-card border border-border rounded-3xl p-4 flex gap-4 shadow-xs hover:border-primary-soft transition">
                         <div class="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center font-bold text-primary-soft overflow-hidden shrink-0">
                             <template x-if="item.image_path">
-                                <img :src="'/' + item.image_path" :alt="item.name" class="w-full h-full object-cover">
+                                <img :src="item.image_path.startsWith('http') ? item.image_path : '/' + item.image_path" :alt="item.name" class="w-full h-full object-cover">
                             </template>
                             <template x-if="!item.image_path">
                                 <span class="t-size1 uppercase text-center px-1" x-text="item.name.substring(0, 3)"></span>

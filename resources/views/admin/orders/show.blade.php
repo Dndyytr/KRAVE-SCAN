@@ -60,7 +60,7 @@
                         <div class="py-4 flex justify-between items-center first:pt-0 last:pb-0">
                             <div class="flex items-center gap-4">
                                 @if($item->menu && $item->menu->image_path)
-                                    <img src="{{ asset('storage/' . $item->menu->image_path) }}" alt="{{ $item->menu->name }}" class="w-12 h-12 object-cover rounded-xl border border-border">
+                                    <img src="{{ Str::startsWith($item->menu->image_path, ['http://', 'https://']) ? $item->menu->image_path : (Str::startsWith($item->menu->image_path, 'storage/') ? asset($item->menu->image_path) : asset('storage/' . $item->menu->image_path)) }}" alt="{{ $item->menu->name }}" class="w-12 h-12 object-cover rounded-xl border border-border">
                                 @else
                                     <div class="w-12 h-12 bg-surface border border-border rounded-xl flex items-center justify-center font-bold text-accent">
                                         {{ $item->menu ? substr($item->menu->name, 0, 1) : '?' }}
