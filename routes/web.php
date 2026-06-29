@@ -16,6 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +30,56 @@ Route::get('/run-migration', function () {
         return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n".e($output).'</pre>';
     } catch (Throwable $e) {
         return "<pre>Error running migrations:\n".e($e->getMessage())."\n\nStack Trace:\n".e($e->getTraceAsString()).'</pre>';
+    }
+})->withoutMiddleware('web');
+
+Route::get('/test-s3', function () {
+    try {
+        $disk = Storage::disk('public');
+        $driver = config('filesystems.disks.public.driver');
+
+        $testFileName = 'test_connection_'.time().'.txt';
+        $disk->put($testFileName, 'KraveScan connection test');
+
+        $exists = $disk->exists($testFileName);
+        $url = $disk->url($testFileName);
+
+        if ($exists) {
+            $disk->delete($testFileName);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'driver' => $driver,
+            'test_file_written' => $exists,
+            'resolved_url' => $url,
+            'config' => [
+                'driver' => config('filesystems.disks.public.driver'),
+                'bucket' => config('filesystems.disks.public.bucket'),
+                'region' => config('filesystems.disks.public.region'),
+                'endpoint' => config('filesystems.disks.public.endpoint'),
+                'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
+                'key_configured' => ! empty(config('filesystems.disks.public.key')),
+                'secret_configured' => ! empty(config('filesystems.disks.public.secret')),
+            ],
+        ]);
+    } catch (Throwable $e) {
+        return response()->json([
+            'status' => 'failed',
+            'driver' => config('filesystems.disks.public.driver'),
+            'error_message' => $e->getMessage(),
+            'error_class' => get_class($e),
+            'trace' => substr($e->getTraceAsString(), 0, 1000),
+            'config' => [
+                'driver' => config('filesystems.disks.public.driver'),
+                'bucket' => config('filesystems.disks.public.bucket'),
+                'region' => config('filesystems.disks.public.region'),
+                'endpoint' => config('filesystems.disks.public.endpoint'),
+                'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
+                'key_configured' => ! empty(config('filesystems.disks.public.key')),
+                'secret_configured' => ! empty(config('filesystems.disks.public.secret')),
+            ],
+        ], 500);
     }
 })->withoutMiddleware('web');
 
