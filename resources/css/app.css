@@ -172,16 +172,16 @@
         @apply text-sm bp360:text-base bp400:text-lg md:text-xl lg:text-[1.3rem] xl:text-[1.4rem] 2xl:text-2xl;
     }
     .t-size7 {
-        @apply text-lg bp360:text-xl bp400:text-[1.3rem] md:text-[1.4rem] lg:text-2xl xl:text-[1.6rem] 2xl:text-3xl;
+        @apply text-base bp360:text-lg bp400:text-xl md:text-[1.3rem] lg:text-[1.4rem] xl:text-2xl 2xl:text-[1.6rem];
     }
     .t-size8 {
-        @apply text-xl bp360:text-[1.3rem] bp400:text-2xl md:text-[1.6rem] lg:text-[1.7rem] xl:text-3xl 2xl:text-[2rem];
+        @apply text-lg bp360:text-xl bp400:text-[1.3rem] md:text-[1.4rem] lg:text-2xl xl:text-[1.6rem] 2xl:text-3xl;
     }
     .t-size9 {
-        @apply text-[1.3rem] bp360:text-2xl bp400:text-[1.6rem] md:text-[1.7rem] lg:text-3xl xl:text-[2rem] 2xl:text-4xl;
+        @apply text-xl bp360:text-[1.3rem] bp400:text-2xl md:text-[1.6rem] lg:text-[1.7rem] xl:text-3xl 2xl:text-[2rem];
     }
     .t-size10 {
-        @apply text-2xl bp360:text-[1.6rem] bp400:text-[1.7rem] md:text-3xl lg:text-[2rem] xl:text-4xl 2xl:text-[2.5rem];
+        @apply text-[1.3rem] bp360:text-2xl bp400:text-[1.6rem] md:text-[1.7rem] lg:text-3xl xl:text-[2rem] 2xl:text-4xl;
     }
 }
 
@@ -229,7 +229,8 @@
 }
 
 @keyframes pulseSoft {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
@@ -274,7 +275,12 @@
         animation: pulseSoft 2s ease-in-out infinite;
     }
     .anim-shimmer {
-        background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-alt) 50%, var(--color-surface) 75%);
+        background: linear-gradient(
+            90deg,
+            var(--color-surface) 25%,
+            var(--color-surface-alt) 50%,
+            var(--color-surface) 75%
+        );
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
     }
@@ -285,8 +291,13 @@
 
 /* ── Print media query ── */
 @media print {
-    nav, aside, header, footer,
-    .no-print, button, .notification-bell {
+    nav,
+    aside,
+    header,
+    footer,
+    .no-print,
+    button,
+    .notification-bell {
         display: none !important;
     }
     body {

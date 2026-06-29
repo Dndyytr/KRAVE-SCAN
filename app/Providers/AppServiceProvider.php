@@ -16,6 +16,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -59,5 +60,10 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('globalBranches', Branch::all());
             }
         });
+
+        // testing ngrok
+        // if (config('app.env') === 'local') {
+        //     URL::forceScheme('https');
+        // }
     }
 }

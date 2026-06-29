@@ -1,144 +1,104 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="description" content="Bakso Cinta Ciamis — Sistem manajemen pemesanan dan operasional.">
-
-        <title>{{ $title ?? 'Login — Bakso Cinta Ciamis' }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="bg-bg text-text font-sans antialiased min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-
-        {{-- ── Main Login Card ── --}}
-        <div class="max-w-5xl w-full bg-card rounded-3xl border border-border shadow-xl overflow-hidden flex flex-col md:flex-row min-h-[560px] md:min-h-[640px]">
-
-            {{-- ═══════════════════════════════════════════════════════════
-                 LEFT PANEL — Branding & Illustration
-                 ═══════════════════════════════════════════════════════════ --}}
-            <div class="w-full md:w-[45%] relative overflow-hidden flex flex-col items-center justify-center px-8 pt-10 pb-0 md:px-10 md:pt-12 md:pb-0 anim-slide-left"
-                 style="background: linear-gradient(170deg, #fff5f7 0%, #fce7ec 50%, #f8d7e0 100%);">
-
-                {{-- Dot Pattern (top-left) --}}
-                <div class="absolute top-6 left-6 opacity-40">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                        @for ($row = 0; $row < 6; $row++)
-                            @for ($col = 0; $col < 6; $col++)
-                                <circle cx="{{ 6 + $col * 14 }}" cy="{{ 6 + $row * 14 }}" r="3" fill="#e88ca2"/>
-                            @endfor
-                        @endfor
-                    </svg>
-                </div>
-
-                {{-- Decorative Blob (top-right, overlaps right panel) --}}
-                <div class="absolute -top-12 -right-16 w-56 h-56 rounded-full bg-primary-soft/30 blur-3xl"></div>
-
-                {{-- Small heart shapes --}}
-                <div class="absolute top-16 right-10 opacity-50">
-                    <svg width="18" height="16" viewBox="0 0 18 16" fill="#e88ca2">
-                        <path d="M9 14.5l-1.1-1C3.6 9.7 1 7.3 1 4.5 1 2.4 2.7.8 4.8.8c1.2 0 2.4.6 3.2 1.5C8.8 1.4 10 .8 11.2.8 13.3.8 15 2.4 15 4.5c0 2.8-2.6 5.2-6.9 8.9L9 14.5z"/>
-                    </svg>
-                </div>
-                <div class="absolute top-28 right-20 opacity-30">
-                    <svg width="12" height="11" viewBox="0 0 18 16" fill="#d96b87">
-                        <path d="M9 14.5l-1.1-1C3.6 9.7 1 7.3 1 4.5 1 2.4 2.7.8 4.8.8c1.2 0 2.4.6 3.2 1.5C8.8 1.4 10 .8 11.2.8 13.3.8 15 2.4 15 4.5c0 2.8-2.6 5.2-6.9 8.9L9 14.5z"/>
-                    </svg>
-                </div>
-
-                {{-- Logo Icon --}}
-                <div class="relative z-10 mb-2 anim-fade" style="animation-delay: 0.15s;">
-                    <img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="Bakso Cinta Icon" class="w-24 h-24 md:w-28 md:h-28 drop-shadow-lg">
-                </div>
-
-                {{-- Brand Name --}}
-                <div class="relative z-10 text-center mb-1 anim-fade" style="animation-delay: 0.25s;">
-                    <h1 class="font-brand text-primary-strong text-3xl md:text-4xl font-extrabold italic leading-tight tracking-tight">
-                        Bakso Cinta
-                    </h1>
-                    <p class="text-accent text-xs md:text-sm font-semibold tracking-[0.35em] mt-1">— C I A M I S —</p>
-                </div>
-
-                {{-- Welcome Text --}}
-                <div class="relative z-10 text-center mt-4 anim-fade" style="animation-delay: 0.35s;">
-                    <h2 class="t-size7 font-heading font-bold text-accent leading-snug">
-                        {{ __('auth_page.welcome_back') }}
-                    </h2>
-                    <p class="t-size3 text-text-muted mt-2 max-w-[280px] mx-auto leading-relaxed font-medium">
-                        {{ __('auth_page.welcome_tagline') }}
-                    </p>
-                </div>
-
-                {{-- Bakso Image --}}
-                <div class="relative z-10 mt-auto anim-slide-up" style="animation-delay: 0.45s;">
-                    <img src="{{ asset('img/bakso.png') }}" alt="Bakso Cinta" class="w-64 md:w-72 lg:w-80 drop-shadow-xl object-contain max-h-[220px] md:max-h-[260px]">
-                </div>
-
-                {{-- Decorative Lines (bottom-left) --}}
-                <div class="absolute bottom-24 left-6 opacity-40">
-                    <svg width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#e88ca2" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="4" y1="0" x2="20" y2="16"/>
-                        <line x1="4" y1="18" x2="4" y2="35"/>
-                        <line x1="12" y1="30" x2="28" y2="30"/>
-                    </svg>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Bakso Cinta Ciamis — Sistem manajemen pemesanan dan operasional.">
+    <title>{{ $title ?? 'Login — Bakso Cinta Ciamis' }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        [x-cloak] { display: none !important; }
+        .auth-page { background: radial-gradient(circle at 8% 8%, rgba(245,183,197,.18), transparent 28%), radial-gradient(circle at 91% 86%, rgba(245,183,197,.14), transparent 30%), #fff9f8; }
+        .auth-shell { width: min(1352px, calc(100vw - 64px)); height: min(974px, calc(100vh - 112px)); min-height: 720px; box-shadow: 0 18px 55px rgba(115,70,76,.13); }
+        .auth-brand { background: radial-gradient(circle at 112% -10%, rgba(251,207,204,.72) 0 34%, transparent 34.2%), linear-gradient(145deg, #fffaf4 0%, #fffaf5 70%, #fff7f2 100%); }
+        .auth-brand::after { content: ""; position: absolute; z-index: 0; left: -7%; right: -18%; bottom: -14%; height: 45%; border-radius: 50% 50% 0 0 / 24% 24% 0 0; background: linear-gradient(145deg, #f9a7b8, #eb8199); transform: rotate(-4deg); }
+        .auth-form-panel { border-radius: 38px 0 0 38px; box-shadow: -12px 0 30px rgba(128,89,89,.035); }
+        .auth-food { filter: drop-shadow(0 24px 22px rgba(130,77,79,.22)); }
+        .auth-slot { margin-top: 48px; }
+        @keyframes authReveal { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
+        @keyframes authSlideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: none; } }
+        @keyframes authSlideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+        @keyframes authRise { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+        .auth-shell { animation: authReveal .65s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-brand-logo { animation: authSlideRight .65s .18s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-brand-copy { animation: authSlideRight .65s .3s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-food-wrap { animation: authRise .75s .38s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-form-panel { animation: authSlideLeft .65s .12s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-slot > header { animation: authRise .55s .28s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-slot > form > div, .auth-slot > form > button, .auth-slot > form > p { animation: authRise .5s cubic-bezier(.22, 1, .36, 1) both; }
+        .auth-slot > form > :nth-child(2) { animation-delay: .34s; }
+        .auth-slot > form > :nth-child(3) { animation-delay: .4s; }
+        .auth-slot > form > :nth-child(4) { animation-delay: .46s; }
+        .auth-slot > form > :nth-child(5) { animation-delay: .52s; }
+        .auth-slot > form > :nth-child(6) { animation-delay: .58s; }
+        .auth-slot > form > :nth-child(7) { animation-delay: .64s; }
+        .auth-slot > form > :nth-child(8) { animation-delay: .7s; }
+        body > footer { animation: authRise .5s .72s cubic-bezier(.22, 1, .36, 1) both; }
+        @media (prefers-reduced-motion: reduce) {
+            .auth-shell, .auth-brand-logo, .auth-brand-copy, .auth-food-wrap, .auth-form-panel,
+            .auth-slot > header, .auth-slot > form > *, body > footer { animation: none !important; }
+        }
+        @media (min-width: 768px) and (min-height: 900px) { .auth-slot { margin-top: 112px; } }
+        @media (max-width: 1023px) { .auth-shell { width: min(960px, calc(100vw - 32px)); } }
+        @media (max-width: 767px) {
+            .auth-page { justify-content: flex-start; padding: 16px; }
+            .auth-shell { width: 100%; height: auto; min-height: 0; flex-direction: column; border-radius: 24px; }
+            .auth-brand { min-height: 300px; width: 100%; }
+            .auth-brand::after { bottom: -25%; height: 62%; }
+            .auth-brand-copy { display: none; }
+            .auth-brand-logo { margin-top: 18px !important; }
+            .auth-food-wrap { height: 58% !important; }
+            .auth-form-panel { border-radius: 24px 24px 0 0; margin-top: -18px; padding-top: 96px; }
+        }
+        @media (max-width: 399px) { .auth-page { padding: 10px; } .auth-brand { min-height: 260px; } }
+    </style>
+</head>
+<body class="auth-page min-h-screen overflow-x-hidden font-sans text-text antialiased flex flex-col items-center justify-center px-8 py-6">
+    <main class="auth-shell relative flex overflow-hidden rounded-[28px] bg-white">
+        <section class="auth-brand relative flex w-[48.3%] shrink-0 flex-col items-center overflow-hidden px-8 pt-10 md:pt-14">
+            <div class="absolute left-10 top-10 grid grid-cols-5 gap-[17px] opacity-80" aria-hidden="true">
+                @for ($dot = 0; $dot < 20; $dot++)
+                    <span class="block size-[5px] rounded-full bg-[#ef91a6]"></span>
+                @endfor
+            </div>
+            <div class="auth-brand-logo relative z-10 mt-[105px] flex flex-col items-center md:mt-[112px]">
+                <img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="" class="h-[108px] w-[108px] object-contain">
+                <h1 class="-mt-2 font-brand text-[38px] font-extrabold italic leading-none tracking-[-.055em] text-[#e8758d]">Bakso Cinta</h1>
+                <div class="mt-3 flex items-center gap-3 text-[15px] font-semibold tracking-[.48em] text-[#b99576]">
+                    <span class="h-px w-12 bg-[#c6a98c]"></span><span>CIAMIS</span><span class="h-px w-12 bg-[#c6a98c]"></span>
                 </div>
             </div>
-
-            {{-- ═══════════════════════════════════════════════════════════
-                 RIGHT PANEL — Login Form
-                 ═══════════════════════════════════════════════════════════ --}}
-            <div class="w-full md:w-[55%] px-8 py-10 sm:px-12 sm:py-12 flex flex-col justify-center bg-card relative anim-slide-right" style="animation-delay: 0.1s;">
-
-                {{-- Language Selector (top-right) --}}
-                <div class="absolute top-5 right-6 z-20" x-data="{ open: false }">
-                    <button @click="open = !open" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-white hover:bg-surface transition-colors text-xs font-semibold text-text-muted shadow-sm cursor-pointer">
-                        {{-- Globe Icon --}}
-                        <svg class="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM3.6 9h16.8M3.6 15h16.8"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3a15 15 0 014 9 15 15 0 01-4 9 15 15 0 01-4-9 15 15 0 014-9z"/>
-                        </svg>
-                        <span>{{ __('auth_page.language') }}</span>
-                        {{-- Chevron --}}
-                        <svg class="w-3 h-3 transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    {{-- Dropdown --}}
-                    <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-border py-1 z-30">
-                        <a href="{{ route('locale.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2 text-xs font-semibold hover:bg-surface transition-colors {{ app()->getLocale() === 'id' ? 'text-primary-strong' : 'text-text-muted' }}">
-                            🇮🇩 Bahasa Indonesia
-                        </a>
-                        <a href="{{ route('locale.switch', 'en') }}" class="flex items-center gap-2 px-4 py-2 text-xs font-semibold hover:bg-surface transition-colors {{ app()->getLocale() === 'en' ? 'text-primary-strong' : 'text-text-muted' }}">
-                            🇬🇧 English
-                        </a>
-                    </div>
-                </div>
-
-                {{-- Mobile Branding (visible only below md) --}}
-                <div class="mb-6 md:hidden text-center anim-fade">
-                    <img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="Bakso Cinta Icon" class="w-16 h-16 mx-auto mb-2">
-                    <span class="font-brand text-primary-strong text-xl font-extrabold italic">Bakso Cinta</span>
-                    <p class="text-accent text-[0.6rem] font-semibold tracking-[0.3em] mt-0.5">— C I A M I S —</p>
-                </div>
-
-                {{-- Form Content (slot) --}}
-                <div>
-                    {{ $slot }}
+            <div class="auth-brand-copy relative z-10 mt-10 text-center">
+                <h2 class="font-heading text-[25px] font-bold text-[#74382f]">{{ __('auth_page.welcome_back') }}</h2>
+                <p class="mx-auto mt-3 max-w-[390px] text-[16px] font-medium leading-[1.65] text-[#776f6d]">{{ __('auth_page.welcome_tagline') }}</p>
+            </div>
+            <div class="auth-food-wrap absolute bottom-[-2%] left-[-3%] z-10 flex h-[43%] w-[106%] items-end justify-center">
+                <span class="absolute left-[8%] top-[8%] h-9 w-4 rotate-[-28deg] rounded-full bg-[#f49aae]" aria-hidden="true"></span>
+                <span class="absolute left-[5%] top-[17%] h-11 w-6 rotate-[-38deg] rounded-full bg-[#f49aae]" aria-hidden="true"></span>
+                <span class="absolute right-[13%] top-[6%] h-9 w-[6px] rotate-[18deg] rounded-full bg-[#f28ca3]" aria-hidden="true"></span>
+                <span class="absolute right-[9%] top-[11%] h-9 w-[6px] rotate-[43deg] rounded-full bg-[#f28ca3]" aria-hidden="true"></span>
+                <span class="absolute right-[6%] top-[18%] h-7 w-[6px] rotate-[70deg] rounded-full bg-[#f28ca3]" aria-hidden="true"></span>
+                <img src="{{ asset('img/bakso.png') }}" alt="Semangkuk Bakso Cinta" class="auth-food h-full w-full object-contain object-bottom">
+            </div>
+        </section>
+        <section class="auth-form-panel relative z-20 flex min-w-0 flex-1 items-center justify-center bg-white px-8 py-12 md:px-12 lg:px-16">
+            <div class="absolute right-6 top-7 z-30 md:right-10 md:top-11" x-data="{ open: false }">
+                <button type="button" @click="open = !open" :aria-expanded="open" class="flex h-[56px] items-center gap-4 rounded-full border border-[#ddd7d5] bg-white px-7 text-[14px] font-semibold text-[#433b39] hover:border-primary hover:bg-[#fffafa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                    <svg class="size-5 text-[#ed7f97]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3.6 9h16.8M3.6 15h16.8M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21c-2.4-2.5-3.6-5.5-3.6-9S9.6 5.5 12 3Z"></path></svg>
+                    <span>{{ __('auth_page.language') }}</span>
+                    <svg class="size-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"></path></svg>
+                </button>
+                <div x-cloak x-show="open" x-transition.origin.top.right @click.outside="open = false" class="absolute right-0 mt-2 w-52 overflow-hidden rounded-2xl border border-border bg-white p-1.5 shadow-xl">
+                    <a href="{{ route('locale.switch', 'id') }}" class="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-surface {{ app()->getLocale() === 'id' ? 'text-primary-strong' : 'text-text-muted' }}">Bahasa Indonesia</a>
+                    <a href="{{ route('locale.switch', 'en') }}" class="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-surface {{ app()->getLocale() === 'en' ? 'text-primary-strong' : 'text-text-muted' }}">English</a>
                 </div>
             </div>
-
-        </div>
-
-        {{-- Footer Copyright --}}
-        <p class="text-text-muted t-size1 mt-6 font-medium anim-fade" style="animation-delay: 0.6s;">
-            {{ __('auth_page.copyright', ['year' => date('Y')]) }}
-        </p>
-
-    </body>
+            <div class="auth-slot w-full max-w-[484px]">{{ $slot }}</div>
+        </section>
+    </main>
+    <footer class="mt-6 text-center text-[13px] font-medium text-[#777270]">{{ __('auth_page.copyright', ['year' => date('Y')]) }}</footer>
+</body>
 </html>

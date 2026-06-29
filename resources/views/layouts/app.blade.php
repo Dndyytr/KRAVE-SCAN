@@ -76,6 +76,15 @@
                             </svg>
                             Daftar Menu
                         </a>
+                        <a href="{{ route('admin.categories.index') }}" class="group flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold t-size4 transition-all duration-200 relative {{ request()->routeIs('admin.categories*') ? 'bg-primary-soft text-accent shadow-sm' : 'text-text-muted hover:bg-surface hover:text-text hover:translate-x-0.5' }}">
+                            @if(request()->routeIs('admin.categories*'))
+                                <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-strong rounded-r-full"></span>
+                            @endif
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            Kategori Menu
+                        </a>
                         <a href="{{ route('admin.stocks.index') }}" class="group flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold t-size4 transition-all duration-200 relative {{ request()->routeIs('admin.stocks*') ? 'bg-primary-soft text-accent shadow-sm' : 'text-text-muted hover:bg-surface hover:text-text hover:translate-x-0.5' }}">
                             @if(request()->routeIs('admin.stocks*'))
                                 <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-strong rounded-r-full"></span>

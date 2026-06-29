@@ -26,3 +26,8 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .agents/
+
+# Python Virtual Environment & Caches
+/ai_service/venv/
+/ai_service/__pycache__/
+*.pyc

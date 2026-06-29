@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AutomationController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReportController;
@@ -47,6 +48,7 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::post('/switch-branch', [DashboardController::class, 'switchBranch'])->name('admin.switch-branch');
         Route::patch('/menus/{menu}/toggle-active', [MenuController::class, 'toggleActive'])->name('admin.menus.toggle-active');
         Route::resource('menus', MenuController::class)->names('admin.menus');
+        Route::resource('categories', CategoryController::class)->names('admin.categories');
 
         Route::resource('stocks', StockController::class)->names('admin.stocks');
         Route::resource('orders', OrderController::class)->only(['index', 'show'])->names('admin.orders');

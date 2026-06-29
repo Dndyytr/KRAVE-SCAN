@@ -90,7 +90,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
                 </button>
-                <input type="file" x-ref="cameraInput" accept="image/*" class="hidden" @change="uploadImage($event)">
+                <input type="file" x-ref="cameraInput" accept="image/*" capture="environment" class="hidden" @change="uploadImage($event)">
             </div>
         </div>
 

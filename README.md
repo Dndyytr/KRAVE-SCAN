@@ -54,6 +54,9 @@ Untuk mempermudah setup dan operasional di komputer lokal, kami telah menyediaka
 3. 📖 **[Panduan Pengguna / User Guide (docs/USER_GUIDE.md)](docs/USER_GUIDE.md)**  
    *Manual singkat operasional sistem bagi Super Admin (Owner), Admin Cabang, Kasir, dan alur pelanggan.*
 
+4. 🧪 **[Panduan Testing Visual (docs/TESTING_GUIDE.md)](docs/TESTING_GUIDE.md)**  
+   *Panduan step-by-step untuk menguji tampilan dan fungsionalitas aplikasi dari perspektif pengguna awam — termasuk simulasi siklus transaksi penuh dari pelanggan hingga kasir.*
+
 ---
 
 ## 🛠️ Stack Teknologi

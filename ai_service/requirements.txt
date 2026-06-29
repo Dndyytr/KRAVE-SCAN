@@ -3,5 +3,5 @@ uvicorn
 python-multipart
 Pillow
 # Optional for real pre-trained ML classification:
-# torch
-# torchvision
+torch
+torchvision
