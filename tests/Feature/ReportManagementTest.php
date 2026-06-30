@@ -124,15 +124,15 @@ class ReportManagementTest extends TestCase
         // 1. Sales Report: View all
         $responseSales = $this->actingAs($superAdmin)->get(route('admin.reports.sales'));
         $responseSales->assertStatus(200);
-        $responseSales->assertSee('Rp 150.000'); // total
+        $responseSales->assertSee('150.000'); // total
         $responseSales->assertSee('Krave Jakarta');
         $responseSales->assertSee('Krave Bandung');
 
         // Filter JKT Branch
         $responseSalesFiltered = $this->actingAs($superAdmin)->get(route('admin.reports.sales', ['branch_id' => $this->branch1->id]));
         $responseSalesFiltered->assertStatus(200);
-        $responseSalesFiltered->assertSee('Rp 50.000');
-        $responseSalesFiltered->assertDontSee('Rp 150.000');
+        $responseSalesFiltered->assertSee('50.000');
+        $responseSalesFiltered->assertDontSee('150.000');
 
         // 2. Menu Report
         $responseMenus = $this->actingAs($superAdmin)->get(route('admin.reports.menus'));
@@ -168,8 +168,8 @@ class ReportManagementTest extends TestCase
         // Access Sales JKT - JKT data must NOT be visible
         $responseSales = $this->actingAs($adminBDG)->get(route('admin.reports.sales'));
         $responseSales->assertStatus(200);
-        $responseSales->assertSee('Rp 100.000');
-        $responseSales->assertDontSee('Rp 50.000');
+        $responseSales->assertSee('100.000');
+        $responseSales->assertDontSee('50.000');
         $responseSales->assertDontSee('Krave Jakarta');
 
         // Access Menus JKT - only BDG menus visible

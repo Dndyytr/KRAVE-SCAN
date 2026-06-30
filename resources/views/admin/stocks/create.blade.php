@@ -28,7 +28,8 @@
                         <!-- Item Name -->
                         <div class="space-y-1.5">
                             <label for="name" class="font-bold t-size3 text-text-muted">Nama Barang <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Contoh: Gelas Plastik, Susu UHT, Kopi Arabika" required
+                            <input type="text" id="name" name="name" value="{{ old('name') }}"
+                                placeholder="Contoh: Gelas Plastik, Susu UHT, Kopi Arabika" required
                                 class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition @error('name') border-danger @enderror">
                             @error('name')
                                 <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
@@ -48,8 +49,10 @@
 
                             <!-- Minimum Quantity -->
                             <div class="space-y-1.5">
-                                <label for="minimum_quantity" class="font-bold t-size3 text-text-muted">Batas Minimum <span class="text-danger">*</span></label>
-                                <input type="number" id="minimum_quantity" name="minimum_quantity" value="{{ old('minimum_quantity', 5) }}" min="0" required
+                                <label for="minimum_quantity" class="font-bold t-size3 text-text-muted">Batas Minimum
+                                    <span class="text-danger">*</span></label>
+                                <input type="number" id="minimum_quantity" name="minimum_quantity" value="{{ old('minimum_quantity', 5) }}" min="0"
+                                    required
                                     class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition @error('minimum_quantity') border-danger @enderror">
                                 @error('minimum_quantity')
                                     <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
@@ -59,7 +62,8 @@
                             <!-- Unit -->
                             <div class="space-y-1.5">
                                 <label for="unit" class="font-bold t-size3 text-text-muted">Satuan <span class="text-danger">*</span></label>
-                                <input type="text" id="unit" name="unit" value="{{ old('unit', 'pcs') }}" placeholder="Contoh: pcs, pack, kg, liter" required
+                                <input type="text" id="unit" name="unit" value="{{ old('unit', 'pcs') }}" placeholder="Contoh: pcs, pack, kg, liter"
+                                    required
                                     class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition @error('unit') border-danger @enderror">
                                 @error('unit')
                                     <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
@@ -71,10 +75,12 @@
 
                 <!-- Submit Button Block -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.stocks.index') }}" class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
+                    <a href="{{ route('admin.stocks.index') }}"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
                         Batal
                     </a>
-                    <button type="submit" class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
+                    <button type="submit"
+                        class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
                         Simpan Stok
                     </button>
                 </div>

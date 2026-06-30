@@ -58,7 +58,8 @@
 
                             <!-- Confirm Password -->
                             <div class="space-y-1.5">
-                                <label for="password_confirmation" class="font-bold t-size3 text-text-muted">Konfirmasi Kata Sandi <span class="text-danger">*</span></label>
+                                <label for="password_confirmation" class="font-bold t-size3 text-text-muted">Konfirmasi
+                                    Kata Sandi <span class="text-danger">*</span></label>
                                 <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Ketik ulang kata sandi"
                                     class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition">
                             </div>
@@ -68,9 +69,10 @@
                             <!-- Role assignment -->
                             <div class="space-y-1.5">
                                 <label for="role_id" class="font-bold t-size3 text-text-muted">Peran Hak Akses <span class="text-danger">*</span></label>
-                                <select id="role_id" name="role_id" required class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('role_id') border-danger @enderror">
+                                <select id="role_id" name="role_id" required
+                                    class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('role_id') border-danger @enderror">
                                     <option value="">Pilih Peran</option>
-                                    @foreach($roles as $role)
+                                    @foreach ($roles as $role)
                                         <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                                             {{ ucfirst($role->name) }}
                                         </option>
@@ -82,18 +84,21 @@
                             </div>
 
                             <!-- Branch Assignment (Only for Super Admin) -->
-                            @if(auth()->user()->branch_id === null)
+                            @if (auth()->user()->branch_id === null)
                                 <div class="space-y-1.5">
-                                    <label for="branch_id" class="font-bold t-size3 text-text-muted">Cabang Penugasan</label>
-                                    <select id="branch_id" name="branch_id" class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('branch_id') border-danger @enderror">
+                                    <label for="branch_id" class="font-bold t-size3 text-text-muted">Cabang
+                                        Penugasan</label>
+                                    <select id="branch_id" name="branch_id"
+                                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('branch_id') border-danger @enderror">
                                         <option value="">Super Admin (Semua Cabang / Tanpa Cabang)</option>
-                                        @foreach($branches as $branch)
+                                        @foreach ($branches as $branch)
                                             <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
                                                 {{ $branch->name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <span class="text-text-muted t-size1 mt-1 block">Biarkan kosong untuk membuat pengguna dengan akses Super Admin global.</span>
+                                    <span class="text-text-muted t-size1 mt-1 block">Biarkan kosong untuk membuat
+                                        pengguna dengan akses Super Admin global.</span>
                                     @error('branch_id')
                                         <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                                     @enderror
@@ -105,10 +110,12 @@
 
                 <!-- Submit Button Block -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.users.index') }}" class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
+                    <a href="{{ route('admin.users.index') }}"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
                         Batal
                     </a>
-                    <button type="submit" class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
+                    <button type="submit"
+                        class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
                         Simpan Staf
                     </button>
                 </div>

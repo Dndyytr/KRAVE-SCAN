@@ -1,7 +1,7 @@
 @props(['status'])
 
 @php
-    $config = match($status) {
+    $config = match ($status) {
         'pending' => [
             'label' => 'Menunggu',
             'bg' => 'bg-warning-soft',
@@ -89,7 +89,8 @@
     };
 @endphp
 
-<span {{ $attributes->merge(['class' => "{$config['bg']} {$config['text']} inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full t-size2 font-semibold whitespace-nowrap"]) }}>
+<span
+    {{ $attributes->merge(['class' => "{$config['bg']} {$config['text']} inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full t-size2 font-semibold whitespace-nowrap"]) }}>
     <span class="w-1.5 h-1.5 rounded-full {{ $config['dot'] }} {{ $config['animate'] ? 'animate-pulse' : '' }}"></span>
     {{ $config['label'] }}
 </span>

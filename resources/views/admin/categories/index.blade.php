@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="space-y-6 anim-fade" x-data="{ 
-        showDeleteModal: false, 
+    <div class="space-y-6 anim-fade" x-data="{
+        showDeleteModal: false,
         deleteRoute: '',
         confirmDelete(route) {
             this.deleteRoute = route;
@@ -25,7 +25,8 @@
                         Kelola data kategori untuk pengelompokan menu hidangan makanan dan minuman di cabang Anda.
                     </p>
                 </div>
-                <a href="{{ route('admin.categories.create') }}" class="bg-primary hover:bg-primary-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2 shrink-0 cursor-pointer">
+                <a href="{{ route('admin.categories.create') }}"
+                    class="bg-primary hover:bg-primary-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2 shrink-0 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -36,14 +37,17 @@
             <!-- Filters -->
             <form method="GET" action="{{ route('admin.categories.index') }}" class="flex flex-col md:flex-row gap-3 pt-2">
                 <div class="relative flex-grow">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kategori..." class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kategori..."
+                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
                 </div>
                 <div class="flex gap-2 w-full md:w-auto shrink-0">
-                    <button type="submit" class="flex-grow md:flex-grow-0 bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer">
+                    <button type="submit"
+                        class="flex-grow md:flex-grow-0 bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer">
                         Filter
                     </button>
-                    @if(request()->filled('search'))
-                        <a href="{{ route('admin.categories.index') }}" class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-4 py-2.5 rounded-xl transition cursor-pointer text-center flex items-center justify-center">
+                    @if (request()->filled('search'))
+                        <a href="{{ route('admin.categories.index') }}"
+                            class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-4 py-2.5 rounded-xl transition cursor-pointer text-center flex items-center justify-center">
                             Reset
                         </a>
                     @endif
@@ -53,7 +57,7 @@
 
         <!-- Categories Table List -->
         <div class="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
-            @if($categories->isEmpty())
+            @if ($categories->isEmpty())
                 <div class="py-12 text-center text-text-muted t-size4 font-semibold">
                     Tidak ada kategori menu yang ditemukan.
                 </div>
@@ -68,7 +72,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-border">
-                            @foreach($categories as $category)
+                            @foreach ($categories as $category)
                                 <tr class="hover:bg-surface/30 transition">
                                     <!-- Name -->
                                     <td class="py-4 px-6">
@@ -83,10 +87,12 @@
                                     <!-- Actions -->
                                     <td class="py-4 px-6 text-right">
                                         <div class="flex justify-end gap-3">
-                                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="text-accent hover:text-primary font-bold t-size3 transition">
+                                            <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                                class="text-accent hover:text-primary font-bold t-size3 transition">
                                                 Edit
                                             </a>
-                                            <button @click="confirmDelete('{{ route('admin.categories.destroy', $category->id) }}')" class="text-danger hover:text-red-600 font-bold t-size3 transition cursor-pointer">
+                                            <button @click="confirmDelete('{{ route('admin.categories.destroy', $category->id) }}')"
+                                                class="text-danger hover:text-red-600 font-bold t-size3 transition cursor-pointer">
                                                 Hapus
                                             </button>
                                         </div>
@@ -105,24 +111,20 @@
         </div>
 
         <!-- Deletion confirmation modal -->
-        <div x-show="showDeleteModal" 
-             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" 
-             style="display: none;"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+        <div x-show="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" style="display: none;"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
             <div class="bg-card border border-border rounded-2xl max-w-md w-full p-6 shadow-lg space-y-4" @click.away="showDeleteModal = false">
                 <h3 class="font-bold t-size5 text-text font-heading">
                     Konfirmasi Hapus Kategori
                 </h3>
                 <p class="text-text-muted t-size3">
-                    Apakah Anda yakin ingin menghapus kategori ini? Kategori yang masih terhubung dengan menu masakan tidak dapat dihapus sebelum menunya dipindahkan ke kategori lain.
+                    Apakah Anda yakin ingin menghapus kategori ini? Kategori yang masih terhubung dengan menu masakan
+                    tidak dapat dihapus sebelum menunya dipindahkan ke kategori lain.
                 </p>
                 <div class="flex justify-end gap-3 pt-2">
-                    <button @click="showDeleteModal = false" class="bg-surface border border-border text-text-muted hover:text-text px-4 py-2 rounded-xl transition cursor-pointer font-semibold t-size4">
+                    <button @click="showDeleteModal = false"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-4 py-2 rounded-xl transition cursor-pointer font-semibold t-size4">
                         Batal
                     </button>
                     <form :action="deleteRoute" method="POST">

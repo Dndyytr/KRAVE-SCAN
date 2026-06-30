@@ -149,6 +149,10 @@
 }
 
 @layer components {
+    [x-cloak] {
+        display: none !important;
+    }
+
     /* ═══ Custom Responsive Typography Classes ═══ */
     .t-size1 {
         @apply text-[0.6rem] bp360:text-[0.7rem] bp400:text-xs md:text-[0.8rem] lg:text-[0.83rem] xl:text-[0.85rem] 2xl:text-sm;

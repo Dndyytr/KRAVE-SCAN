@@ -15,7 +15,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 anim-fade">
         <!-- Column 1 & 2: Order Details & Items -->
         <div class="lg:col-span-2 space-y-6">
-            
+
             <!-- Order General Card -->
             <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
                 <div class="flex items-center justify-between border-b border-border pb-4">
@@ -56,18 +56,20 @@
                 </h3>
 
                 <div class="divide-y divide-border">
-                    @foreach($order->orderItems as $item)
+                    @foreach ($order->orderItems as $item)
                         <div class="py-4 flex justify-between items-center first:pt-0 last:pb-0">
                             <div class="flex items-center gap-4">
-                                @if($item->menu && $item->menu->image_path)
-                                    <img src="{{ Str::startsWith($item->menu->image_path, ['http://', 'https://']) ? $item->menu->image_path : (Str::startsWith($item->menu->image_path, 'storage/') ? asset($item->menu->image_path) : asset('storage/' . $item->menu->image_path)) }}" alt="{{ $item->menu->name }}" class="w-12 h-12 object-cover rounded-xl border border-border">
+                                @if ($item->menu && $item->menu->image_path)
+                                    <img src="{{ Str::startsWith($item->menu->image_path, ['http://', 'https://']) ? $item->menu->image_path : (Str::startsWith($item->menu->image_path, 'storage/') ? asset($item->menu->image_path) : asset('storage/' . $item->menu->image_path)) }}"
+                                        alt="{{ $item->menu->name }}" class="w-12 h-12 object-cover rounded-xl border border-border">
                                 @else
                                     <div class="w-12 h-12 bg-surface border border-border rounded-xl flex items-center justify-center font-bold text-accent">
                                         {{ $item->menu ? substr($item->menu->name, 0, 1) : '?' }}
                                     </div>
                                 @endif
                                 <div>
-                                    <h4 class="font-bold t-size3 text-text">{{ $item->menu ? $item->menu->name : __('Menu Terhapus') }}</h4>
+                                    <h4 class="font-bold t-size3 text-text">
+                                        {{ $item->menu ? $item->menu->name : __('Menu Terhapus') }}</h4>
                                     <span class="text-text-muted t-size2">
                                         {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </span>
@@ -97,25 +99,26 @@
                 <div class="relative pl-6 border-l-2 border-primary-soft/50 space-y-6">
                     @forelse($order->histories as $history)
                         <div class="relative">
-                            <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
-                                @if($history->status === 'pending') bg-warning
+                            <span
+                                class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
+                                @if ($history->status === 'pending') bg-warning
                                 @elseif($history->status === 'confirmed') bg-info
                                 @elseif($history->status === 'in_process') bg-primary
                                 @elseif($history->status === 'completed') bg-success
-                                @else bg-danger
-                                @endif"></span>
-                            
+                                @else bg-danger @endif"></span>
+
                             <div>
                                 <div class="flex items-center gap-2">
                                     <span class="font-extrabold text-text t-size3">
                                         {{ ucfirst(str_replace('_', ' ', $history->status)) }}
                                     </span>
                                     <span class="text-text-muted text-[11px]">
-                                        {{ $history->created_at->format('H:i') }} ({{ $history->created_at->diffForHumans() }})
+                                        {{ $history->created_at->format('H:i') }}
+                                        ({{ $history->created_at->diffForHumans() }})
                                     </span>
                                 </div>
                                 <p class="text-text-muted t-size2 mt-0.5">{{ $history->notes }}</p>
-                                @if($history->user)
+                                @if ($history->user)
                                     <span class="text-[10px] text-text-muted/60 mt-1 block">
                                         👤 {{ __('Diperbarui oleh') }}: {{ $history->user->name }}
                                     </span>
@@ -157,7 +160,7 @@
                         </div>
                     </div>
 
-                    @foreach($payment->receipts as $receipt)
+                    @foreach ($payment->receipts as $receipt)
                         <div class="bg-card border border-border rounded-xl p-4 text-center space-y-2">
                             <span class="text-text-muted t-size2 block">{{ __('Nomor Struk') }}</span>
                             <code class="font-mono font-bold text-text block t-size3 bg-surface border border-border py-1 px-3 rounded-lg select-all">

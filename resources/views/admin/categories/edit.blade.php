@@ -28,7 +28,8 @@
                     <!-- Category Name -->
                     <div class="space-y-1.5">
                         <label for="name" class="font-bold t-size3 text-text-muted">Nama Kategori <span class="text-danger">*</span></label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" placeholder="Contoh: Minuman Dingin" required autofocus
+                        <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" placeholder="Contoh: Minuman Dingin"
+                            required autofocus
                             class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition @error('name') border-danger @enderror">
                         @error('name')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
@@ -38,10 +39,12 @@
 
                 <!-- Submit Button Block -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.categories.index') }}" class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
+                    <a href="{{ route('admin.categories.index') }}"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
                         Batal
                     </a>
-                    <button type="submit" class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
+                    <button type="submit"
+                        class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
                         Simpan Perubahan
                     </button>
                 </div>

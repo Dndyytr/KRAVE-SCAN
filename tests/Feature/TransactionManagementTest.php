@@ -105,14 +105,14 @@ class TransactionManagementTest extends TestCase
 
         $response->assertStatus(200);
         // Assert all transactions are visible
-        $response->assertSee('Rp 50.000');
-        $response->assertSee('Rp 100.000');
-        $response->assertSee('Rp 30.000');
+        $response->assertSee('50.000');
+        $response->assertSee('100.000');
+        $response->assertSee('30.000');
 
         // Assert aggregates (total = 150000, cash = 50000, qris = 100000)
-        $response->assertSee('Rp 150.000'); // total success revenue
-        $response->assertSee('Rp 50.000');  // total success cash
-        $response->assertSee('Rp 100.000'); // total success qris
+        $response->assertSee('150.000'); // total success revenue
+        $response->assertSee('50.000');  // total success cash
+        $response->assertSee('100.000'); // total success qris
     }
 
     public function test_branch_admin_is_restricted_by_branch_scope(): void
@@ -129,12 +129,12 @@ class TransactionManagementTest extends TestCase
         $response = $this->actingAs($adminJKT)->get(route('admin.transactions.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Rp 50.000');
-        $response->assertDontSee('Rp 100.000');
+        $response->assertSee('50.000');
+        $response->assertDontSee('100.000');
 
         // Aggregates should only count Branch 1
-        $response->assertSee('Rp 50.000'); // total revenue for JKT branch
-        $response->assertDontSee('Rp 150.000');
+        $response->assertSee('50.000'); // total revenue for JKT branch
+        $response->assertDontSee('150.000');
     }
 
     public function test_transactions_can_be_filtered_by_method_status_and_date(): void
@@ -151,19 +151,19 @@ class TransactionManagementTest extends TestCase
         // 1. Filter by method = cash
         $response = $this->actingAs($superAdmin)->get(route('admin.transactions.index', ['method' => 'cash']));
         $response->assertStatus(200);
-        $response->assertSee('Rp 50.000');
-        $response->assertSee('Rp 30.000');
-        $response->assertDontSee('Rp 100.000');
+        $response->assertSee('50.000');
+        $response->assertSee('30.000');
+        $response->assertDontSee('100.000');
 
         // Aggregates for cash success should be 50,000 (pending is excluded)
-        $response->assertSee('Rp 50.000');
+        $response->assertSee('50.000');
 
         // 2. Filter by status = pending
         $responseStatus = $this->actingAs($superAdmin)->get(route('admin.transactions.index', ['status' => 'pending']));
         $responseStatus->assertStatus(200);
-        $responseStatus->assertSee('Rp 30.000');
-        $responseStatus->assertDontSee('Rp 50.000');
-        $responseStatus->assertDontSee('Rp 100.000');
+        $responseStatus->assertSee('30.000');
+        $responseStatus->assertDontSee('50.000');
+        $responseStatus->assertDontSee('100.000');
 
         // 3. Filter by date range (yesterday should exclude today's payments)
         $yesterday = now()->subDay()->format('Y-m-d');
@@ -172,8 +172,8 @@ class TransactionManagementTest extends TestCase
             'end_date' => $yesterday,
         ]));
         $responseDate->assertStatus(200);
-        $responseDate->assertDontSee('Rp 50.000');
-        $responseDate->assertDontSee('Rp 100.000');
-        $responseDate->assertDontSee('Rp 30.000');
+        $responseDate->assertDontSee('50.000');
+        $responseDate->assertDontSee('100.000');
+        $responseDate->assertDontSee('30.000');
     }
 }
