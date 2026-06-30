@@ -19,6 +19,16 @@ class ActivityLogController extends Controller
             ->with(['user', 'branch'])
             ->latest();
 
+        if (auth()->user()->branch_id !== null) {
+            $query->where(function ($q) {
+                $q->whereHas('user.role', function ($roleQuery) {
+                    $roleQuery->whereIn('name', ['cashier', 'kitchen']);
+                })
+                    ->orWhere('user_id', auth()->id())
+                    ->orWhereNull('user_id');
+            });
+        }
+
         // Apply filters
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->input('user_id'));
@@ -47,7 +57,10 @@ class ActivityLogController extends Controller
         // If Branch Admin, only get users belonging to their branch.
         $usersQuery = User::query();
         if (auth()->user()->branch_id !== null) {
-            $usersQuery->where('branch_id', auth()->user()->branch_id);
+            $usersQuery->where('branch_id', auth()->user()->branch_id)
+                ->whereHas('role', function ($q) {
+                    $q->whereIn('name', ['cashier', 'kitchen']);
+                });
         }
         $users = $usersQuery->orderBy('name')->get();
 

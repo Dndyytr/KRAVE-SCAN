@@ -337,27 +337,7 @@
                     <p class="text-text-muted t-size2 mt-0.5">{{ __('Perbarui progres pengerjaan pesanan.') }}</p>
                 </div>
 
-                @if ($order->status === 'confirmed')
-                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="in_process">
-                        <button type="submit"
-                            class="w-full bg-accent hover:bg-accent/90 text-white font-extrabold py-3.5 rounded-xl t-size3 transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
-                            ⚙️ {{ __('Mulai Proses Masak') }}
-                        </button>
-                    </form>
-                @elseif($order->status === 'in_process')
-                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="completed">
-                        <button type="submit"
-                            class="w-full bg-success hover:bg-success-strong text-white font-extrabold py-3.5 rounded-xl t-size3 transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
-                            ✅ {{ __('Selesaikan & Sajikan') }}
-                        </button>
-                    </form>
-                @endif
+
 
                 @if (in_array($order->status, ['pending', 'confirmed', 'in_process']))
                     <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST"

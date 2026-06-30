@@ -1,0 +1,170 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-bold t-size7 font-heading text-text">
+            {{ __('Dapur - Antrean Masak') }}
+        </h2>
+    </x-slot>
+
+    <div x-data="{
+        init() {
+            // Auto refresh order list every 10 seconds for kitchen view
+            setInterval(() => {
+                window.location.reload();
+            }, 10000);
+        }
+    }" class="space-y-6">
+
+        <!-- Date Filter Form -->
+        <form method="GET" action="{{ route('kitchen.orders') }}" class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
+            @if ($currentStatus)
+                <input type="hidden" name="status" value="{{ $currentStatus }}">
+            @endif
+            <div class="space-y-1">
+                <label for="start_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Mulai') }}</label>
+                <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
+                    class="bg-surface border border-border rounded-xl px-4 py-2 t-size3 text-text focus:outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1">
+                <label for="end_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Selesai') }}</label>
+                <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
+                    class="bg-surface border border-border rounded-xl px-4 py-2 t-size3 text-text focus:outline-none focus:border-primary">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit"
+                    class="bg-primary hover:bg-primary-strong text-white font-extrabold px-5 py-2 rounded-xl t-size3 transition cursor-pointer shadow-xs">
+                    {{ __('Filter') }}
+                </button>
+                @if ($startDate || $endDate)
+                    <a href="{{ route('kitchen.orders', array_filter(['status' => $currentStatus])) }}"
+                        class="bg-surface hover:bg-surface-alt border border-border text-text font-bold px-4 py-2 rounded-xl t-size3 transition flex items-center justify-center">
+                        {{ __('Reset') }}
+                    </a>
+                @endif
+            </div>
+        </form>
+
+        <!-- Status Filter Bar -->
+        <div class="flex flex-wrap gap-2 items-center justify-between bg-card border border-border rounded-2xl p-4 shadow-xs">
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('kitchen.orders', array_filter(['start_date' => $startDate, 'end_date' => $endDate])) }}"
+                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ is_null($currentStatus) ? 'bg-primary text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
+                    {{ __('Semua Antrean') }}
+                </a>
+                <a href="{{ route('kitchen.orders', array_filter(['status' => 'confirmed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
+                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'confirmed' ? 'bg-info text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
+                    {{ __('Perlu Dimasak (Confirmed)') }}
+                </a>
+                <a href="{{ route('kitchen.orders', array_filter(['status' => 'in_process', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
+                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'in_process' ? 'bg-accent text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
+                    {{ __('Sedang Dimasak (In Process)') }}
+                </a>
+                <a href="{{ route('kitchen.orders', array_filter(['status' => 'completed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
+                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'completed' ? 'bg-success text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
+                    {{ __('Selesai Disajikan') }}
+                </a>
+            </div>
+
+            <div class="text-text-muted t-size2 font-semibold">
+                {{ __('Auto-refresh aktif (10s)') }}
+            </div>
+        </div>
+
+        <!-- Orders Table / List -->
+        <div class="bg-card border border-border rounded-2xl overflow-hidden shadow-xs">
+            @if ($orders->isEmpty())
+                <div class="p-12 text-center space-y-3">
+                    <div class="w-16 h-16 bg-surface-alt text-text-muted/60 rounded-full flex items-center justify-center mx-auto">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="font-bold t-size4 text-text">{{ __('Antrean Bersih!') }}</h3>
+                        <p class="text-text-muted t-size2 max-w-sm mx-auto">
+                            {{ __('Belum ada hidangan yang perlu dipersiapkan untuk saat ini.') }}
+                        </p>
+                    </div>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface-alt border-b border-border text-text-muted t-size2 font-bold uppercase tracking-wider">
+                                <th class="py-4 px-6">{{ __('Pesanan') }}</th>
+                                <th class="py-4 px-6">{{ __('Meja') }}</th>
+                                <th class="py-4 px-6">{{ __('Hidangan & Catatan') }}</th>
+                                <th class="py-4 px-6">{{ __('Status') }}</th>
+                                <th class="py-4 px-6">{{ __('Waktu Masuk') }}</th>
+                                <th class="py-4 px-6 text-right">{{ __('Aksi') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            @foreach ($orders as $order)
+                                <tr class="hover:bg-surface/50 transition">
+                                    <!-- Order ID -->
+                                    <td class="py-4 px-6 font-bold text-text t-size3">
+                                        #{{ $order->id }}
+                                    </td>
+
+                                    <!-- Table Number -->
+                                    <td class="py-4 px-6">
+                                        <span class="bg-primary-soft/50 text-accent font-extrabold px-3 py-1 rounded-full t-size2 border border-primary-soft">
+                                            {{ __('Meja') }} {{ $order->table_number }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Order Items & Notes -->
+                                    <td class="py-4 px-6 max-w-xs t-size3 text-text font-semibold">
+                                        <div class="space-y-1">
+                                            @foreach ($order->orderItems as $item)
+                                                <div class="flex flex-col">
+                                                    <span class="text-text font-bold">🍳 {{ $item->menu->name }} <span
+                                                            class="text-accent font-extrabold">({{ $item->quantity }}x)</span></span>
+                                                    @if ($item->note)
+                                                        <span
+                                                            class="text-danger t-size2 italic pl-5 font-semibold bg-danger-soft/20 py-0.5 px-2 rounded-md inline-block">
+                                                            Catatan: "{{ $item->note }}"
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="py-4 px-6">
+                                        <x-status-badge :status="$order->status" />
+                                    </td>
+
+                                    <!-- Order Time -->
+                                    <td class="py-4 px-6 t-size2 text-text-muted">
+                                        {{ $order->created_at->format('H:i') }}
+                                        <span class="block text-[10px] text-text-muted/60">{{ $order->created_at->format('d M Y') }}</span>
+                                    </td>
+
+                                    <!-- Action -->
+                                    <td class="py-4 px-6 text-right">
+                                        <a href="{{ route('kitchen.orders.show', $order->id) }}"
+                                            class="inline-flex items-center bg-primary hover:bg-primary-strong text-white font-extrabold px-4 py-2 rounded-xl t-size2 transition shadow-xs cursor-pointer">
+                                            {{ __('Detail & Proses') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if ($orders->hasPages())
+                    <div class="bg-surface-alt border-t border-border px-6 py-4">
+                        {{ $orders->links() }}
+                    </div>
+                @endif
+            @endif
+        </div>
+
+    </div>
+</x-app-layout>

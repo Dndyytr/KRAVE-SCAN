@@ -105,15 +105,15 @@ class NotificationTest extends TestCase
 
         event(new OrderCreated($order));
 
-        // Super Admin, Branch A Admin, and Branch A Cashier should receive notification
+        // Branch A Admin and Branch A Cashier should receive notification
         Notification::assertSentTo(
-            [$this->superAdmin, $this->branchAAdmin, $this->branchACashier],
+            [$this->branchAAdmin, $this->branchACashier],
             OrderCreatedNotification::class
         );
 
-        // Branch B Admin should NOT receive notification
+        // Super Admin & Branch B Admin should NOT receive notification
         Notification::assertNotSentTo(
-            [$this->branchBAdmin],
+            [$this->superAdmin, $this->branchBAdmin],
             OrderCreatedNotification::class
         );
     }

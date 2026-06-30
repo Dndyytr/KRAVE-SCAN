@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
@@ -22,12 +23,12 @@ Route::redirect('/', '/login');
 
 Route::get('/run-migration', function () {
     try {
-        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        Artisan::call('migrate', ['--force' => true]);
         $output = Artisan::output();
 
-        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n".e($output).'</pre>';
+        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n" . e($output) . '</pre>';
     } catch (Throwable $e) {
-        return "<pre>Error running migrations:\n".e($e->getMessage())."\n\nStack Trace:\n".e($e->getTraceAsString()).'</pre>';
+        return "<pre>Error running migrations:\n" . e($e->getMessage()) . "\n\nStack Trace:\n" . e($e->getTraceAsString()) . '</pre>';
     }
 })->withoutMiddleware('web');
 
@@ -36,7 +37,7 @@ Route::get('/test-s3', function () {
         $disk = Storage::disk('public');
         $driver = config('filesystems.disks.public.driver');
 
-        $testFileName = 'test_connection_'.time().'.txt';
+        $testFileName = 'test_connection_' . time() . '.txt';
         $disk->put($testFileName, 'KraveScan connection test');
 
         $exists = $disk->exists($testFileName);
@@ -57,8 +58,8 @@ Route::get('/test-s3', function () {
                 'region' => config('filesystems.disks.public.region'),
                 'endpoint' => config('filesystems.disks.public.endpoint'),
                 'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
-                'key_configured' => ! empty(config('filesystems.disks.public.key')),
-                'secret_configured' => ! empty(config('filesystems.disks.public.secret')),
+                'key_configured' => !empty(config('filesystems.disks.public.key')),
+                'secret_configured' => !empty(config('filesystems.disks.public.secret')),
             ],
         ]);
     } catch (Throwable $e) {
@@ -74,8 +75,8 @@ Route::get('/test-s3', function () {
                 'region' => config('filesystems.disks.public.region'),
                 'endpoint' => config('filesystems.disks.public.endpoint'),
                 'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
-                'key_configured' => ! empty(config('filesystems.disks.public.key')),
-                'secret_configured' => ! empty(config('filesystems.disks.public.secret')),
+                'key_configured' => !empty(config('filesystems.disks.public.key')),
+                'secret_configured' => !empty(config('filesystems.disks.public.secret')),
             ],
         ], 500);
     }
@@ -141,6 +142,13 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::post('/orders/{order}/payment', [CashierController::class, 'processPayment'])->name('cashier.orders.payment');
         Route::get('/receipts/{receipt}', [CashierController::class, 'showReceipt'])->name('cashier.receipts.show');
     });
+
+    // Kitchen Group
+    Route::prefix('kitchen')->middleware('role:kitchen')->group(function () {
+        Route::get('/orders', [KitchenController::class, 'orders'])->name('kitchen.orders');
+        Route::get('/orders/{order}', [KitchenController::class, 'showOrder'])->name('kitchen.orders.show');
+        Route::patch('/orders/{order}/status', [KitchenController::class, 'updateStatus'])->name('kitchen.orders.update-status');
+    });
 });
 
 // Customers Group (Tanpa Autentikasi / Sesi Meja)
@@ -160,4 +168,4 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     Route::get('/order/{order}', [CustomerController::class, 'orderStatus'])->name('customer.order.status');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

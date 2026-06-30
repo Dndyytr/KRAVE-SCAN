@@ -17,12 +17,9 @@ class SendOrderCreatedNotifications implements ShouldQueue
     {
         $order = $event->order;
 
-        // Find all staff (admin & cashier) in the same branch, plus Super Admins (branch_id = null)
+        // Find all staff in the same branch
         $users = User::withoutGlobalScopes()
-            ->where(function ($query) use ($order) {
-                $query->where('branch_id', $order->branch_id)
-                    ->orWhereNull('branch_id');
-            })
+            ->where('branch_id', $order->branch_id)
             ->where('is_active', true)
             ->get();
 

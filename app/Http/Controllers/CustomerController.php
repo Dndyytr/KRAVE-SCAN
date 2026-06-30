@@ -26,6 +26,21 @@ class CustomerController extends Controller
 
         $branch = app(BranchContext::class)->getBranch();
 
+        // Restore active order tracking from DB if present for this table/branch
+        if ($branch) {
+            $activeOrder = Order::where('branch_id', $branch->id)
+                ->where('table_number', $table_number)
+                ->whereIn('status', ['pending', 'confirmed', 'in_process'])
+                ->latest()
+                ->first();
+
+            if ($activeOrder) {
+                session(['latest_order_id' => $activeOrder->id]);
+            } else {
+                session()->forget('latest_order_id');
+            }
+        }
+
         // Fetch active categories and active menus
         $categories = Category::all();
         $menus = Menu::where('is_active', true)->with('category')->get();
@@ -52,24 +67,31 @@ class CustomerController extends Controller
         $request->validate([
             'menu_id' => 'required|exists:menus,id',
             'quantity' => 'nullable|integer|min:1',
+            'note' => 'nullable|string|max:255',
         ]);
 
         $menuId = $request->input('menu_id');
         $quantity = $request->input('quantity', 1);
+        $note = $request->input('note', '');
 
         $menu = Menu::where('is_active', true)->findOrFail($menuId);
 
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$menuId])) {
-            $cart[$menuId]['quantity'] += $quantity;
+        // Unique cart key based on menu ID and note hash
+        $cartKey = $menuId.($note !== '' ? '_'.md5($note) : '');
+
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity'] += $quantity;
         } else {
-            $cart[$menuId] = [
+            $cart[$cartKey] = [
+                'cart_key' => $cartKey,
                 'id' => $menu->id,
                 'name' => $menu->name,
                 'price' => (float) $menu->price,
                 'quantity' => $quantity,
                 'image_path' => $menu->image_path,
+                'note' => $note,
             ];
         }
 
@@ -115,22 +137,23 @@ class CustomerController extends Controller
     public function updateCart(Request $request, $branch_code)
     {
         $request->validate([
-            'menu_id' => 'required|integer',
+            'cart_key' => 'required_without:menu_id|string',
+            'menu_id' => 'required_without:cart_key|integer',
             'quantity' => 'required|integer|min:0',
         ]);
 
-        $menuId = $request->input('menu_id');
+        $cartKey = $request->input('cart_key', $request->input('menu_id'));
         $quantity = $request->input('quantity');
 
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$menuId])) {
+        if (isset($cart[$cartKey])) {
             if ($quantity <= 0) {
-                unset($cart[$menuId]);
+                unset($cart[$cartKey]);
                 $itemSubtotal = 0;
             } else {
-                $cart[$menuId]['quantity'] = $quantity;
-                $itemSubtotal = $cart[$menuId]['price'] * $quantity;
+                $cart[$cartKey]['quantity'] = $quantity;
+                $itemSubtotal = $cart[$cartKey]['price'] * $quantity;
             }
             session()->put('cart', $cart);
         } else {
@@ -201,6 +224,7 @@ class CustomerController extends Controller
                     'quantity' => $item['quantity'],
                     'price' => $price,
                     'subtotal' => $subtotal,
+                    'note' => $item['note'] ?? null,
                 ]);
             }
 

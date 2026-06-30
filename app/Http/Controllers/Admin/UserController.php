@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
 class UserController extends Controller
@@ -18,6 +19,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::query()->with(['role', 'branch']);
+
+        // For Branch Admin, only show cashier and kitchen roles
+        if (auth()->user()->branch_id !== null) {
+            $query->whereHas('role', function ($q) {
+                $q->whereIn('name', ['cashier', 'kitchen']);
+            });
+        }
 
         // Apply search filter (name or email)
         if ($request->filled('search')) {
@@ -50,7 +58,9 @@ class UserController extends Controller
 
         $users = $query->orderBy('name')->paginate(10)->withQueryString();
         $branches = auth()->user()->branch_id === null ? Branch::orderBy('name')->get() : collect();
-        $roles = Role::orderBy('name')->get();
+        $roles = auth()->user()->branch_id === null
+            ? Role::orderBy('name')->get()
+            : Role::whereIn('name', ['cashier', 'kitchen'])->orderBy('name')->get();
 
         return view('admin.users.index', compact('users', 'branches', 'roles'));
     }
@@ -60,7 +70,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::orderBy('name')->get();
+        $roles = auth()->user()->branch_id === null
+            ? Role::orderBy('name')->get()
+            : Role::whereIn('name', ['cashier', 'kitchen'])->orderBy('name')->get();
         $branches = auth()->user()->branch_id === null ? Branch::orderBy('name')->get() : collect();
 
         return view('admin.users.create', compact('roles', 'branches'));
@@ -75,7 +87,12 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role_id' => 'required|exists:roles,id',
+            'role_id' => [
+                'required',
+                auth()->user()->branch_id === null
+                    ? 'exists:roles,id'
+                    : Rule::exists('roles', 'id')->whereIn('name', ['cashier', 'kitchen']),
+            ],
         ];
 
         // Only Super Admin can select a branch
@@ -104,11 +121,15 @@ class UserController extends Controller
     public function edit(User $user)
     {
         // Safety check (in case global scope is bypassed or not working)
-        if (auth()->user()->branch_id !== null && $user->branch_id !== auth()->user()->branch_id) {
-            abort(403, 'Anda tidak memiliki akses ke staf cabang lain.');
+        if (auth()->user()->branch_id !== null) {
+            if ($user->branch_id !== auth()->user()->branch_id || ! in_array($user->role?->name, ['cashier', 'kitchen'])) {
+                abort(403, 'Anda tidak memiliki akses ke staf ini.');
+            }
         }
 
-        $roles = Role::orderBy('name')->get();
+        $roles = auth()->user()->branch_id === null
+            ? Role::orderBy('name')->get()
+            : Role::whereIn('name', ['cashier', 'kitchen'])->orderBy('name')->get();
         $branches = auth()->user()->branch_id === null ? Branch::orderBy('name')->get() : collect();
 
         return view('admin.users.edit', compact('user', 'roles', 'branches'));
@@ -120,8 +141,10 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         // Safety check
-        if (auth()->user()->branch_id !== null && $user->branch_id !== auth()->user()->branch_id) {
-            abort(403, 'Anda tidak memiliki akses ke staf cabang lain.');
+        if (auth()->user()->branch_id !== null) {
+            if ($user->branch_id !== auth()->user()->branch_id || ! in_array($user->role?->name, ['cashier', 'kitchen'])) {
+                abort(403, 'Anda tidak memiliki akses ke staf ini.');
+            }
         }
 
         $rules = [
@@ -134,7 +157,12 @@ class UserController extends Controller
         $isEditingSelf = $user->id === auth()->id();
 
         if (! $isEditingSelf) {
-            $rules['role_id'] = 'required|exists:roles,id';
+            $rules['role_id'] = [
+                'required',
+                auth()->user()->branch_id === null
+                    ? 'exists:roles,id'
+                    : Rule::exists('roles', 'id')->whereIn('name', ['cashier', 'kitchen']),
+            ];
             if (auth()->user()->branch_id === null) {
                 $rules['branch_id'] = 'nullable|exists:branches,id';
             }
@@ -163,14 +191,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Safety check
-        if (auth()->user()->branch_id !== null && $user->branch_id !== auth()->user()->branch_id) {
-            abort(403, 'Anda tidak memiliki akses ke staf cabang lain.');
-        }
-
         // Prevent self deletion
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')->with('error', __('Anda tidak dapat menghapus akun Anda sendiri.'));
+        }
+
+        // Safety check
+        if (auth()->user()->branch_id !== null) {
+            if ($user->branch_id !== auth()->user()->branch_id || ! in_array($user->role?->name, ['cashier', 'kitchen'])) {
+                abort(403, 'Anda tidak memiliki akses ke staf ini.');
+            }
         }
 
         $user->delete();
@@ -183,14 +213,16 @@ class UserController extends Controller
      */
     public function toggleActive(User $user)
     {
-        // Safety check
-        if (auth()->user()->branch_id !== null && $user->branch_id !== auth()->user()->branch_id) {
-            abort(403, 'Anda tidak memiliki akses ke staf cabang lain.');
-        }
-
         // Prevent self suspend
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')->with('error', __('Anda tidak dapat menonaktifkan akun Anda sendiri.'));
+        }
+
+        // Safety check
+        if (auth()->user()->branch_id !== null) {
+            if ($user->branch_id !== auth()->user()->branch_id || ! in_array($user->role?->name, ['cashier', 'kitchen'])) {
+                abort(403, 'Anda tidak memiliki akses ke staf ini.');
+            }
         }
 
         $user->is_active = ! $user->is_active;

@@ -118,7 +118,9 @@
                             <tr class="bg-surface-alt border-b border-border text-text-muted t-size2 font-bold uppercase tracking-wider">
                                 <th class="py-3 px-6">Waktu</th>
                                 <th class="py-3 px-6">Pengguna</th>
-                                <th class="py-3 px-6">Cabang</th>
+                                @if (auth()->user()->branch_id === null)
+                                    <th class="py-3 px-6">Cabang</th>
+                                @endif
                                 <th class="py-3 px-6">Aksi</th>
                                 <th class="py-3 px-6">Target Entitas</th>
                                 <th class="py-3 px-6">IP Address</th>
@@ -142,10 +144,12 @@
                                             <span class="text-text-muted italic">Sistem (Otomatis)</span>
                                         @endif
                                     </td>
-                                    <!-- Branch -->
-                                    <td class="py-4 px-6 text-text t-size3">
-                                        {{ $log->branch?->name ?: 'Super Admin (Global)' }}
-                                    </td>
+                                    @if (auth()->user()->branch_id === null)
+                                        <!-- Branch -->
+                                        <td class="py-4 px-6 text-text t-size3">
+                                            {{ $log->branch?->name ?: 'Super Admin (Global)' }}
+                                        </td>
+                                    @endif
                                     <!-- Action badge -->
                                     <td class="py-4 px-6 whitespace-nowrap">
                                         @if ($log->action === 'created')

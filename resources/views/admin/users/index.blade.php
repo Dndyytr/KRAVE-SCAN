@@ -132,10 +132,18 @@
                                             <span class="bg-accent/10 text-accent font-bold px-2.5 py-0.5 rounded-full t-size1 border border-accent/25">
                                                 Admin
                                             </span>
-                                        @else
+                                        @elseif ($user->role?->name === 'kitchen')
+                                            <span class="bg-warning/15 text-warning font-bold px-2.5 py-0.5 rounded-full t-size1 border border-warning/25">
+                                                Dapur
+                                            </span>
+                                        @elseif ($user->role?->name === 'cashier')
                                             <span
                                                 class="bg-primary-soft/40 text-primary-strong font-bold px-2.5 py-0.5 rounded-full t-size1 border border-primary-soft/60">
                                                 Kasir
+                                            </span>
+                                        @else
+                                            <span class="bg-surface border border-border text-text-muted font-bold px-2.5 py-0.5 rounded-full t-size1">
+                                                {{ ucfirst($user->role?->name ?? 'Staf') }}
                                             </span>
                                         @endif
                                     </td>

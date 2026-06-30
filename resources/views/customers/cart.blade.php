@@ -2,23 +2,23 @@
     <div x-data="{
         cart: {{ json_encode($cart) }},
         cartTotal: {{ (float) $cartTotal }},
-        updateQty(menuId, newQty) {
+        updateQty(cartKey, newQty) {
             fetch('{{ route('customer.cart.update', ['branch_code' => $branch_code]) }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ menu_id: menuId, quantity: newQty })
+                    body: JSON.stringify({ cart_key: cartKey, quantity: newQty })
                 })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
                         if (newQty <= 0) {
-                            delete this.cart[menuId];
+                            delete this.cart[cartKey];
                         } else {
-                            if (this.cart[menuId]) {
-                                this.cart[menuId].quantity = newQty;
+                            if (this.cart[cartKey]) {
+                                this.cart[cartKey].quantity = newQty;
                             }
                         }
                         this.cartTotal = Number(data.cart_total);
@@ -75,7 +75,7 @@
         <!-- Cart Content -->
         <div x-show="!isEmpty()" class="space-y-6" style="display: none;">
             <div class="space-y-4">
-                <template x-for="item in Object.values(cart)" :key="item.id">
+                <template x-for="item in Object.values(cart)" :key="item.cart_key">
                     <div class="bg-card border border-border rounded-3xl p-4 flex gap-4 shadow-xs hover:border-primary-soft transition">
                         <div class="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center font-bold text-primary-soft overflow-hidden shrink-0">
                             <template x-if="item.image_path">
@@ -90,13 +90,19 @@
                             <div>
                                 <h4 class="font-bold t-size4 text-text" x-text="item.name"></h4>
                                 <span class="text-text-muted t-size2" x-text="'Rp ' + Number(item.price).toLocaleString('id-ID')"></span>
+                                <template x-if="item.note && item.note.trim() !== ''">
+                                    <div
+                                        class="mt-1 text-accent t-size2 font-semibold bg-primary-soft/30 px-2.5 py-1 rounded-lg inline-block border border-primary-soft/50">
+                                        Catatan: <span class="text-text" x-text="item.note"></span>
+                                    </div>
+                                </template>
                             </div>
                             <div class="flex items-center justify-between mt-2">
                                 <div class="flex items-center gap-2 bg-surface border border-border rounded-full p-1">
-                                    <button @click="updateQty(item.id, item.quantity - 1)"
+                                    <button @click="updateQty(item.cart_key, item.quantity - 1)"
                                         class="w-6 h-6 rounded-full bg-card flex items-center justify-center font-bold hover:bg-primary-soft hover:text-accent transition shadow-xs cursor-pointer">-</button>
                                     <span class="w-6 text-center font-bold t-size3 text-text" x-text="item.quantity"></span>
-                                    <button @click="updateQty(item.id, item.quantity + 1)"
+                                    <button @click="updateQty(item.cart_key, item.quantity + 1)"
                                         class="w-6 h-6 rounded-full bg-card flex items-center justify-center font-bold hover:bg-primary-soft hover:text-accent transition shadow-xs cursor-pointer">+</button>
                                 </div>
                                 <span class="font-extrabold text-accent t-size4" x-text="'Rp ' + (item.price * item.quantity).toLocaleString('id-ID')"></span>

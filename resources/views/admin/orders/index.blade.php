@@ -37,19 +37,21 @@
                     </select>
                 </div>
 
-                <!-- Branch Filter -->
-                <div class="space-y-1">
-                    <label for="branch_id" class="block t-size2 font-semibold text-text-muted">{{ __('Cabang') }}</label>
-                    <select name="branch_id" id="branch_id"
-                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer">
-                        <option value="">{{ __('Semua Cabang') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ $currentBranchId == $branch->id ? 'selected' : '' }}>
-                                {{ $branch->name }} ({{ $branch->code }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                @if (auth()->user()->branch_id === null)
+                    <!-- Branch Filter -->
+                    <div class="space-y-1">
+                        <label for="branch_id" class="block t-size2 font-semibold text-text-muted">{{ __('Cabang') }}</label>
+                        <select name="branch_id" id="branch_id"
+                            class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer">
+                            <option value="">{{ __('Semua Cabang') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $currentBranchId == $branch->id ? 'selected' : '' }}>
+                                    {{ $branch->name }} ({{ $branch->code }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
 
                 <!-- Start Date -->
                 <div class="space-y-1">
@@ -105,7 +107,9 @@
                         <thead>
                             <tr class="bg-surface-alt border-b border-border text-text-muted t-size2 font-bold uppercase tracking-wider">
                                 <th class="py-4 px-6">{{ __('ID Pesanan') }}</th>
-                                <th class="py-4 px-6">{{ __('Cabang') }}</th>
+                                @if (auth()->user()->branch_id === null)
+                                    <th class="py-4 px-6">{{ __('Cabang') }}</th>
+                                @endif
                                 <th class="py-4 px-6">{{ __('Meja') }}</th>
                                 <th class="py-4 px-6">{{ __('Item Pesanan') }}</th>
                                 <th class="py-4 px-6">{{ __('Total') }}</th>
@@ -120,11 +124,13 @@
                                     <td class="py-4 px-6 font-bold text-text t-size3">
                                         #{{ $order->id }}
                                     </td>
-                                    <td class="py-4 px-6">
-                                        <span class="bg-surface border border-border text-text-muted px-2.5 py-0.5 rounded-lg t-size2 font-semibold">
-                                            {{ $order->branch->name }}
-                                        </span>
-                                    </td>
+                                    @if (auth()->user()->branch_id === null)
+                                        <td class="py-4 px-6">
+                                            <span class="bg-surface border border-border text-text-muted px-2.5 py-0.5 rounded-lg t-size2 font-semibold">
+                                                {{ $order->branch->name }}
+                                            </span>
+                                        </td>
+                                    @endif
                                     <td class="py-4 px-6">
                                         <span class="bg-primary-soft/50 text-accent font-extrabold px-3 py-1 rounded-full t-size2 border border-primary-soft">
                                             {{ __('Meja') }} {{ $order->table_number }}
