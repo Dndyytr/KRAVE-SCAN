@@ -10,11 +10,14 @@ use App\Listeners\SendOrderCreatedNotifications;
 use App\Listeners\TriggerOrderAutomations;
 use App\Models\Branch;
 use App\Models\Order;
+use App\Models\Permission;
 use App\Observers\OrderObserver;
 use App\Services\ActivityLogger;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -70,6 +73,26 @@ class AppServiceProvider extends ServiceProvider
             $compiledPath = config('view.compiled');
             if ($compiledPath && ! is_dir($compiledPath)) {
                 @mkdir($compiledPath, 0755, true);
+            }
+        }
+
+        // Register dynamic gates from database
+        Gate::before(function ($user, $ability) {
+            if ($user->role && $user->role->name === 'admin') {
+                return true;
+            }
+        });
+
+        if (Schema::hasTable('permissions')) {
+            try {
+                $permissions = Permission::all();
+                foreach ($permissions as $permission) {
+                    Gate::define($permission->name, function ($user) use ($permission) {
+                        return $user->role && $user->role->permissions->contains('name', $permission->name);
+                    });
+                }
+            } catch (\Throwable $e) {
+                // Silence migration or DB connection errors
             }
         }
     }

@@ -20,7 +20,7 @@
 
 <body class="bg-bg text-text font-sans antialiased min-h-screen flex flex-col pb-20 md:pb-0">
     <!-- Customer Top Navbar -->
-    <header class="bg-card border-b border-border sticky top-0 z-40 shadow-xs">
+    <header class="{{ $immersive ? 'hidden' : '' }} bg-card border-b border-border sticky top-0 z-40 shadow-xs">
         <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-primary font-brand font-extrabold t-size7 tracking-tight">KRAVE<span class="text-accent">SCAN</span></span>
@@ -41,7 +41,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-grow max-w-md w-full mx-auto px-4 py-6">
+    <main class="{{ $immersive ? 'flex-grow w-full' : 'flex-grow max-w-md w-full mx-auto px-4 py-6' }}">
         {{ $slot }}
     </main>
 
@@ -63,7 +63,7 @@
             <span class="t-size1 font-semibold">Menu</span>
         </a>
 
-        <a href="#" class="flex flex-col items-center gap-1 text-text-muted hover:text-primary">
+        <a href="{{ route('customer.ai-scan', ['branch_code' => $branchCode]) }}" class="flex flex-col items-center gap-1 {{ request()->routeIs('customer.ai-scan') ? 'text-primary-strong font-bold' : 'text-text-muted hover:text-primary' }}">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
@@ -83,6 +83,16 @@
                 class="absolute -top-1 right-2 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
                 style="display: none;"></span>
             <span class="t-size1 font-semibold">Keranjang</span>
+        </a>
+
+        <a href="{{ route('customer.payment', ['branch_code' => $branchCode]) }}"
+            class="flex flex-col items-center gap-1 {{ request()->routeIs('customer.payment*') ? 'text-primary-strong font-bold' : 'text-text-muted hover:text-primary' }}">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                </path>
+            </svg>
+            <span class="t-size1 font-semibold">Pembayaran</span>
         </a>
 
         <a href="{{ route('customer.order.status', ['branch_code' => $branchCode]) }}"

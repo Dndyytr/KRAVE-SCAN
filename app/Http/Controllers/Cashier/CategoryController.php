@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
@@ -25,7 +25,7 @@ class CategoryController extends Controller
 
         $categories = $query->orderBy('name')->paginate(10)->withQueryString();
 
-        return view('admin.categories.index', compact('categories'));
+        return view('cashiers.categories.index', compact('categories'));
     }
 
     /**
@@ -33,7 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('cashiers.categories.create');
     }
 
     /**
@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('cashier.categories.index')
             ->with('success', __('Kategori berhasil ditambahkan.'));
     }
 
@@ -65,7 +65,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('cashiers.categories.edit', compact('category'));
     }
 
     /**
@@ -88,7 +88,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('cashier.categories.index')
             ->with('success', __('Kategori berhasil diperbarui.'));
     }
 
@@ -98,13 +98,13 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         if ($category->menus()->exists()) {
-            return redirect()->route('admin.categories.index')
+            return redirect()->route('cashier.categories.index')
                 ->with('error', __('Kategori tidak dapat dihapus karena masih memiliki menu masakan yang terhubung.'));
         }
 
         $category->delete();
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('cashier.categories.index')
             ->with('success', __('Kategori berhasil dihapus.'));
     }
 }

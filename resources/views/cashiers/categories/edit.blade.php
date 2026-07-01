@@ -8,14 +8,14 @@
     <div class="max-w-3xl mx-auto space-y-6 anim-fade">
         <!-- Back Link -->
         <div class="flex justify-between items-center">
-            <a href="{{ route('admin.categories.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
+            <a href="{{ route('cashier.categories.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
                 &larr; Kembali ke Daftar Kategori
             </a>
         </div>
 
         <!-- Form Card -->
         <div class="bg-card border border-border rounded-2xl p-6 shadow-xs">
-            <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('cashier.categories.update', $category->id) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -39,7 +39,7 @@
 
                 <!-- Submit Button Block -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.categories.index') }}"
+                    <a href="{{ route('cashier.categories.index') }}"
                         class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
                         Batal
                     </a>

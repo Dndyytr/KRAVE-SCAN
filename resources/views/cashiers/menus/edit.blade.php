@@ -8,14 +8,14 @@
     <div class="max-w-3xl mx-auto space-y-6 anim-fade">
         <!-- Back Link -->
         <div class="flex justify-between items-center">
-            <a href="{{ route('admin.menus.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
+            <a href="{{ route('cashier.menus.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
                 &larr; Kembali ke Daftar Menu
             </a>
         </div>
 
         <!-- Form Card -->
         <div class="bg-card border border-border rounded-2xl p-6 shadow-xs">
-            <form action="{{ route('admin.menus.update', $menu->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('cashier.menus.update', $menu->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -82,8 +82,7 @@
                                             class="w-11 h-6 bg-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
                                         </div>
                                     </div>
-                                    <span class="font-semibold text-text t-size4">Aktif (Tersedia untuk dipesan
-                                        pelanggan)</span>
+                                    <span class="font-semibold text-text t-size4">Aktif (Tersedia untuk dipesan pelanggan)</span>
                                 </label>
                             </div>
                             @error('is_active')
@@ -94,8 +93,7 @@
 
                     <!-- Hubungkan ke Stok Barang (Opsional) -->
                     <div class="space-y-1.5">
-                        <label for="stock_item_id" class="font-bold t-size3 text-text-muted font-heading">Hubungkan ke
-                            Stok Barang (Opsional)</label>
+                        <label for="stock_item_id" class="font-bold t-size3 text-text-muted font-heading">Hubungkan ke Stok Barang (Opsional)</label>
                         <select id="stock_item_id" name="stock_item_id"
                             class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('stock_item_id') border-danger @enderror">
                             <option value="">-- Tidak Terhubung ke Stok --</option>
@@ -105,8 +103,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-text-muted t-size1">Jika dihubungkan, stok barang ini akan berkurang otomatis
-                            ketika ada pelanggan yang membeli menu ini dan status pembayaran dikonfirmasi.</p>
+                        <p class="text-text-muted t-size1">Jika dihubungkan, stok barang ini akan berkurang otomatis ketika ada pelanggan yang membeli menu ini dan status pembayaran dikonfirmasi.</p>
                         @error('stock_item_id')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                         @enderror
@@ -185,7 +182,7 @@
 
                 <!-- Submit Button Block -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.menus.index') }}"
+                    <a href="{{ route('cashier.menus.index') }}"
                         class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
                         Batal
                     </a>

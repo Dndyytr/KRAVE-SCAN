@@ -164,7 +164,7 @@ class StockManagementTest extends TestCase
 
     public function test_admin_can_create_menu_linked_to_stock(): void
     {
-        $admin = $this->getAdminUser();
+        $cashier = $this->getCashierUser();
         $stock = StockItem::create([
             'branch_id' => $this->branch->id,
             'name' => 'Biji Kopi Arabika',
@@ -173,7 +173,7 @@ class StockManagementTest extends TestCase
             'unit' => 'kg',
         ]);
 
-        $response = $this->actingAs($admin)->post(route('admin.menus.store'), [
+        $response = $this->actingAs($cashier)->post(route('cashier.menus.store'), [
             'name' => 'Espresso Classic Linked',
             'category_id' => $this->category->id,
             'stock_item_id' => $stock->id,
@@ -182,7 +182,7 @@ class StockManagementTest extends TestCase
             'is_active' => 1,
         ]);
 
-        $response->assertRedirect(route('admin.menus.index'));
+        $response->assertRedirect(route('cashier.menus.index'));
 
         $this->assertDatabaseHas('menus', [
             'name' => 'Espresso Classic Linked',

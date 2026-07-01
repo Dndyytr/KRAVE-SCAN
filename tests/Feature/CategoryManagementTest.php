@@ -18,6 +18,8 @@ class CategoryManagementTest extends TestCase
 
     private Role $cashierRole;
 
+    private Role $kitchenRole;
+
     private Branch $branch1;
 
     private Branch $branch2;
@@ -28,6 +30,7 @@ class CategoryManagementTest extends TestCase
 
         $this->adminRole = Role::create(['name' => 'admin']);
         $this->cashierRole = Role::create(['name' => 'cashier']);
+        $this->kitchenRole = Role::create(['name' => 'kitchen']);
 
         $this->branch1 = Branch::create([
             'name' => 'Branch One',
@@ -66,48 +69,57 @@ class CategoryManagementTest extends TestCase
         ]);
     }
 
-    public function test_guest_cannot_access_categories_crud(): void
+    private function getKitchenUser(Branch $branch)
     {
-        $this->get(route('admin.categories.index'))->assertRedirect(route('login'));
-        $this->get(route('admin.categories.create'))->assertRedirect(route('login'));
-        $this->post(route('admin.categories.store'), [])->assertRedirect(route('login'));
+        return User::create([
+            'name' => 'Kitchen User',
+            'email' => 'kitchen_'.$branch->code.'@test.com',
+            'password' => bcrypt('password'),
+            'role_id' => $this->kitchenRole->id,
+            'branch_id' => $branch->id,
+        ]);
     }
 
-    public function test_cashier_cannot_access_categories_crud(): void
+    public function test_guest_cannot_access_categories_crud(): void
+    {
+        $this->get(route('cashier.categories.index'))->assertRedirect(route('login'));
+        $this->get(route('cashier.categories.create'))->assertRedirect(route('login'));
+        $this->post(route('cashier.categories.store'), [])->assertRedirect(route('login'));
+    }
+
+    public function test_kitchen_cannot_access_categories_crud(): void
+    {
+        $kitchen = $this->getKitchenUser($this->branch1);
+
+        $this->actingAs($kitchen)->get(route('cashier.categories.index'))->assertStatus(403);
+        $this->actingAs($kitchen)->get(route('cashier.categories.create'))->assertStatus(403);
+        $this->actingAs($kitchen)->post(route('cashier.categories.store'), [])->assertStatus(403);
+    }
+
+    public function test_cashier_can_access_categories_index(): void
     {
         $cashier = $this->getCashierUser($this->branch1);
 
-        $this->actingAs($cashier)->get(route('admin.categories.index'))->assertStatus(403);
-        $this->actingAs($cashier)->get(route('admin.categories.create'))->assertStatus(403);
-        $this->actingAs($cashier)->post(route('admin.categories.store'), [])->assertStatus(403);
-    }
-
-    public function test_admin_can_access_categories_index(): void
-    {
-        $admin = $this->getAdminUser($this->branch1);
-
-        // Use actingAs and branch session context if set by middleware, or rely on model ScopedToBranch
-        // Note: SetStaffBranchContext will run upon request
         $category = Category::create([
             'name' => 'Coffee BR1',
             'branch_id' => $this->branch1->id,
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.categories.index'));
+        $response = $this->actingAs($cashier)->get(route('cashier.categories.index'));
 
         $response->assertStatus(200);
         $response->assertSee('Coffee BR1');
     }
 
-    public function test_admin_can_create_category(): void
+    public function test_cashier_can_create_category(): void
     {
-        $admin = $this->getAdminUser($this->branch1);
+        $cashier = $this->getCashierUser($this->branch1);
 
-        $response = $this->actingAs($admin)->post(route('admin.categories.store'), [
+        $response = $this->actingAs($cashier)->post(route('cashier.categories.store'), [
             'name' => 'Ice Blended',
         ]);
 
-        $response->assertRedirect(route('admin.categories.index'));
+        $response->assertRedirect(route('cashier.categories.index'));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('categories', [
@@ -116,40 +128,37 @@ class CategoryManagementTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_create_duplicate_category_in_same_branch(): void
+    public function test_cashier_cannot_create_duplicate_category_in_same_branch(): void
     {
-        $admin = $this->getAdminUser($this->branch1);
+        $cashier = $this->getCashierUser($this->branch1);
 
         Category::create([
             'name' => 'Snacks',
             'branch_id' => $this->branch1->id,
         ]);
 
-        $response = $this->actingAs($admin)->post(route('admin.categories.store'), [
+        $response = $this->actingAs($cashier)->post(route('cashier.categories.store'), [
             'name' => 'Snacks',
         ]);
 
         $response->assertSessionHasErrors('name');
-        // Check only one Category exists in DB for branch1
         $this->assertEquals(1, Category::where('name', 'Snacks')->where('branch_id', $this->branch1->id)->count());
     }
 
-    public function test_admin_can_create_same_category_name_in_different_branches(): void
+    public function test_cashier_can_create_same_category_name_in_different_branches(): void
     {
-        // First branch category
         Category::create([
             'name' => 'Signature',
             'branch_id' => $this->branch1->id,
         ]);
 
-        // Create with Admin Branch Two
-        $admin2 = $this->getAdminUser($this->branch2);
+        $cashier2 = $this->getCashierUser($this->branch2);
 
-        $response = $this->actingAs($admin2)->post(route('admin.categories.store'), [
+        $response = $this->actingAs($cashier2)->post(route('cashier.categories.store'), [
             'name' => 'Signature',
         ]);
 
-        $response->assertRedirect(route('admin.categories.index'));
+        $response->assertRedirect(route('cashier.categories.index'));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('categories', [
@@ -158,43 +167,43 @@ class CategoryManagementTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_update_category(): void
+    public function test_cashier_can_update_category(): void
     {
-        $admin = $this->getAdminUser($this->branch1);
+        $cashier = $this->getCashierUser($this->branch1);
 
         $category = Category::create([
             'name' => 'Main Course Old',
             'branch_id' => $this->branch1->id,
         ]);
 
-        $response = $this->actingAs($admin)->put(route('admin.categories.update', $category->id), [
+        $response = $this->actingAs($cashier)->put(route('cashier.categories.update', $category->id), [
             'name' => 'Main Course New',
         ]);
 
-        $response->assertRedirect(route('admin.categories.index'));
+        $response->assertRedirect(route('cashier.categories.index'));
         $category->refresh();
         $this->assertEquals('Main Course New', $category->name);
     }
 
-    public function test_admin_can_delete_category_without_menus(): void
+    public function test_cashier_can_delete_category_without_menus(): void
     {
-        $admin = $this->getAdminUser($this->branch1);
+        $cashier = $this->getCashierUser($this->branch1);
 
         $category = Category::create([
             'name' => 'Dessert',
             'branch_id' => $this->branch1->id,
         ]);
 
-        $response = $this->actingAs($admin)->delete(route('admin.categories.destroy', $category->id));
+        $response = $this->actingAs($cashier)->delete(route('cashier.categories.destroy', $category->id));
 
-        $response->assertRedirect(route('admin.categories.index'));
+        $response->assertRedirect(route('cashier.categories.index'));
         $response->assertSessionHas('success');
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
     }
 
-    public function test_admin_cannot_delete_category_with_menus(): void
+    public function test_cashier_cannot_delete_category_with_menus(): void
     {
-        $admin = $this->getAdminUser($this->branch1);
+        $cashier = $this->getCashierUser($this->branch1);
 
         $category = Category::create([
             'name' => 'Drinks',
@@ -209,38 +218,34 @@ class CategoryManagementTest extends TestCase
             'branch_id' => $this->branch1->id,
         ]);
 
-        $response = $this->actingAs($admin)->delete(route('admin.categories.destroy', $category->id));
+        $response = $this->actingAs($cashier)->delete(route('cashier.categories.destroy', $category->id));
 
-        $response->assertRedirect(route('admin.categories.index'));
+        $response->assertRedirect(route('cashier.categories.index'));
         $response->assertSessionHas('error');
         $this->assertDatabaseHas('categories', ['id' => $category->id]);
     }
 
     public function test_branch_isolation_for_categories(): void
     {
-        // Admin of Branch 1 should not see/edit/delete Branch 2's categories
-        $admin1 = $this->getAdminUser($this->branch1);
+        $cashier1 = $this->getCashierUser($this->branch1);
 
-        // Category of Branch 2
         $category2 = Category::create([
             'name' => 'Branch 2 Exclusive',
             'branch_id' => $this->branch2->id,
         ]);
 
-        // Try to access index
-        $response = $this->actingAs($admin1)->get(route('admin.categories.index'));
+        $response = $this->actingAs($cashier1)->get(route('cashier.categories.index'));
         $response->assertDontSee('Branch 2 Exclusive');
 
-        // Try to edit/update category2 (should abort 404 because global scope restricts to branch1)
-        $response = $this->actingAs($admin1)->get(route('admin.categories.edit', $category2->id));
+        $response = $this->actingAs($cashier1)->get(route('cashier.categories.edit', $category2->id));
         $response->assertStatus(404);
 
-        $response = $this->actingAs($admin1)->put(route('admin.categories.update', $category2->id), [
+        $response = $this->actingAs($cashier1)->put(route('cashier.categories.update', $category2->id), [
             'name' => 'Hacked Name',
         ]);
         $response->assertStatus(404);
 
-        $response = $this->actingAs($admin1)->delete(route('admin.categories.destroy', $category2->id));
+        $response = $this->actingAs($cashier1)->delete(route('cashier.categories.destroy', $category2->id));
         $response->assertStatus(404);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -35,7 +35,7 @@ class MenuController extends Controller
         $menus = $query->orderBy('category_id')->orderBy('name')->paginate(10)->withQueryString();
         $categories = Category::all();
 
-        return view('admin.menus.index', compact('menus', 'categories'));
+        return view('cashiers.menus.index', compact('menus', 'categories'));
     }
 
     /**
@@ -46,7 +46,7 @@ class MenuController extends Controller
         $categories = Category::all();
         $stocks = StockItem::orderBy('name')->get();
 
-        return view('admin.menus.create', compact('categories', 'stocks'));
+        return view('cashiers.menus.create', compact('categories', 'stocks'));
     }
 
     /**
@@ -75,7 +75,7 @@ class MenuController extends Controller
 
         Menu::create($data);
 
-        return redirect()->route('admin.menus.index')->with('success', __('Menu berhasil ditambahkan.'));
+        return redirect()->route('cashier.menus.index')->with('success', __('Menu berhasil ditambahkan.'));
     }
 
     /**
@@ -86,7 +86,7 @@ class MenuController extends Controller
         $categories = Category::all();
         $stocks = StockItem::orderBy('name')->get();
 
-        return view('admin.menus.edit', compact('menu', 'categories', 'stocks'));
+        return view('cashiers.menus.edit', compact('menu', 'categories', 'stocks'));
     }
 
     /**
@@ -121,7 +121,7 @@ class MenuController extends Controller
 
         $menu->update($data);
 
-        return redirect()->route('admin.menus.index')->with('success', __('Menu berhasil diperbarui.'));
+        return redirect()->route('cashier.menus.index')->with('success', __('Menu berhasil diperbarui.'));
     }
 
     /**
@@ -136,7 +136,7 @@ class MenuController extends Controller
 
         $menu->delete();
 
-        return redirect()->route('admin.menus.index')->with('success', __('Menu berhasil dihapus.'));
+        return redirect()->route('cashier.menus.index')->with('success', __('Menu berhasil dihapus.'));
     }
 
     /**
@@ -155,6 +155,6 @@ class MenuController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.menus.index')->with('success', __('Status menu berhasil diperbarui.'));
+        return redirect()->route('cashier.menus.index')->with('success', __('Status menu berhasil diperbarui.'));
     }
 }

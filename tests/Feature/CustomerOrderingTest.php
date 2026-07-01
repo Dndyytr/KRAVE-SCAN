@@ -79,6 +79,36 @@ class CustomerOrderingTest extends TestCase
         $this->assertEquals(12, session('table_number'));
     }
 
+    public function test_customer_can_view_pending_payment_page(): void
+    {
+        $order = Order::withoutGlobalScopes()->create([
+            'branch_id' => $this->branch->id,
+            'table_number' => 5,
+            'status' => 'pending',
+            'total_amount' => 25000,
+            'customer_name' => 'Budi',
+            'customer_contact' => '081234567890',
+        ]);
+
+        $order->orderItems()->create([
+            'menu_id' => $this->activeMenu->id,
+            'quantity' => 1,
+            'price' => 25000,
+            'subtotal' => 25000,
+        ]);
+
+        $response = $this
+            ->withSession(['table_number' => 5, 'latest_order_id' => $order->id])
+            ->get(route('customer.payment', [
+                'branch_code' => 'jkt-01',
+                'order' => $order->id,
+            ]));
+
+        $response->assertOk();
+        $response->assertViewIs('customers.payment');
+        $response->assertViewHas('order', fn (Order $viewOrder) => $viewOrder->is($order));
+    }
+
     /**
      * Test adding active menu item to cart.
      */
@@ -228,7 +258,7 @@ class CustomerOrderingTest extends TestCase
         $this->assertEquals($order->id, session('latest_order_id'));
 
         // Check redirection goes to order status page
-        $response->assertRedirect(route('customer.order.status', [
+        $response->assertRedirect(route('customer.payment', [
             'branch_code' => 'jkt-01',
             'order' => $order->id,
         ]));

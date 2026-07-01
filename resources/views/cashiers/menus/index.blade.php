@@ -13,6 +13,18 @@
             this.showDeleteModal = true;
         }
     }">
+        @if (session('success'))
+            <div class="bg-success/10 border border-success/30 text-success p-4 rounded-xl t-size3 font-semibold">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-danger/10 border border-danger/30 text-danger p-4 rounded-xl t-size3 font-semibold">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Top Actions / Filter Panel -->
         <div class="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -24,7 +36,7 @@
                         Kelola data menu masakan, kategori, harga, dan ketersediaan menu secara global.
                     </p>
                 </div>
-                <a href="{{ route('admin.menus.create') }}"
+                <a href="{{ route('cashier.menus.create') }}"
                     class="bg-primary hover:bg-primary-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2 shrink-0 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -34,7 +46,7 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" action="{{ route('admin.menus.index') }}" class="flex flex-col md:flex-row gap-3 pt-2">
+            <form method="GET" action="{{ route('cashier.menus.index') }}" class="flex flex-col md:flex-row gap-3 pt-2">
                 <div class="relative flex-grow">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama menu atau deskripsi..."
                         class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
@@ -56,7 +68,7 @@
                         Filter
                     </button>
                     @if (request()->anyFilled(['search', 'category_id']))
-                        <a href="{{ route('admin.menus.index') }}"
+                        <a href="{{ route('cashier.menus.index') }}"
                             class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-4 py-2.5 rounded-xl transition cursor-pointer text-center flex items-center justify-center">
                             Reset
                         </a>
@@ -126,7 +138,7 @@
                                         <div x-data="{
                                             isActive: {{ $menu->is_active ? 'true' : 'false' }},
                                             toggle() {
-                                                fetch('{{ route('admin.menus.toggle-active', $menu->id) }}', {
+                                                fetch('{{ route('cashier.menus.toggle-active', $menu->id) }}', {
                                                         method: 'PATCH',
                                                         headers: {
                                                             'Content-Type': 'application/json',
@@ -159,11 +171,11 @@
                                     <!-- Actions -->
                                     <td class="py-4 px-6 text-right">
                                         <div class="flex justify-end gap-3">
-                                            <a href="{{ route('admin.menus.edit', $menu->id) }}"
+                                            <a href="{{ route('cashier.menus.edit', $menu->id) }}"
                                                 class="text-accent hover:text-primary font-bold t-size3 transition">
                                                 Edit
                                             </a>
-                                            <button @click="confirmDelete('{{ route('admin.menus.destroy', $menu->id) }}')"
+                                            <button @click="confirmDelete('{{ route('cashier.menus.destroy', $menu->id) }}')"
                                                 class="text-danger hover:text-red-600 font-bold t-size3 transition cursor-pointer">
                                                 Hapus
                                             </button>

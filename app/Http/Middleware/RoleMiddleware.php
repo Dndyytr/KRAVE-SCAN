@@ -27,8 +27,18 @@ class RoleMiddleware
             abort(403, 'Akun Anda telah ditangguhkan.');
         }
 
-        // Cek apakah peran pengguna sesuai dengan peran yang diminta oleh rute secara persis (strict match)
-        if ($request->user()->role?->name !== $role) {
+        $userRole = $request->user()->role;
+        if (! $userRole) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Cek apakah peran pengguna sesuai dengan peran yang diminta secara persis (backward compatibility)
+        // atau memiliki hak akses khusus 'access_{role}' atau merupakan admin
+        $permissionName = 'access_'.$role;
+        $hasAccess = $userRole->name === $role
+            || $userRole->permissions()->where('name', $permissionName)->exists();
+
+        if (! $hasAccess) {
             abort(403, 'Unauthorized action.');
         }
 

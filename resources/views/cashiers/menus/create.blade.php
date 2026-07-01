@@ -8,14 +8,14 @@
     <div class="max-w-3xl mx-auto space-y-6 anim-fade">
         <!-- Back Link -->
         <div class="flex justify-between items-center">
-            <a href="{{ route('admin.menus.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
+            <a href="{{ route('cashier.menus.index') }}" class="text-text-muted hover:text-text font-bold t-size3 transition flex items-center gap-1">
                 &larr; Kembali ke Daftar Menu
             </a>
         </div>
 
         <!-- Form Card -->
         <div class="bg-card border border-border rounded-2xl p-6 shadow-xs">
-            <form action="{{ route('admin.menus.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('cashier.menus.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <!-- Basic Information Section -->
@@ -80,8 +80,7 @@
                                             class="w-11 h-6 bg-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
                                         </div>
                                     </div>
-                                    <span class="font-semibold text-text t-size4">Aktif (Tersedia untuk dipesan
-                                        pelanggan)</span>
+                                    <span class="font-semibold text-text t-size4">Aktif (Tersedia untuk dipesan pelanggan)</span>
                                 </label>
                             </div>
                             @error('is_active')
@@ -92,19 +91,16 @@
 
                     <!-- Hubungkan ke Stok Barang (Opsional) -->
                     <div class="space-y-1.5">
-                        <label for="stock_item_id" class="font-bold t-size3 text-text-muted font-heading">Hubungkan ke
-                            Stok Barang (Opsional)</label>
+                        <label for="stock_item_id" class="font-bold t-size3 text-text-muted font-heading">Hubungkan ke Stok Barang (Opsional)</label>
                         <select id="stock_item_id" name="stock_item_id"
                             class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('stock_item_id') border-danger @enderror">
                             <option value="">-- Tidak Terhubung ke Stok --</option>
                             @foreach ($stocks as $stock)
                                 <option value="{{ $stock->id }}" {{ old('stock_item_id') == $stock->id ? 'selected' : '' }}>
-                                    {{ $stock->name }} (Sisa: {{ $stock->quantity }} {{ $stock->unit }})
+                                    {{ $stock->name }} (Tersedia: {{ $stock->quantity }} {{ $stock->unit }})
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-text-muted t-size1">Jika dihubungkan, stok barang ini akan berkurang otomatis
-                            ketika ada pelanggan yang membeli menu ini dan status pembayaran dikonfirmasi.</p>
                         @error('stock_item_id')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                         @enderror
@@ -113,83 +109,57 @@
                     <!-- Description -->
                     <div class="space-y-1.5">
                         <label for="description" class="font-bold t-size3 text-text-muted">Deskripsi Menu</label>
-                        <textarea id="description" name="description" rows="3" placeholder="Masukkan deskripsi rasa kopi, porsi makanan, dll..."
-                            class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition @error('description') border-danger @enderror">{{ old('description') }}</textarea>
+                        <textarea id="description" name="description" rows="3" placeholder="Masukkan deskripsi detail mengenai hidangan menu ini..."
+                            class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 t-size4 outline-hidden transition">{{ old('description') }}</textarea>
                         @error('description')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
 
-                <!-- Product Image Upload Section -->
-                <div class="space-y-4">
-                    <h3 class="font-bold t-size5 text-text font-heading border-b border-border pb-2">
-                        Foto Produk Menu
-                    </h3>
-
-                    <div x-data="{
-                        imagePreview: null,
-                        handleFileChange(event) {
-                            const file = event.target.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = (e) => {
-                                    this.imagePreview = e.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            } else {
-                                this.imagePreview = null;
+                    <!-- Image Upload -->
+                    <div class="space-y-2">
+                        <label class="font-bold t-size3 text-text-muted block">Foto Hidangan</label>
+                        <div x-data="{
+                            previewUrl: null,
+                            fileChosen(event) {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    this.previewUrl = URL.createObjectURL(file);
+                                }
                             }
-                        },
-                        removeImage() {
-                            this.imagePreview = null;
-                            document.getElementById('image-input').value = '';
-                        }
-                    }" class="space-y-2">
-                        <label class="font-bold t-size3 text-text-muted block">Unggah Gambar</label>
-                        <div
-                            class="relative border-2 border-dashed border-border rounded-2xl p-6 hover:border-primary transition flex flex-col items-center justify-center bg-surface-alt/20 min-h-[160px]">
-                            <input type="file" id="image-input" name="image" accept="image/*"
-                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" @change="handleFileChange($event)">
-
-                            <!-- Placeholder display -->
-                            <div x-show="!imagePreview" class="text-center space-y-2 pointer-events-none">
-                                <svg class="w-10 h-10 text-text-muted/40 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <p class="t-size3 font-bold text-text">Klik atau seret file gambar untuk mengunggah</p>
-                                <p class="t-size1 text-text-muted">Format: JPG, PNG, WEBP. Ukuran Maksimum: 2MB.</p>
-                            </div>
-
-                            <!-- Preview display -->
-                            <div x-show="imagePreview" class="relative w-40 h-40 rounded-xl overflow-hidden border border-border shadow-xs z-10"
-                                style="display: none;">
-                                <img :src="imagePreview" class="w-full h-full object-cover">
-                                <button type="button" @click.prevent="removeImage()"
-                                    class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-md transition cursor-pointer">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        }" class="flex flex-col sm:flex-row items-start gap-4">
+                            <!-- Image preview -->
+                            <div class="w-32 h-32 bg-surface border border-border rounded-2xl flex items-center justify-center overflow-hidden shrink-0">
+                                <template x-if="previewUrl">
+                                    <img :src="previewUrl" alt="Preview" class="w-full h-full object-cover">
+                                </template>
+                                <template x-if="!previewUrl">
+                                    <svg class="w-8 h-8 text-text-muted/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
-                                </button>
+                                </template>
+                            </div>
+                            <!-- Input -->
+                            <div class="space-y-1.5">
+                                <input type="file" name="image" id="image" accept="image/*" @change="fileChosen"
+                                    class="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-soft/40 file:text-accent hover:file:bg-primary-soft/60 file:cursor-pointer cursor-pointer">
+                                <p class="text-text-muted text-[11px] font-semibold">Format gambar: JPEG, PNG, JPG, WEBP. Ukuran maks 2MB.</p>
+                                @error('image')
+                                    <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
-                        @error('image')
-                            <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
-                        @enderror
                     </div>
                 </div>
 
-                <!-- Submit Button Block -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                    <a href="{{ route('admin.menus.index') }}"
-                        class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-bold t-size4">
+                <!-- Submit Buttons -->
+                <div class="flex justify-end gap-3 pt-6 border-t border-border">
+                    <a href="{{ route('cashier.menus.index') }}"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-6 py-2.5 rounded-xl transition cursor-pointer font-semibold t-size4">
                         Batal
                     </a>
                     <button type="submit"
-                        class="bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer t-size4">
+                        class="bg-primary hover:bg-primary-strong text-white font-bold px-8 py-2.5 rounded-xl transition shadow-xs cursor-pointer">
                         Simpan Menu
                     </button>
                 </div>

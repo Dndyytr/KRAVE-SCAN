@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
     {
         $adminRole = Role::where('name', 'admin')->first();
         $cashierRole = Role::where('name', 'cashier')->first();
+        $kitchenRole = Role::where('name', 'kitchen')->first();
 
         $jktBranch = Branch::where('code', 'JKT-01')->first();
         $bdgBranch = Branch::where('code', 'BDG-01')->first();
@@ -47,6 +48,14 @@ class UserSeeder extends Seeder
             'branch_id' => $jktBranch->id,
         ]);
 
+        User::create([
+            'name' => 'Kitchen Jakarta',
+            'email' => 'kitchen.jkt@kravescan.com',
+            'password' => Hash::make('password'),
+            'role_id' => $kitchenRole->id,
+            'branch_id' => $jktBranch->id,
+        ]);
+
         // Bandung Branch Admin & Cashier
         User::create([
             'name' => 'Admin Bandung',
@@ -61,6 +70,14 @@ class UserSeeder extends Seeder
             'email' => 'cashier.bdg@kravescan.com',
             'password' => Hash::make('password'),
             'role_id' => $cashierRole->id,
+            'branch_id' => $bdgBranch->id,
+        ]);
+
+        User::create([
+            'name' => 'Kitchen Bandung',
+            'email' => 'kitchen.bdg@kravescan.com',
+            'password' => Hash::make('password'),
+            'role_id' => $kitchenRole->id,
             'branch_id' => $bdgBranch->id,
         ]);
     }

@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AutomationController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Cashier\CategoryController as CashierCategoryController;
+use App\Http\Controllers\Cashier\MenuController as CashierMenuController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -109,10 +110,7 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
     // Admins Group
     Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::post('/switch-branch', [DashboardController::class, 'switchBranch'])->name('admin.switch-branch');
-        Route::patch('/menus/{menu}/toggle-active', [MenuController::class, 'toggleActive'])->name('admin.menus.toggle-active');
-        Route::resource('menus', MenuController::class)->names('admin.menus');
-        Route::resource('categories', CategoryController::class)->names('admin.categories');
-
+        Route::resource('roles', RoleController::class)->names('admin.roles');
         Route::resource('stocks', StockController::class)->names('admin.stocks');
         Route::resource('orders', OrderController::class)->only(['index', 'show'])->names('admin.orders');
         Route::resource('transactions', TransactionController::class)->only(['index'])->names('admin.transactions');
@@ -144,6 +142,11 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::get('/transactions/{order}', [CashierController::class, 'showTransaction'])->name('cashier.transactions.show');
         Route::post('/orders/{order}/payment', [CashierController::class, 'processPayment'])->name('cashier.orders.payment');
         Route::get('/receipts/{receipt}', [CashierController::class, 'showReceipt'])->name('cashier.receipts.show');
+
+        // Added menu/category management for cashier
+        Route::patch('/menus/{menu}/toggle-active', [CashierMenuController::class, 'toggleActive'])->name('cashier.menus.toggle-active');
+        Route::resource('menus', CashierMenuController::class)->names('cashier.menus');
+        Route::resource('categories', CashierCategoryController::class)->names('cashier.categories');
     });
 
     // Kitchen Group
@@ -164,12 +167,15 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
 
     Route::get('/welcome/{table_number}', [CustomerController::class, 'welcome'])->name('customer.welcome');
     Route::get('/table/{table_number}', [CustomerController::class, 'menu'])->name('customer.menu');
+    Route::get('/ai-scan', [CustomerController::class, 'aiScan'])->name('customer.ai-scan');
     Route::post('/menu/identify', [CustomerController::class, 'identifyMenu'])->name('customer.menu.identify');
     Route::get('/cart', [CustomerController::class, 'cart'])->name('customer.cart');
     Route::post('/cart/add', [CustomerController::class, 'addToCart'])->name('customer.cart.add');
     Route::post('/cart/update', [CustomerController::class, 'updateCart'])->name('customer.cart.update');
     Route::post('/checkout', [CustomerController::class, 'checkout'])->name('customer.checkout');
     Route::get('/order/{order?}', [CustomerController::class, 'orderStatus'])->name('customer.order.status');
+    Route::get('/payment/{order?}', [CustomerController::class, 'payment'])->name('customer.payment');
+    Route::post('/order/{order}/pay-qris', [CustomerController::class, 'payQris'])->name('customer.pay-qris');
 });
 
 require __DIR__.'/auth.php';

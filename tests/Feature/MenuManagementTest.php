@@ -20,6 +20,8 @@ class MenuManagementTest extends TestCase
 
     private Role $cashierRole;
 
+    private Role $kitchenRole;
+
     private Branch $branch;
 
     private Category $category;
@@ -30,6 +32,7 @@ class MenuManagementTest extends TestCase
 
         $this->adminRole = Role::create(['name' => 'admin']);
         $this->cashierRole = Role::create(['name' => 'cashier']);
+        $this->kitchenRole = Role::create(['name' => 'kitchen']);
         $this->branch = Branch::create([
             'name' => 'Test Branch',
             'code' => 'TEST-01',
@@ -61,25 +64,36 @@ class MenuManagementTest extends TestCase
         ]);
     }
 
+    private function getKitchenUser()
+    {
+        return User::create([
+            'name' => 'Kitchen User',
+            'email' => 'kitchen@test.com',
+            'password' => bcrypt('password'),
+            'role_id' => $this->kitchenRole->id,
+            'branch_id' => $this->branch->id,
+        ]);
+    }
+
     public function test_guest_cannot_access_menus_crud(): void
     {
-        $this->get(route('admin.menus.index'))->assertRedirect(route('login'));
-        $this->get(route('admin.menus.create'))->assertRedirect(route('login'));
-        $this->post(route('admin.menus.store'), [])->assertRedirect(route('login'));
+        $this->get(route('cashier.menus.index'))->assertRedirect(route('login'));
+        $this->get(route('cashier.menus.create'))->assertRedirect(route('login'));
+        $this->post(route('cashier.menus.store'), [])->assertRedirect(route('login'));
     }
 
-    public function test_cashier_cannot_access_menus_crud(): void
+    public function test_kitchen_cannot_access_menus_crud(): void
+    {
+        $kitchen = $this->getKitchenUser();
+
+        $this->actingAs($kitchen)->get(route('cashier.menus.index'))->assertStatus(403);
+        $this->actingAs($kitchen)->get(route('cashier.menus.create'))->assertStatus(403);
+        $this->actingAs($kitchen)->post(route('cashier.menus.store'), [])->assertStatus(403);
+    }
+
+    public function test_cashier_can_access_menus_index(): void
     {
         $cashier = $this->getCashierUser();
-
-        $this->actingAs($cashier)->get(route('admin.menus.index'))->assertStatus(403);
-        $this->actingAs($cashier)->get(route('admin.menus.create'))->assertStatus(403);
-        $this->actingAs($cashier)->post(route('admin.menus.store'), [])->assertStatus(403);
-    }
-
-    public function test_admin_can_access_menus_index(): void
-    {
-        $admin = $this->getAdminUser();
         $menu = Menu::create([
             'name' => 'Espresso Classic Test',
             'category_id' => $this->category->id,
@@ -87,20 +101,20 @@ class MenuManagementTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.menus.index'));
+        $response = $this->actingAs($cashier)->get(route('cashier.menus.index'));
 
         $response->assertStatus(200);
         $response->assertSee('Espresso Classic Test');
     }
 
-    public function test_admin_can_create_menu_with_image(): void
+    public function test_cashier_can_create_menu_with_image(): void
     {
         Storage::fake('public');
-        $admin = $this->getAdminUser();
+        $cashier = $this->getCashierUser();
 
         $image = UploadedFile::fake()->image('espresso.jpg');
 
-        $response = $this->actingAs($admin)->post(route('admin.menus.store'), [
+        $response = $this->actingAs($cashier)->post(route('cashier.menus.store'), [
             'name' => 'Espresso Classic',
             'category_id' => $this->category->id,
             'price' => 15000,
@@ -109,7 +123,7 @@ class MenuManagementTest extends TestCase
             'image' => $image,
         ]);
 
-        $response->assertRedirect(route('admin.menus.index'));
+        $response->assertRedirect(route('cashier.menus.index'));
 
         $this->assertDatabaseHas('menus', [
             'name' => 'Espresso Classic',
@@ -125,10 +139,10 @@ class MenuManagementTest extends TestCase
         Storage::disk('public')->assertExists($relativeOldPath);
     }
 
-    public function test_admin_can_update_menu_and_image(): void
+    public function test_cashier_can_update_menu_and_image(): void
     {
         Storage::fake('public');
-        $admin = $this->getAdminUser();
+        $cashier = $this->getCashierUser();
 
         $menu = Menu::create([
             'name' => 'Old Name',
@@ -143,7 +157,7 @@ class MenuManagementTest extends TestCase
 
         $newImage = UploadedFile::fake()->image('new.jpg');
 
-        $response = $this->actingAs($admin)->put(route('admin.menus.update', $menu->id), [
+        $response = $this->actingAs($cashier)->put(route('cashier.menus.update', $menu->id), [
             'name' => 'New Name',
             'category_id' => $this->category->id,
             'price' => 12000,
@@ -152,7 +166,7 @@ class MenuManagementTest extends TestCase
             'image' => $newImage,
         ]);
 
-        $response->assertRedirect(route('admin.menus.index'));
+        $response->assertRedirect(route('cashier.menus.index'));
 
         $menu->refresh();
         $this->assertEquals('New Name', $menu->name);
@@ -165,10 +179,10 @@ class MenuManagementTest extends TestCase
         Storage::disk('public')->assertExists($newRelativePath);
     }
 
-    public function test_admin_can_delete_menu(): void
+    public function test_cashier_can_delete_menu(): void
     {
         Storage::fake('public');
-        $admin = $this->getAdminUser();
+        $cashier = $this->getCashierUser();
 
         $menu = Menu::create([
             'name' => 'Espresso Classic',
@@ -180,16 +194,16 @@ class MenuManagementTest extends TestCase
 
         Storage::disk('public')->put('menus/espresso.jpg', 'fake content');
 
-        $response = $this->actingAs($admin)->delete(route('admin.menus.destroy', $menu->id));
+        $response = $this->actingAs($cashier)->delete(route('cashier.menus.destroy', $menu->id));
 
-        $response->assertRedirect(route('admin.menus.index'));
+        $response->assertRedirect(route('cashier.menus.index'));
         $this->assertDatabaseMissing('menus', ['id' => $menu->id]);
         Storage::disk('public')->assertMissing('menus/espresso.jpg');
     }
 
-    public function test_admin_can_toggle_menu_active_status(): void
+    public function test_cashier_can_toggle_menu_active_status(): void
     {
-        $admin = $this->getAdminUser();
+        $cashier = $this->getCashierUser();
         $menu = Menu::create([
             'name' => 'Espresso Classic',
             'category_id' => $this->category->id,
@@ -198,7 +212,7 @@ class MenuManagementTest extends TestCase
         ]);
 
         // Toggle to false
-        $response = $this->actingAs($admin)->patchJson(route('admin.menus.toggle-active', $menu->id));
+        $response = $this->actingAs($cashier)->patchJson(route('cashier.menus.toggle-active', $menu->id));
         $response->assertJson([
             'success' => true,
             'is_active' => false,
@@ -208,7 +222,7 @@ class MenuManagementTest extends TestCase
         $this->assertFalse($menu->is_active);
 
         // Toggle back to true
-        $response = $this->actingAs($admin)->patchJson(route('admin.menus.toggle-active', $menu->id));
+        $response = $this->actingAs($cashier)->patchJson(route('cashier.menus.toggle-active', $menu->id));
         $response->assertJson([
             'success' => true,
             'is_active' => true,

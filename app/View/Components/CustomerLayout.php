@@ -20,8 +20,11 @@ class CustomerLayout extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(?string $branch = null, ?string $table = null)
-    {
+    public function __construct(
+        ?string $branch = null,
+        ?string $table = null,
+        public bool $immersive = false,
+    ) {
         $this->branch = $branch;
         $this->table = $table;
     }

@@ -39,7 +39,7 @@ class RoleAuthorizationTest extends TestCase
     public function test_guest_is_redirected_to_login(): void
     {
         $this->get('/dashboard')->assertRedirect(route('login'));
-        $this->get('/admin/menus')->assertRedirect(route('login'));
+        $this->get('/admin/users')->assertRedirect(route('login'));
         $this->get('/cashier/orders')->assertRedirect(route('login'));
     }
 
@@ -92,7 +92,7 @@ class RoleAuthorizationTest extends TestCase
             'branch_id' => $this->branch->id,
         ]);
 
-        $response = $this->actingAs($cashier)->get('/admin/menus');
+        $response = $this->actingAs($cashier)->get('/admin/users');
 
         $response->assertStatus(403);
     }
