@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Branch;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\StockItem;
 use App\Models\User;
@@ -38,6 +39,9 @@ class DashboardTest extends TestCase
         // Create Roles
         $this->adminRole = Role::create(['name' => 'admin']);
         $this->cashierRole = Role::create(['name' => 'cashier']);
+        $this->cashierRole->permissions()->attach(
+            Permission::create(['name' => 'access_cashier', 'label' => 'Akses Halaman Kasir'])
+        );
 
         // Create Branches
         $this->branchJakarta = Branch::create([
@@ -105,6 +109,7 @@ class DashboardTest extends TestCase
         $response = $this->actingAs($this->jakartaCashier)->get(route('dashboard'));
         $response->assertStatus(200);
         $response->assertViewIs('dashboard');
+        $response->assertSee(route('cashier.orders', absolute: false));
     }
 
     /**
@@ -221,6 +226,7 @@ class DashboardTest extends TestCase
         $responseJkt->assertViewHas('todayRevenue', 50000.00);
         $responseJkt->assertViewHas('pendingOrdersCount', 1);
         $responseJkt->assertViewHas('lowStockCount', 1);
+        $responseJkt->assertViewHas('activeOrdersCount', 2);
 
         // --- Verify Bandung Cashier View ---
         $responseBdg = $this->actingAs($this->bandungCashier)->get(route('dashboard'));
@@ -235,6 +241,7 @@ class DashboardTest extends TestCase
         $responseBdg->assertViewHas('todayRevenue', 75000.00);
         $responseBdg->assertViewHas('pendingOrdersCount', 0);
         $responseBdg->assertViewHas('lowStockCount', 1);
+        $responseBdg->assertViewHas('activeOrdersCount', 1);
 
         // --- Verify Super Admin View (Cumulative across branches) ---
         $responseSuper = $this->actingAs($this->superAdmin)->get(route('dashboard'));

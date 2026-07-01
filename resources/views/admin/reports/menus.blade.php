@@ -1,92 +1,97 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold t-size7 font-heading text-text">
-            {{ __('Laporan Performa Menu') }}
-        </h2>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-extrabold t-size8 font-heading text-text">
+                    {{ __('Laporan Performa Menu 💖') }}
+                </h2>
+                <p class="text-text-muted t-size3 mt-1">
+                    {{ __('Analisis menu makanan & minuman terlaris berdasarkan kuantitas terjual.') }}
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="hidden sm:block">
+                    <div class="bg-card border border-border px-4 py-2 rounded-2xl flex items-center gap-2 t-size2 font-semibold text-text">
+                        <span class="text-primary">📅</span>
+                        {{ now()->translatedFormat('l, d M Y') }}
+                    </div>
+                </div>
+                <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}"
+                    class="bg-primary hover:bg-primary-strong text-white font-bold px-4 py-2.5 rounded-xl transition shadow-xs cursor-pointer flex items-center gap-2 t-size3">
+                    📤 {{ __('Export Report') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
 
     <div class="space-y-6 anim-fade">
-        <!-- Filter & Ekspor Card -->
-        <div class="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-4">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h3 class="font-bold t-size5 text-text font-heading">
-                        {{ __('Filter & Ekspor Performa Menu') }}
-                    </h3>
-                    <p class="text-text-muted t-size3 mt-0.5">
-                        {{ __('Analisis menu makanan & minuman terlaris berdasarkan kuantitas terjual.') }}
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}"
-                        class="bg-success hover:bg-success/90 text-white font-bold px-4 py-2.5 rounded-xl transition shadow-xs cursor-pointer flex items-center gap-2 t-size3">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        {{ __('Ekspor Excel') }}
-                    </a>
-                </div>
-            </div>
 
-            <form method="GET" action="{{ route('admin.reports.menus') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
-                <!-- Branch Filter (Only for Super Admin) -->
-                @if (auth()->user()->branch_id === null)
-                    <div class="space-y-1">
-                        <label for="branch_id" class="block t-size2 font-semibold text-text-muted">{{ __('Cabang') }}</label>
-                        <select name="branch_id" id="branch_id"
-                            class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2 t-size4 outline-hidden transition cursor-pointer">
-                            <option value="">{{ __('Semua Cabang') }}</option>
-                            @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>
-                                    {{ $branch->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-border pb-px">
+            <a href="{{ route('admin.reports.sales', ['type' => 'sales', 'branch_id' => request('branch_id'), 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                class="px-5 py-3 font-bold t-size3 transition-all border-b-2 border-transparent text-text-muted hover:text-text">
+                📈 Sales Report
+            </a>
+            <a href="{{ route('admin.reports.sales', ['type' => 'financial', 'branch_id' => request('branch_id'), 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                class="px-5 py-3 font-bold t-size3 transition-all border-b-2 border-transparent text-text-muted hover:text-text">
+                💵 Financial Report
+            </a>
+            <a href="{{ route('admin.reports.menus', ['branch_id' => request('branch_id'), 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                class="px-5 py-3 font-bold t-size3 transition-all border-b-2 border-primary text-accent bg-primary-soft/10 rounded-t-xl">
+                🍔 Performa Menu
+            </a>
+            <a href="{{ route('admin.reports.payments', ['branch_id' => request('branch_id'), 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                class="px-5 py-3 font-bold t-size3 transition-all border-b-2 border-transparent text-text-muted hover:text-text">
+                💳 Metode Pembayaran
+            </a>
+        </div>
+
+        <!-- Filters Row -->
+        <div class="bg-card border border-border rounded-2xl p-4 shadow-xs">
+            <form method="GET" action="{{ route('admin.reports.menus') }}" class="flex flex-wrap items-center gap-3">
+
+                <!-- Date Range picker -->
+                <div class="flex items-center bg-card border border-border rounded-xl px-3 py-1.5 gap-2 shrink-0">
+                    <span class="text-text-muted">📅</span>
+                    <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
+                        class="bg-transparent border-0 p-0 text-text font-semibold t-size3 focus:ring-0 focus:outline-none">
+                    <span class="text-text-muted font-bold t-size2">-</span>
+                    <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
+                        class="bg-transparent border-0 p-0 text-text font-semibold t-size3 focus:ring-0 focus:outline-none">
+                </div>
+
+                <!-- Outlet Dropdown (Only for Super Admin) -->
+                @if ($isSuperAdmin)
+                    <select name="branch_id"
+                        class="bg-card border border-border rounded-xl px-3 py-2 t-size3 font-semibold text-text focus:ring-primary focus:border-primary cursor-pointer">
+                        <option value="">Semua Outlet</option>
+                        @foreach ($branches as $branch)
+                            <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>
+                                {{ $branch->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 @endif
 
-                <!-- Start Date -->
-                <div class="space-y-1">
-                    <label for="start_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Mulai') }}</label>
-                    <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
-                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
-                </div>
-
-                <!-- End Date -->
-                <div class="space-y-1">
-                    <label for="end_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Selesai') }}</label>
-                    <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
-                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
-                </div>
-
-                <!-- Action Button -->
-                <div class="flex items-end gap-2 md:col-span-1">
-                    <button type="submit"
-                        class="w-full bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer text-center">
-                        {{ __('Terapkan') }}
-                    </button>
-                    @if (request('branch_id') || request('start_date') || request('end_date'))
-                        <a href="{{ route('admin.reports.menus') }}"
-                            class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-4 py-2.5 rounded-xl transition cursor-pointer text-center font-bold flex items-center justify-center">
-                            {{ __('Reset') }}
-                        </a>
-                    @endif
-                </div>
+                <button type="submit"
+                    class="bg-card border border-primary hover:bg-primary-soft/20 text-accent font-bold px-5 py-2 rounded-xl transition t-size3 cursor-pointer">
+                    🔍 Filter
+                </button>
+                @if (request('branch_id') || request('start_date') || request('end_date'))
+                    <a href="{{ route('admin.reports.menus') }}"
+                        class="bg-surface border border-border text-text-muted hover:text-text px-4 py-2 rounded-xl transition t-size3 font-semibold">
+                        Reset
+                    </a>
+                @endif
             </form>
         </div>
 
         <!-- Menu Performance Table -->
-        <div class="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
+        <div class="bg-card border border-border rounded-3xl overflow-hidden shadow-xs">
             @if ($menuPerformance->isEmpty())
                 <div class="p-12 text-center space-y-3">
                     <div class="w-16 h-16 bg-surface-alt text-text-muted/60 rounded-full flex items-center justify-center mx-auto">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
-                            </path>
-                        </svg>
+                        🍔
                     </div>
                     <div class="space-y-1">
                         <h3 class="font-bold t-size4 text-text">{{ __('Tidak Ada Data Performa Menu') }}</h3>
@@ -140,5 +145,6 @@
                 </div>
             @endif
         </div>
+
     </div>
 </x-app-layout>

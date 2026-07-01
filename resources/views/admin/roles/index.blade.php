@@ -1,144 +1,123 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold t-size7 font-heading text-text">
-            {{ __('Kelola Hak Akses & Peran') }}
-        </h2>
-    </x-slot>
-
-    <div class="space-y-6 anim-fade" x-data="{
+    <div x-data="{
         showDeleteModal: false,
         deleteRoute: '',
         confirmDelete(route) {
             this.deleteRoute = route;
             this.showDeleteModal = true;
         }
-    }">
-        @if (session('success'))
-            <div class="bg-success/10 border border-success/30 text-success p-4 rounded-xl t-size3 font-semibold">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-danger/10 border border-danger/30 text-danger p-4 rounded-xl t-size3 font-semibold">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <!-- Top Actions Panel -->
-        <div class="bg-card border border-border rounded-2xl p-6 shadow-xs">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    }" class="space-y-6">
+        <div class="anim-fade space-y-6">
+            <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <h3 class="font-bold t-size5 text-text font-heading">
-                        Daftar Peran Staf
-                    </h3>
-                    <p class="text-text-muted t-size3 mt-0.5">
-                        Kelola peran (roles) dinamis untuk staf serta penugasan hak akses (permissions) masing-masing peran.
-                    </p>
+                    <p class="text-base font-bold text-primary-strong">Pengaturan Akses</p>
+                    <h1 class="mt-1 font-heading text-2xl font-extrabold tracking-tight text-text md:text-3xl">Peran & Hak
+                        Akses</h1>
+                    <p class="mt-2 max-w-2xl text-base leading-7 text-text-muted">Atur peran staf dan tentukan fitur yang
+                        dapat digunakan oleh setiap peran.</p>
                 </div>
                 <a href="{{ route('admin.roles.create') }}"
-                    class="bg-primary hover:bg-primary-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2 shrink-0 cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    class="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-primary-strong">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" />
                     </svg>
-                    Tambah Peran Baru
+                    Tambah Peran
                 </a>
-            </div>
-        </div>
+            </header>
 
-        <!-- Roles Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach ($roles as $role)
-                <div class="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="font-extrabold t-size5 font-heading text-text capitalize">
-                                {{ $role->name }}
-                            </span>
-                            @if (in_array($role->name, ['admin', 'cashier', 'kitchen']))
-                                <span class="bg-primary-soft/40 text-accent font-bold px-2.5 py-0.5 rounded-full text-[11px] uppercase tracking-wider">
-                                    Sistem
+            <section class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3" aria-label="Daftar peran">
+                @forelse ($roles as $role)
+                    @php($isSystemRole = in_array($role->name, ['admin', 'cashier', 'kitchen']))
+                    <article
+                        class="flex min-h-[280px] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-[0_10px_30px_var(--color-shadow)] transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                        <div class="flex-1 p-5 md:p-6">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex min-w-0 items-center gap-3">
+                                    <div
+                                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl {{ $isSystemRole ? 'bg-primary-soft/35 text-primary-strong' : 'bg-info-soft text-blue-700' }}">
+                                        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+                                            <path d="m9 12 2 2 4-4" />
+                                        </svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h2 class="truncate font-heading text-xl font-extrabold capitalize text-text">
+                                            {{ $role->name }}</h2>
+                                        <p class="mt-1 text-base text-text-muted">{{ $role->permissions->count() }} hak
+                                            akses aktif</p>
+                                    </div>
+                                </div>
+                                <span
+                                    class="shrink-0 rounded-full border px-3 py-1 text-sm font-bold {{ $isSystemRole ? 'border-primary-soft bg-primary-soft/30 text-accent' : 'border-border bg-surface text-text-muted' }}">
+                                    {{ $isSystemRole ? 'Sistem' : 'Kustom' }}
                                 </span>
-                            @else
-                                <span class="bg-surface border border-border text-text-muted font-bold px-2.5 py-0.5 rounded-full text-[11px] uppercase tracking-wider">
-                                    Kustom
-                                </span>
-                            @endif
+                            </div>
+
+                            <div class="mt-5 border-t border-border pt-4">
+                                <p class="text-base font-bold text-text">Hak akses utama</p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    @forelse ($role->permissions->take(6) as $permission)
+                                        <span
+                                            class="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-semibold leading-5 text-text-muted">{{ $permission->label }}</span>
+                                    @empty
+                                        <p class="text-base italic text-text-muted">Belum ada hak akses yang ditetapkan.</p>
+                                    @endforelse
+                                    @if ($role->permissions->count() > 6)
+                                        <span
+                                            class="rounded-lg border border-primary-soft bg-primary-soft/20 px-3 py-1.5 text-sm font-bold text-primary-strong">+{{ $role->permissions->count() - 6 }}
+                                            lainnya</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
 
-                        <p class="text-text-muted t-size2">
-                            Memiliki {{ $role->permissions->count() }} hak akses aktif.
-                        </p>
-
-                        <!-- Permissions Badges -->
-                        <div class="flex flex-wrap gap-1.5 pt-1">
-                            @forelse($role->permissions->take(6) as $permission)
-                                <span class="bg-surface-alt border border-border text-text-muted text-[11px] px-2 py-0.5 rounded-md font-semibold">
-                                    {{ $permission->label }}
-                                </span>
-                            @empty
-                                <span class="text-text-muted italic text-[11px] font-semibold">
-                                    Tidak ada hak akses yang ditetapkan.
-                                </span>
-                            @endforelse
-                            @if ($role->permissions->count() > 6)
-                                <span class="bg-surface-alt border border-border text-primary text-[11px] px-2 py-0.5 rounded-md font-extrabold">
-                                    +{{ $role->permissions->count() - 6 }} lainnya
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end gap-2 pt-4 border-t border-border/60">
-                        <a href="{{ route('admin.roles.edit', $role->id) }}"
-                            class="bg-surface hover:bg-border text-text border border-border font-bold px-4 py-2 rounded-xl transition t-size3 flex items-center gap-1.5 cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                            </svg>
-                            Edit
-                        </a>
-
-                        @if (!in_array($role->name, ['admin', 'cashier', 'kitchen']))
-                            <button type="button" @click="confirmDelete('{{ route('admin.roles.destroy', $role->id) }}')"
-                                class="bg-danger/10 hover:bg-danger/20 text-danger border border-danger/20 font-bold px-4 py-2 rounded-xl transition t-size3 flex items-center gap-1.5 cursor-pointer">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        <footer class="flex items-center justify-end gap-2 border-t border-border bg-bg/60 px-5 py-4 md:px-6">
+                            <a href="{{ route('admin.roles.edit', $role) }}"
+                                class="inline-flex min-h-11 items-center gap-2 rounded-xl border border-primary-soft bg-card px-4 text-base font-bold text-primary-strong hover:bg-surface">
+                                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z" />
+                                    <path d="m14 7 3 3" />
                                 </svg>
-                                Hapus
-                            </button>
-                        @endif
+                                Edit Akses
+                            </a>
+                            @if (!$isSystemRole)
+                                <button type="button" @click="confirmDelete('{{ route('admin.roles.destroy', $role) }}')"
+                                    class="inline-flex min-h-11 items-center gap-2 rounded-xl border border-danger/40 bg-card px-4 text-base font-bold text-danger hover:bg-danger-soft">
+                                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14" />
+                                    </svg>
+                                    Hapus
+                                </button>
+                            @endif
+                        </footer>
+                    </article>
+                @empty
+                    <div class="rounded-2xl border border-border bg-card px-6 py-16 text-center md:col-span-2 xl:col-span-3">
+                        <p class="text-lg font-bold text-text">Belum ada peran</p>
+                        <p class="mt-1 text-base text-text-muted">Tambahkan peran untuk mulai mengatur akses staf.</p>
                     </div>
-                </div>
-            @endforeach
+                @endforelse
+            </section>
         </div>
 
-        <!-- Delete Confirmation Modal -->
-        <div x-show="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;">
-            <div class="bg-card border border-border w-full max-w-md rounded-3xl p-6 space-y-6 shadow-xl"
-                @click.away="showDeleteModal = false">
-                <div class="space-y-2">
-                    <h3 class="font-bold t-size5 font-heading text-text">
-                        Konfirmasi Hapus Peran
-                    </h3>
-                    <p class="text-text-muted t-size3">
-                        Apakah Anda yakin ingin menghapus peran kustom ini? Tindakan ini tidak dapat dibatalkan.
-                    </p>
+        <div x-cloak x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 z-52 flex items-center justify-center bg-black/35 px-4">
+            <div class="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-lg" @click.outside="showDeleteModal = false">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft text-danger">
+                    <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 9v4M12 17h.01" />
+                        <path d="M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z" />
+                    </svg>
                 </div>
-                <div class="flex justify-end gap-3">
+                <h3 class="mt-4 font-heading text-xl font-bold text-text">Hapus peran?</h3>
+                <p class="mt-2 text-base leading-7 text-text-muted">Peran kustom ini akan dihapus. Peran bawaan sistem
+                    tetap dilindungi.</p>
+                <div class="mt-6 flex justify-end gap-3">
                     <button type="button" @click="showDeleteModal = false"
-                        class="bg-surface hover:bg-border text-text border border-border font-bold px-5 py-2.5 rounded-xl transition cursor-pointer">
-                        Batal
-                    </button>
-                    <form :action="deleteRoute" method="POST" class="inline">
+                        class="min-h-11 rounded-xl border border-border px-5 text-base font-bold text-text-muted hover:bg-surface">Batal</button>
+                    <form :action="deleteRoute" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
-                            class="bg-danger hover:bg-danger-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs cursor-pointer">
-                            Hapus Peran
-                        </button>
+                        <button type="submit" class="min-h-11 rounded-xl bg-danger px-5 text-base font-bold text-white hover:bg-red-600">Hapus</button>
                     </form>
                 </div>
             </div>

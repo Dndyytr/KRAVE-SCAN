@@ -57,6 +57,19 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $activeOrders = collect();
+        $activeOrdersCount = 0;
+
+        if (auth()->user()->hasPermission('access_cashier')) {
+            $activeOrdersQuery = Order::whereIn('status', ['pending', 'confirmed', 'in_process']);
+            $activeOrdersCount = (clone $activeOrdersQuery)->count();
+            $activeOrders = $activeOrdersQuery
+                ->with('orderItems.menu')
+                ->oldest()
+                ->take(5)
+                ->get();
+        }
+
         // 6. Low Stock Items List (Latest 5 warnings)
         $lowStockItems = StockItem::whereColumn('quantity', '<=', 'minimum_quantity')
             ->latest()
@@ -98,6 +111,8 @@ class DashboardController extends Controller
             'pendingOrdersCount' => $pendingOrdersCount,
             'lowStockCount' => $lowStockCount,
             'recentOrders' => $recentOrders,
+            'activeOrders' => $activeOrders,
+            'activeOrdersCount' => $activeOrdersCount,
             'lowStockItems' => $lowStockItems,
             'revenueTrend' => $revenueTrend,
             'ordersTrend' => $ordersTrend,

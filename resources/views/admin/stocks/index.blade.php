@@ -1,166 +1,183 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold t-size7 font-heading text-text">
-            {{ __('Kelola Stok Barang') }}
-        </h2>
-    </x-slot>
-
-    <div class="space-y-6 anim-fade" x-data="{
+    <div x-data="{
         showDeleteModal: false,
         deleteRoute: '',
         confirmDelete(route) {
             this.deleteRoute = route;
             this.showDeleteModal = true;
         }
-    }">
-        <!-- Top Actions / Filter Panel -->
-        <div class="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-4">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    }" class="space-y-6">
+        <div class="anim-fade space-y-6">
+            <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <h3 class="font-bold t-size5 text-text font-heading">
-                        Daftar Stok Inventaris
-                    </h3>
-                    <p class="text-text-muted t-size3 mt-0.5">
-                        Kelola persediaan bahan baku dan barang siap jual untuk cabang ini secara real-time.
-                    </p>
+                    <p class="text-base font-bold text-primary-strong">Manajemen Stok</p>
+                    <h1 class="mt-1 font-heading text-2xl font-extrabold tracking-tight text-text md:text-3xl">Daftar Stok
+                        Inventaris</h1>
+                    <p class="mt-2 max-w-2xl text-base leading-7 text-text-muted">Pantau jumlah bahan baku, batas minimum,
+                        dan kondisi persediaan cabang.</p>
                 </div>
                 <a href="{{ route('admin.stocks.create') }}"
-                    class="bg-primary hover:bg-primary-strong text-white font-bold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2 shrink-0 cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    class="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-primary-strong">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" />
                     </svg>
                     Tambah Stok
                 </a>
-            </div>
+            </header>
 
-            <!-- Filters -->
-            <form method="GET" action="{{ route('admin.stocks.index') }}" class="flex flex-col md:flex-row gap-3 pt-2">
-                <div class="relative flex-grow">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama barang..."
-                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2 t-size4 outline-hidden transition">
-                </div>
-                <div class="w-full md:w-56">
-                    <select name="status"
-                        class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer">
-                        <option value="">Semua Status</option>
-                        <option value="low" {{ request('status') === 'low' ? 'selected' : '' }}>Stok Menipis</option>
-                        <option value="safe" {{ request('status') === 'safe' ? 'selected' : '' }}>Stok Aman</option>
-                    </select>
-                </div>
-                <div class="flex gap-2 w-full md:w-auto shrink-0">
-                    <button type="submit"
-                        class="flex-grow md:flex-grow-0 bg-primary hover:bg-primary-strong text-white font-bold px-6 py-2.5 rounded-xl transition shadow-xs cursor-pointer">
-                        Filter
-                    </button>
-                    @if (request()->anyFilled(['search', 'status']))
-                        <a href="{{ route('admin.stocks.index') }}"
-                            class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-4 py-2.5 rounded-xl transition cursor-pointer text-center flex items-center justify-center">
-                            Reset
-                        </a>
-                    @endif
-                </div>
-            </form>
-        </div>
+            <section class="rounded-2xl border border-border bg-card p-4 shadow-[0_10px_30px_var(--color-shadow)] md:p-5" aria-label="Filter stok">
+                <form method="GET" action="{{ route('admin.stocks.index') }}" class="grid grid-cols-1 gap-3 md:grid-cols-[minmax(280px,1fr)_220px_auto]">
+                    <label class="relative block">
+                        <span class="sr-only">Cari stok</span>
+                        <svg viewBox="0 0 24 24" class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="7" />
+                            <path d="m20 20-3.5-3.5" />
+                        </svg>
+                        <input type="search" name="search" value="{{ request('search') }}" placeholder="Cari nama barang..."
+                            class="h-12 w-full rounded-xl border-border bg-card pl-12 pr-4 text-base font-medium text-text placeholder:text-text-muted/70 focus:border-primary focus:ring-primary">
+                    </label>
+                    <label>
+                        <span class="sr-only">Filter kondisi stok</span>
+                        <select name="status"
+                            class="h-12 w-full rounded-xl border-border bg-card px-4 text-base font-semibold text-text focus:border-primary focus:ring-primary">
+                            <option value="">Semua Status</option>
+                            <option value="low" @selected(request('status') === 'low')>Stok Menipis</option>
+                            <option value="safe" @selected(request('status') === 'safe')>Stok Aman</option>
+                        </select>
+                    </label>
+                    <div class="flex gap-2">
+                        <button type="submit"
+                            class="min-h-12 flex-1 rounded-xl bg-primary px-5 text-base font-bold text-white hover:bg-primary-strong md:flex-none">Terapkan</button>
+                        @if (request()->anyFilled(['search', 'status']))
+                            <a href="{{ route('admin.stocks.index') }}"
+                                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-border bg-card px-4 text-base font-bold text-text-muted hover:bg-surface hover:text-text">Reset</a>
+                        @endif
+                    </div>
+                </form>
+            </section>
 
-
-        <!-- Stock Table List -->
-        <div class="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
-            @if ($stocks->isEmpty())
-                <div class="py-12 text-center text-text-muted t-size4 font-semibold">
-                    Tidak ada barang stok yang ditemukan.
+            <section class="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_10px_32px_var(--color-shadow)]"
+                aria-labelledby="stocks-table-title">
+                <div class="flex items-center justify-between border-b border-border px-5 py-4 md:px-6">
+                    <div>
+                        <h2 id="stocks-table-title" class="font-heading text-xl font-bold text-text">Data Stok</h2>
+                        <p class="mt-1 text-base text-text-muted">{{ $stocks->total() }} item inventaris ditemukan</p>
+                    </div>
                 </div>
-            @else
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-surface-alt border-b border-border text-text-muted t-size2 font-bold uppercase tracking-wider">
-                                <th class="py-3 px-6">Nama Barang</th>
-                                <th class="py-3 px-6">Jumlah Stok</th>
-                                <th class="py-3 px-6">Batas Minimum</th>
-                                <th class="py-3 px-6">Satuan</th>
-                                <th class="py-3 px-6">Status</th>
-                                <th class="py-3 px-6">Terakhir Diperbarui</th>
-                                <th class="py-3 px-6 text-right w-40">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-border">
-                            @foreach ($stocks as $stock)
-                                @php
-                                    $isLow = $stock->quantity <= $stock->minimum_quantity;
-                                @endphp
-                                <tr class="hover:bg-surface/30 transition">
-                                    <!-- Name -->
-                                    <td class="py-4 px-6 font-bold text-text t-size4">
-                                        {{ $stock->name }}
-                                    </td>
-                                    <!-- Quantity -->
-                                    <td class="py-4 px-6 font-semibold t-size4 {{ $isLow ? 'text-danger' : 'text-text' }}">
-                                        {{ $stock->quantity }}
-                                    </td>
-                                    <!-- Minimum Quantity -->
-                                    <td class="py-4 px-6 text-text-muted t-size4">
-                                        {{ $stock->minimum_quantity }}
-                                    </td>
-                                    <!-- Unit -->
-                                    <td class="py-4 px-6 text-text-muted t-size4">
-                                        {{ $stock->unit }}
-                                    </td>
-                                    <td class="py-4 px-6">
-                                        <x-status-badge :status="$isLow ? 'low_stock' : 'available'" />
-                                    </td>
-                                    <!-- Last Updated -->
-                                    <td class="py-4 px-6 text-text-muted t-size3">
-                                        {{ $stock->updated_at->diffForHumans() }}
-                                    </td>
-                                    <!-- Actions -->
-                                    <td class="py-4 px-6 text-right">
-                                        <div class="flex justify-end gap-3">
-                                            <a href="{{ route('admin.stocks.edit', $stock->id) }}"
-                                                class="text-accent hover:text-primary font-bold t-size3 transition">
-                                                Edit
-                                            </a>
-                                            <button @click="confirmDelete('{{ route('admin.stocks.destroy', $stock->id) }}')"
-                                                class="text-danger hover:text-red-600 font-bold t-size3 transition cursor-pointer">
-                                                Hapus
-                                            </button>
-                                        </div>
-                                    </td>
+
+                @if ($stocks->isEmpty())
+                    <div class="px-6 py-16 text-center">
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-surface text-primary-strong">
+                            <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="m3 7 9-4 9 4-9 4-9-4Z" />
+                                <path d="m3 7 9 4 9-4v10l-9 4-9-4V7Z" />
+                            </svg>
+                        </div>
+                        <p class="mt-3 text-lg font-bold text-text">Stok tidak ditemukan</p>
+                        <p class="mt-1 text-base text-text-muted">Coba ubah pencarian atau filter status.</p>
+                    </div>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[980px] border-separate border-spacing-0 text-left">
+                            <thead class="bg-gradient-to-r from-bg to-surface">
+                                <tr>
+                                    <th class="border-b border-border px-6 py-4 text-base font-bold text-text">Barang</th>
+                                    <th class="border-b border-border px-5 py-4 text-base font-bold text-text">Stok Saat Ini
+                                    </th>
+                                    <th class="border-b border-border px-5 py-4 text-base font-bold text-text">Batas Minimum
+                                    </th>
+                                    <th class="border-b border-border px-5 py-4 text-base font-bold text-text">Kondisi</th>
+                                    <th class="border-b border-border px-5 py-4 text-base font-bold text-text">Diperbarui
+                                    </th>
+                                    <th class="border-b border-border px-6 py-4 text-right text-base font-bold text-text">
+                                        Aksi</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination block -->
-                <div class="px-6 py-4 border-t border-border">
-                    {{ $stocks->links() }}
-                </div>
-            @endif
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                @foreach ($stocks as $stock)
+                                    @php($isLow = $stock->quantity <= $stock->minimum_quantity)
+                                    <tr class="transition-colors duration-200 hover:bg-surface/60">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl {{ $isLow ? 'bg-danger-soft text-danger' : 'bg-success-soft text-green-700' }}">
+                                                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                        <path d="m3 7 9-4 9 4-9 4-9-4Z" />
+                                                        <path d="m3 7 9 4 9-4v10l-9 4-9-4V7Z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <p class="text-base font-bold text-text">{{ $stock->name }}</p>
+                                                    <p class="mt-1 text-sm text-text-muted">Satuan {{ $stock->unit }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-5 py-4">
+                                            <span
+                                                class="text-lg font-extrabold {{ $isLow ? 'text-danger' : 'text-text' }}">{{ number_format($stock->quantity, 0, ',', '.') }}</span>
+                                            <span class="ml-1 text-base text-text-muted">{{ $stock->unit }}</span>
+                                        </td>
+                                        <td class="px-5 py-4 text-base font-semibold text-text-muted">
+                                            {{ number_format($stock->minimum_quantity, 0, ',', '.') }} {{ $stock->unit }}
+                                        </td>
+                                        <td class="px-5 py-4"><x-status-badge :status="$isLow ? 'low_stock' : 'available'" class="!text-base" /></td>
+                                        <td class="px-5 py-4">
+                                            <p class="text-base font-semibold text-text">
+                                                {{ $stock->updated_at->translatedFormat('d M Y') }}</p>
+                                            <p class="mt-1 text-sm text-text-muted">
+                                                {{ $stock->updated_at->diffForHumans() }}</p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-end gap-2">
+                                                <a href="{{ route('admin.stocks.edit', $stock) }}" title="Edit stok" aria-label="Edit {{ $stock->name }}"
+                                                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-primary-soft bg-card text-primary-strong hover:bg-surface">
+                                                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                        <path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z" />
+                                                        <path d="m14 7 3 3" />
+                                                    </svg>
+                                                </a>
+                                                <button type="button" @click="confirmDelete('{{ route('admin.stocks.destroy', $stock) }}')"
+                                                    title="Hapus stok" aria-label="Hapus {{ $stock->name }}"
+                                                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-danger/40 bg-card text-danger hover:bg-danger-soft">
+                                                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                        <path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="flex flex-col gap-3 border-t border-border bg-bg/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between md:px-6">
+                        <p class="text-base font-medium text-text-muted">Menampilkan
+                            {{ $stocks->firstItem() }}–{{ $stocks->lastItem() }} dari {{ $stocks->total() }} item</p>
+                        {{ $stocks->links() }}
+                    </footer>
+                @endif
+            </section>
         </div>
 
-        <!-- Deletion confirmation modal -->
-        <div x-show="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" style="display: none;"
-            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
-            <div class="bg-card border border-border rounded-2xl max-w-md w-full p-6 shadow-lg space-y-4" @click.away="showDeleteModal = false">
-                <h3 class="font-bold t-size5 text-text font-heading">
-                    Konfirmasi Hapus Stok
-                </h3>
-                <p class="text-text-muted t-size3">
-                    Apakah Anda yakin ingin menghapus stok barang ini? Penghapusan akan memutus ikatan menu apa pun ke
-                    item stok ini.
-                </p>
-                <div class="flex justify-end gap-3 pt-2">
-                    <button @click="showDeleteModal = false"
-                        class="bg-surface border border-border text-text-muted hover:text-text px-4 py-2 rounded-xl transition cursor-pointer font-semibold t-size4">
-                        Batal
-                    </button>
+        <div x-cloak x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 z-52 flex items-center justify-center bg-black/35 px-4">
+            <div class="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-lg" @click.outside="showDeleteModal = false">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft text-danger">
+                    <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 9v4M12 17h.01" />
+                        <path d="M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z" />
+                    </svg>
+                </div>
+                <h3 class="mt-4 font-heading text-xl font-bold text-text">Hapus stok?</h3>
+                <p class="mt-2 text-base leading-7 text-text-muted">Item stok akan dihapus dan hubungan dengan menu
+                    terkait dapat terputus.</p>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" @click="showDeleteModal = false"
+                        class="min-h-11 rounded-xl border border-border px-5 text-base font-bold text-text-muted hover:bg-surface">Batal</button>
                     <form :action="deleteRoute" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-danger hover:bg-red-600 text-white font-bold px-4 py-2 rounded-xl transition cursor-pointer t-size4">
-                            Hapus
-                        </button>
+                        <button type="submit" class="min-h-11 rounded-xl bg-danger px-5 text-base font-bold text-white hover:bg-red-600">Hapus</button>
                     </form>
                 </div>
             </div>

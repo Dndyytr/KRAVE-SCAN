@@ -25,12 +25,12 @@ Route::redirect('/', '/login');
 
 Route::get('/run-migration', function () {
     try {
-        Artisan::call('migrate', ['--force' => true]);
+        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
         $output = Artisan::output();
 
-        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n".e($output).'</pre>';
+        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n" . e($output) . '</pre>';
     } catch (Throwable $e) {
-        return "<pre>Error running migrations:\n".e($e->getMessage())."\n\nStack Trace:\n".e($e->getTraceAsString()).'</pre>';
+        return "<pre>Error running migrations:\n" . e($e->getMessage()) . "\n\nStack Trace:\n" . e($e->getTraceAsString()) . '</pre>';
     }
 })->withoutMiddleware('web');
 
@@ -178,4 +178,4 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     Route::post('/order/{order}/pay-qris', [CustomerController::class, 'payQris'])->name('customer.pay-qris');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
