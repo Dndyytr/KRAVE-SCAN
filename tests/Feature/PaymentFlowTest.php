@@ -102,7 +102,7 @@ class PaymentFlowTest extends TestCase
         });
 
         // Jakarta cashier scans orders
-        $response = $this->actingAs($this->cashier)->get(route('cashier.orders'));
+        $response = $this->actingAs($this->cashier)->get(route('cashier.transactions'));
         $orders = $response->viewData('orders');
 
         $this->assertTrue($orders->contains('id', $jktOrder->id));

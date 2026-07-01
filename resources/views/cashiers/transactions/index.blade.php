@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold t-size7 font-heading text-text">
-            {{ __('Kelola Pesanan') }}
+            {{ __('Kelola Transaksi') }}
         </h2>
     </x-slot>
 
     <div x-data="{
         init() {
-            // Auto refresh order list every 15 seconds to fetch new orders
+            // Auto refresh list every 15 seconds to fetch new pending payments
             setInterval(() => {
                 window.location.reload();
             }, 15000);
@@ -15,10 +15,7 @@
     }" class="space-y-6">
 
         <!-- Date Filter Form -->
-        <form method="GET" action="{{ route('cashier.orders') }}" class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
-            @if ($currentStatus)
-                <input type="hidden" name="status" value="{{ $currentStatus }}">
-            @endif
+        <form method="GET" action="{{ route('cashier.transactions') }}" class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
             <div class="space-y-1">
                 <label for="start_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Mulai') }}</label>
                 <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
@@ -35,7 +32,7 @@
                     {{ __('Filter') }}
                 </button>
                 @if ($startDate || $endDate)
-                    <a href="{{ route('cashier.orders', array_filter(['status' => $currentStatus])) }}"
+                    <a href="{{ route('cashier.transactions') }}"
                         class="bg-surface hover:bg-surface-alt border border-border text-text font-bold px-4 py-2 rounded-xl t-size3 transition flex items-center justify-center">
                         {{ __('Reset') }}
                     </a>
@@ -43,29 +40,12 @@
             </div>
         </form>
 
-        <!-- Status Filter Bar (Excludes Pending) -->
-        <div class="flex flex-wrap gap-2 items-center justify-between bg-card border border-border rounded-2xl p-4 shadow-xs">
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ route('cashier.orders', array_filter(['start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ is_null($currentStatus) ? 'bg-primary text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Semua Aktif') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'confirmed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'confirmed' ? 'bg-info text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Confirmed') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'in_process', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'in_process' ? 'bg-accent text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('In Process') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'completed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'completed' ? 'bg-success text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Completed') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'cancelled', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition {{ $currentStatus === 'cancelled' ? 'bg-danger text-white' : 'bg-surface text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Cancelled') }}
-                </a>
+        <!-- Status Filter Bar -->
+        <div class="flex items-center justify-between bg-card border border-border rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center gap-2">
+                <span class="bg-warning/20 text-warning font-bold px-4 py-2 rounded-xl t-size3">
+                    {{ __('Menunggu Pembayaran (Pending)') }}
+                </span>
             </div>
 
             <div class="text-text-muted t-size2 font-semibold">
@@ -73,7 +53,7 @@
             </div>
         </div>
 
-        <!-- Orders Table / List -->
+        <!-- Transactions Table / List -->
         <div class="bg-card border border-border rounded-2xl overflow-hidden shadow-xs">
             @if ($orders->isEmpty())
                 <div class="p-12 text-center space-y-3">
@@ -85,9 +65,9 @@
                         </svg>
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-bold t-size4 text-text">{{ __('Tidak Ada Pesanan') }}</h3>
+                        <h3 class="font-bold t-size4 text-text">{{ __('Tidak Ada Transaksi Pending') }}</h3>
                         <p class="text-text-muted t-size2 max-w-sm mx-auto">
-                            {{ __('Belum ada pesanan dengan status terpilih untuk saat ini di cabang Anda.') }}
+                            {{ __('Belum ada pesanan masuk yang menunggu pembayaran saat ini.') }}
                         </p>
                     </div>
                 </div>
@@ -101,7 +81,6 @@
                                 <th class="py-4 px-6">{{ __('Meja') }}</th>
                                 <th class="py-4 px-6">{{ __('Item Pesanan') }}</th>
                                 <th class="py-4 px-6">{{ __('Total') }}</th>
-                                <th class="py-4 px-6">{{ __('Status') }}</th>
                                 <th class="py-4 px-6">{{ __('Waktu') }}</th>
                                 <th class="py-4 px-6 text-right">{{ __('Aksi') }}</th>
                             </tr>
@@ -114,7 +93,7 @@
                                         #{{ $order->id }}
                                     </td>
 
-                                    <!-- Customer details -->
+                                    <!-- Customer Details -->
                                     <td class="py-4 px-6">
                                         <div class="font-bold text-text t-size3">{{ $order->customer_name ?? '-' }}</div>
                                         <div class="text-text-muted t-size1">{{ $order->customer_contact ?? '-' }}</div>
@@ -141,11 +120,6 @@
                                         Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                                     </td>
 
-                                    <!-- Status -->
-                                    <td class="py-4 px-6">
-                                        <x-status-badge :status="$order->status" />
-                                    </td>
-
                                     <!-- Order Time -->
                                     <td class="py-4 px-6 t-size2 text-text-muted">
                                         {{ $order->created_at->format('H:i') }}
@@ -154,9 +128,9 @@
 
                                     <!-- Action -->
                                     <td class="py-4 px-6 text-right">
-                                        <a href="{{ route('cashier.orders.show', $order->id) }}"
-                                            class="inline-flex items-center bg-surface border border-border text-text hover:bg-surface-alt font-semibold px-4 py-2 rounded-xl t-size2 transition cursor-pointer">
-                                            {{ __('Detail') }}
+                                        <a href="{{ route('cashier.transactions.show', $order->id) }}"
+                                            class="inline-flex items-center bg-primary hover:bg-primary-strong text-white font-extrabold px-4 py-2 rounded-xl t-size2 transition shadow-xs cursor-pointer">
+                                            {{ __('Proses Pembayaran') }}
                                         </a>
                                     </td>
                                 </tr>

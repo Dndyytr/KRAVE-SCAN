@@ -15,6 +15,8 @@ class Order extends Model
         'table_number',
         'status',
         'total_amount',
+        'customer_name',
+        'customer_contact',
     ];
 
     public function branch()

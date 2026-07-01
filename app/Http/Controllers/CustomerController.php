@@ -26,6 +26,24 @@ class CustomerController extends Controller
 
         $branch = app(BranchContext::class)->getBranch();
 
+        // Prevent ordering if there is a pending order
+        if ($branch) {
+            $pendingOrder = Order::where('branch_id', $branch->id)
+                ->where('table_number', $table_number)
+                ->where('status', 'pending')
+                ->latest()
+                ->first();
+
+            if ($pendingOrder) {
+                return redirect()->route('customer.order.status', [
+                    'branch_code' => $branch_code,
+                    'order' => $pendingOrder->id,
+                ])->with('error', __('Anda memiliki pesanan yang belum dibayar. Selesaikan pembayaran terlebih dahulu sebelum memesan menu lain.'));
+            }
+        }
+
+        $branch = app(BranchContext::class)->getBranch();
+
         // Restore active order tracking from DB if present for this table/branch
         if ($branch) {
             $activeOrder = Order::where('branch_id', $branch->id)
@@ -64,6 +82,24 @@ class CustomerController extends Controller
      */
     public function addToCart(Request $request, $branch_code)
     {
+        $branch = app(BranchContext::class)->getBranch();
+        $table = session('table_number');
+
+        if ($branch && $table) {
+            $pendingOrder = Order::where('branch_id', $branch->id)
+                ->where('table_number', $table)
+                ->where('status', 'pending')
+                ->latest()
+                ->first();
+
+            if ($pendingOrder) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Anda memiliki pesanan yang belum dibayar. Selesaikan pembayaran terlebih dahulu sebelum memesan menu lain.'),
+                ], 403);
+            }
+        }
+
         $request->validate([
             'menu_id' => 'required|exists:menus,id',
             'quantity' => 'nullable|integer|min:1',
@@ -112,6 +148,22 @@ class CustomerController extends Controller
     {
         $branch = app(BranchContext::class)->getBranch();
         $table = session('table_number');
+
+        if ($branch && $table) {
+            $pendingOrder = Order::where('branch_id', $branch->id)
+                ->where('table_number', $table)
+                ->where('status', 'pending')
+                ->latest()
+                ->first();
+
+            if ($pendingOrder) {
+                return redirect()->route('customer.order.status', [
+                    'branch_code' => $branch_code,
+                    'order' => $pendingOrder->id,
+                ])->with('error', __('Anda memiliki pesanan yang belum dibayar. Selesaikan pembayaran terlebih dahulu sebelum memesan menu lain.'));
+            }
+        }
+
         $cart = session()->get('cart', []);
 
         $cartTotal = 0;
@@ -195,6 +247,11 @@ class CustomerController extends Controller
                 ->with('error', __('Nomor meja tidak ditemukan. Silakan pindai ulang QR Code meja Anda.'));
         }
 
+        $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_contact' => 'required|string|max:255',
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -203,6 +260,8 @@ class CustomerController extends Controller
                 'table_number' => $table,
                 'status' => 'pending',
                 'total_amount' => 0, // Placeholder, updated below
+                'customer_name' => $request->input('customer_name'),
+                'customer_contact' => $request->input('customer_contact'),
             ]);
 
             $totalAmount = 0;
@@ -256,22 +315,52 @@ class CustomerController extends Controller
     /**
      * Display order status.
      */
-    public function orderStatus(Request $request, $branch_code, Order $order)
+    public function orderStatus(Request $request, $branch_code, ?Order $order = null)
     {
         $branch = app(BranchContext::class)->getBranch();
 
-        // Ensure the order belongs to the resolved branch context
-        if ($branch && $order->branch_id !== $branch->id) {
-            abort(404, __('Order not found in this branch.'));
+        // If no order parameter, try to find the latest order from session or active table orders
+        if (! $order || ! $order->exists) {
+            $latestOrderId = session('latest_order_id');
+            if ($latestOrderId) {
+                $order = Order::find($latestOrderId);
+            }
         }
 
-        // Eager load items and menus
-        $order->load('orderItems.menu');
+        // If still no order, let's look for active orders for the table in session
+        $tableNumber = session('table_number');
+        if ((! $order || ! $order->exists) && $tableNumber && $branch) {
+            $order = Order::where('branch_id', $branch->id)
+                ->where('table_number', $tableNumber)
+                ->whereIn('status', ['pending', 'confirmed', 'in_process'])
+                ->latest()
+                ->first();
+        }
+
+        $activeOrders = collect();
+
+        // If an order is resolved, check branch context and load active orders for the table
+        if ($order && $order->exists) {
+            if ($branch && $order->branch_id !== $branch->id) {
+                abort(404, __('Order not found in this branch.'));
+            }
+
+            $activeOrders = Order::where('branch_id', $order->branch_id)
+                ->where('table_number', $order->table_number)
+                ->whereIn('status', ['pending', 'confirmed', 'in_process'])
+                ->latest()
+                ->get();
+
+            $order->load('orderItems.menu');
+        } else {
+            $order = null;
+        }
 
         return view('customers.status', [
             'branch_code' => $branch_code,
             'branch' => $branch ? $branch->name : strtoupper($branch_code),
             'order' => $order,
+            'activeOrders' => $activeOrders,
         ]);
     }
 

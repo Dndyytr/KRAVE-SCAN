@@ -191,7 +191,10 @@ class CustomerOrderingTest extends TestCase
         ]);
 
         // Resolve branch context via middleware by running a request
-        $response = $this->post(route('customer.checkout', ['branch_code' => 'jkt-01']));
+        $response = $this->post(route('customer.checkout', ['branch_code' => 'jkt-01']), [
+            'customer_name' => 'Budi',
+            'customer_contact' => '08123456789',
+        ]);
 
         // Should redirect to order status
         $response->assertRedirect();

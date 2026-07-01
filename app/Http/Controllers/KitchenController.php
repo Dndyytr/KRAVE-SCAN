@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\StockItem;
 use App\Services\BranchContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +85,7 @@ class KitchenController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:in_process,completed',
+            'status' => 'required|in:in_process,completed,cancelled',
         ]);
 
         $newStatus = $request->input('status');
@@ -99,9 +100,25 @@ class KitchenController extends Controller
             return redirect()->back()->with('error', __('Pesanan harus berstatus In Process sebelum diselesaikan.'));
         }
 
+        if ($newStatus === 'cancelled' && ! in_array($currentStatus, ['confirmed', 'in_process'])) {
+            return redirect()->back()->with('error', __('Hanya pesanan yang sedang diproses atau dikonfirmasi yang dapat dibatalkan di dapur.'));
+        }
+
         DB::beginTransaction();
 
         try {
+            // Restore stock if cancelled by kitchen
+            if ($newStatus === 'cancelled' && in_array($currentStatus, ['confirmed', 'in_process'])) {
+                $order->load('orderItems.menu');
+                foreach ($order->orderItems as $item) {
+                    if ($item->menu && $item->menu->stock_item_id) {
+                        StockItem::withoutGlobalScopes()
+                            ->where('id', $item->menu->stock_item_id)
+                            ->increment('quantity', $item->quantity);
+                    }
+                }
+            }
+
             $order->update(['status' => $newStatus]);
             DB::commit();
 

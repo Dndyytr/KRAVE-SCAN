@@ -17,6 +17,22 @@
         <!-- Column 1 & 2: Order Info & Items -->
         <div class="lg:col-span-2 space-y-6">
 
+            <!-- Customer Info Card -->
+            <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
+                <h3 class="font-bold t-size4 font-heading text-accent border-b border-border pb-3">
+                    {{ __('Informasi Pelanggan') }}
+                </h3>
+                <div class="grid grid-cols-2 gap-4 t-size3">
+                    <div>
+                        <span class="text-text-muted block">{{ __('Nama Pelanggan') }}</span>
+                        <span class="font-bold text-text">{{ $order->customer_name ?? '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-text-muted block">{{ __('No. WA / Email') }}</span>
+                        <span class="font-bold text-text">{{ $order->customer_contact ?? '-' }}</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- Order General Card -->
             <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
@@ -71,6 +87,11 @@
                                     <span class="text-text-muted t-size2">
                                         {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </span>
+                                    @if ($item->note)
+                                        <span class="block text-accent t-size1 font-semibold mt-0.5 bg-primary-soft/30 px-2 py-0.5 rounded-md inline-block border border-primary-soft/50">
+                                            Catatan: <span class="text-text font-bold">"{{ $item->note }}"</span>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <span class="font-bold text-text t-size3">
@@ -97,12 +118,10 @@
                 <div class="relative pl-6 border-l-2 border-primary-soft/50 space-y-6">
                     @forelse($order->histories as $history)
                         <div class="relative">
-                            <!-- Icon/Bullet indicator -->
-                            <span
-                                class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
+                            <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
                                 @if ($history->status === 'pending') bg-warning
                                 @elseif($history->status === 'confirmed') bg-info
-                                @elseif($history->status === 'in_process') bg-primary
+                                @elseif($history->status === 'in_process') bg-accent
                                 @elseif($history->status === 'completed') bg-success
                                 @else bg-danger @endif"></span>
 
@@ -132,233 +151,97 @@
 
         </div>
 
-        <!-- Column 3: Payment Section -->
+        <!-- Column 3: Status & Payment Display -->
         <div class="space-y-6">
 
-            @if ($order->status === 'pending')
-                <!-- Interactive Payment Form -->
-                <div x-data="{
-                    paymentMethod: 'cash',
-                    totalAmount: {{ $order->total_amount }},
-                    amountPaid: '',
-                    get change() {
-                        if (!this.amountPaid || this.amountPaid === '') return 0;
-                        let numericPaid = parseFloat(this.amountPaid);
-                        if (isNaN(numericPaid)) return 0;
-                        return Math.max(0, numericPaid - this.totalAmount);
-                    },
-                    get isInsufficient() {
-                        if (this.paymentMethod !== 'cash') return false;
-                        if (!this.amountPaid || this.amountPaid === '') return true;
-                        let numericPaid = parseFloat(this.amountPaid);
-                        return isNaN(numericPaid) || numericPaid < this.totalAmount;
-                    },
-                    setPreset(amount) {
-                        this.amountPaid = amount;
-                    },
-                    formatRupiah(amount) {
-                        return 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(amount);
-                    }
-                }" class="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-xs">
-
-                    <div class="border-b border-border pb-3">
-                        <h3 class="font-bold t-size4 font-heading text-text">{{ __('Metode Pembayaran') }}</h3>
-                        <p class="text-text-muted t-size2 mt-0.5">{{ __('Pilih metode transaksi pembayaran kasir.') }}
-                        </p>
-                    </div>
-
-                    <form action="{{ route('cashier.orders.payment', $order->id) }}" method="POST" class="space-y-6">
-                        @csrf
-
-                        <!-- Toggle Buttons for Payment Method -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="sr-only">
-                                <div class="p-3 border rounded-xl text-center font-bold t-size3 transition"
-                                    :class="paymentMethod === 'cash' ?
-                                        'border-primary bg-primary-soft/30 text-accent font-extrabold shadow-sm' :
-                                        'border-border bg-surface text-text-muted hover:bg-surface-alt'">
-                                    💵 {{ __('Tunai (Cash)') }}
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="sr-only">
-                                <div class="p-3 border rounded-xl text-center font-bold t-size3 transition"
-                                    :class="paymentMethod === 'qris' ?
-                                        'border-primary bg-primary-soft/30 text-accent font-extrabold shadow-sm' :
-                                        'border-border bg-surface text-text-muted hover:bg-surface-alt'">
-                                    📱 {{ __('QRIS') }}
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Cash Section -->
-                        <div x-show="paymentMethod === 'cash'" x-transition class="space-y-4">
-                            <div class="space-y-2">
-                                <label for="amount_paid" class="font-semibold text-text t-size3 block">
-                                    {{ __('Uang Tunai Diterima') }}
-                                </label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-text-muted font-bold t-size3">
-                                        Rp
-                                    </span>
-                                    <input type="number" id="amount_paid" name="amount_paid" x-model="amountPaid"
-                                        class="w-full pl-12 pr-4 py-3 bg-input-bg border border-input-border focus:border-input-focus focus:ring-1 focus:ring-input-focus rounded-xl font-bold t-size4 text-text"
-                                        placeholder="Contoh: 50000" :required="paymentMethod === 'cash'">
-                                </div>
-                            </div>
-
-                            <!-- Preset Amount Helpers -->
-                            <div class="space-y-1.5">
-                                <span class="t-size1 font-semibold text-text-muted block">{{ __('Pilihan Uang Cepat') }}</span>
-                                <div class="flex flex-wrap gap-2">
-                                    <button type="button" @click="setPreset(totalAmount)"
-                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">
-                                        {{ __('Uang Pas') }}
-                                    </button>
-                                    @if ($order->total_amount <= 10000)
-                                        <button type="button" @click="setPreset(10000)"
-                                            class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
-                                            10k</button>
-                                    @endif
-                                    @if ($order->total_amount <= 20000)
-                                        <button type="button" @click="setPreset(20000)"
-                                            class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
-                                            20k</button>
-                                    @endif
-                                    @if ($order->total_amount <= 50000)
-                                        <button type="button" @click="setPreset(50000)"
-                                            class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
-                                            50k</button>
-                                    @endif
-                                    @if ($order->total_amount <= 100000)
-                                        <button type="button" @click="setPreset(100000)"
-                                            class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
-                                            100k</button>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Change Display Calculator -->
-                            <div class="bg-surface rounded-xl p-4 border border-border flex items-center justify-between">
-                                <span class="text-text-muted font-semibold t-size3">{{ __('Kembalian') }}</span>
-                                <span class="font-extrabold t-size5 transition" :class="isInsufficient ? 'text-danger' : 'text-success'"
-                                    x-text="isInsufficient ? 'Uang kurang' : formatRupiah(change)">
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- QRIS Section -->
-                        <div x-show="paymentMethod === 'qris'" x-transition class="bg-surface rounded-xl p-4 border border-border text-center space-y-2">
-                            <span class="text-3xl block">📱</span>
-                            <h4 class="font-bold text-text t-size3">{{ __('Simulasi QRIS') }}</h4>
-                            <p class="text-text-muted t-size2 px-2">
-                                {{ __('Harap verifikasi keberhasilan pembayaran QRIS pada EDC / Aplikasi Merchant Anda secara manual.') }}
-                            </p>
-                            <div class="inline-block bg-success/15 border border-success/30 text-success text-[10px] uppercase font-bold px-2 py-0.5 rounded">
-                                {{ __('Pembayaran Instan Sukses') }}
-                            </div>
-                        </div>
-
-                        <!-- Confirm Button -->
-                        <button type="submit"
-                            class="w-full bg-primary hover:bg-primary-strong text-white font-extrabold py-3.5 rounded-xl t-size3 transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            :disabled="isInsufficient">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                </path>
-                            </svg>
-                            {{ __('Konfirmasi Pembayaran') }}
-                        </button>
-
-                    </form>
+            <!-- Payment Completed Display -->
+            <div class="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-xs">
+                <div class="border-b border-border pb-3">
+                    <h3 class="font-bold t-size4 font-heading text-text">{{ __('Informasi Pembayaran') }}</h3>
+                    <p class="text-text-muted t-size2 mt-0.5">{{ __('Pesanan telah terbayar lunas.') }}</p>
                 </div>
-            @else
-                <!-- Payment Completed Display -->
-                <div class="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-xs">
 
-                    <div class="border-b border-border pb-3">
-                        <h3 class="font-bold t-size4 font-heading text-text">{{ __('Informasi Pembayaran') }}</h3>
-                        <p class="text-text-muted t-size2 mt-0.5">{{ __('Pesanan telah terbayar lunas.') }}</p>
+                @forelse ($order->payments as $payment)
+                    <div class="bg-surface border border-border rounded-xl p-4 space-y-3 t-size3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted">{{ __('Metode') }}</span>
+                            <span class="font-bold text-text uppercase">
+                                {{ $payment->method === 'cash' ? __('💵 Tunai') : __('📱 QRIS') }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted">{{ __('Status') }}</span>
+                            <x-status-badge :status="$payment->status" />
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted">{{ __('Uang Bayar') }}</span>
+                            <span class="font-bold text-text">
+                                Rp {{ number_format($payment->cash_received ?? $payment->amount, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-border pt-2">
+                            <span class="text-text-muted">{{ __('Total Harga') }}</span>
+                            <span class="font-bold text-text">
+                                Rp {{ number_format($payment->amount, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted">{{ __('Kembalian') }}</span>
+                            <span class="font-extrabold text-success">
+                                Rp {{ number_format($payment->change ?? 0, 0, ',', '.') }}
+                            </span>
+                        </div>
                     </div>
 
-                    @foreach ($order->payments as $payment)
-                        <div class="bg-surface border border-border rounded-xl p-4 space-y-3 t-size3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-text-muted">{{ __('Metode') }}</span>
-                                <span class="font-bold text-text uppercase">
-                                    {{ $payment->method === 'cash' ? __('💵 Tunai') : __('📱 QRIS') }}
-                                </span>
+                    <!-- Receipts link -->
+                    @foreach ($payment->receipts as $receipt)
+                        <div class="space-y-3">
+                            <div class="bg-card border border-border rounded-xl p-4 text-center space-y-2">
+                                <span class="text-text-muted t-size2 block">{{ __('Nomor Struk') }}</span>
+                                <code class="font-mono font-bold text-text block t-size3 bg-surface border border-border py-1 px-3 rounded-lg select-all">
+                                    {{ $receipt->receipt_number }}
+                                </code>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-text-muted">{{ __('Status') }}</span>
-                                <x-status-badge :status="$payment->status" />
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-text-muted">{{ __('Nominal Transaksi') }}</span>
-                                <span class="font-extrabold text-accent">
-                                    Rp {{ number_format($payment->amount, 0, ',', '.') }}
-                                </span>
-                            </div>
+
+                            <a href="{{ route('cashier.receipts.show', $receipt->id) }}" target="_blank"
+                                class="w-full bg-surface border border-border hover:bg-surface-alt text-text font-bold py-3 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 17h2a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                                    </path>
+                                </svg>
+                                {{ __('Cetak Struk Digital') }}
+                            </a>
                         </div>
-
-                        <!-- Receipts link -->
-                        @foreach ($payment->receipts as $receipt)
-                            <div class="space-y-3">
-                                <div class="bg-card border border-border rounded-xl p-4 text-center space-y-2">
-                                    <span class="text-text-muted t-size2 block">{{ __('Nomor Struk') }}</span>
-                                    <code class="font-mono font-bold text-text block t-size3 bg-surface border border-border py-1 px-3 rounded-lg select-all">
-                                        {{ $receipt->receipt_number }}
-                                    </code>
-                                </div>
-
-                                <a href="{{ route('cashier.receipts.show', $receipt->id) }}" target="_blank"
-                                    class="w-full bg-surface border border-border hover:bg-surface-alt text-text font-bold py-3 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
-                                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 17h2a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
-                                        </path>
-                                    </svg>
-                                    {{ __('Cetak Struk Digital') }}
-                                </a>
-                            </div>
-                        @endforeach
                     @endforeach
+                @empty
+                    <div class="text-center py-2 text-text-muted t-size2">
+                        {{ __('Tidak ada data pembayaran.') }}
+                    </div>
+                @endforelse
+            </div>
 
-                </div>
-            @endif
-
-            <!-- Status Management Card -->
+            <!-- Status Monitoring Card -->
             <div class="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-xs">
                 <div class="border-b border-border pb-3">
-                    <h3 class="font-bold t-size4 font-heading text-text">{{ __('Kelola Status Pesanan') }}</h3>
-                    <p class="text-text-muted t-size2 mt-0.5">{{ __('Perbarui progres pengerjaan pesanan.') }}</p>
+                    <h3 class="font-bold t-size4 font-heading text-text">{{ __('Status Pengerjaan Dapur') }}</h3>
+                    <p class="text-text-muted t-size2 mt-0.5">{{ __('Status progres pengerjaan di dapur saat ini.') }}</p>
                 </div>
 
-
-
-                @if (in_array($order->status, ['pending', 'confirmed', 'in_process']))
-                    <form action="{{ route('cashier.orders.update-status', $order->id) }}" method="POST"
-                        onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?');">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="cancelled">
-                        <button type="submit"
-                            class="w-full bg-danger/10 hover:bg-danger/25 text-danger border border-danger/30 font-bold py-2.5 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer">
-                            ❌ {{ __('Batalkan Pesanan') }}
-                        </button>
-                    </form>
-                @else
-                    <div class="text-center py-2 text-text-muted t-size3">
-                        @if ($order->status === 'completed')
-                            🎉 {{ __('Pesanan selesai sepenuhnya.') }}
-                        @else
-                            🚫 {{ __('Pesanan ini dibatalkan.') }}
-                        @endif
-                    </div>
-                @endif
+                <div class="text-center py-4 text-text-muted t-size3 font-semibold">
+                    @if ($order->status === 'confirmed')
+                        👨‍🍳 {{ __('Pesanan dalam antrean pengerjaan dapur.') }}
+                    @elseif ($order->status === 'in_process')
+                        🍳 {{ __('Pesanan sedang disiapkan di dapur.') }}
+                    @elseif ($order->status === 'completed')
+                        🎉 {{ __('Pesanan selesai sepenuhnya.') }}
+                    @elseif ($order->status === 'cancelled')
+                        🚫 {{ __('Pesanan ini dibatalkan.') }}
+                    @else
+                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                    @endif
+                </div>
             </div>
 
         </div>

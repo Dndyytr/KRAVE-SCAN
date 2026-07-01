@@ -17,7 +17,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
+
+// use Illuminate\Support\Facades\Storage;
 
 Route::redirect('/', '/login');
 
@@ -26,61 +27,61 @@ Route::get('/run-migration', function () {
         Artisan::call('migrate', ['--force' => true]);
         $output = Artisan::output();
 
-        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n" . e($output) . '</pre>';
+        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n".e($output).'</pre>';
     } catch (Throwable $e) {
-        return "<pre>Error running migrations:\n" . e($e->getMessage()) . "\n\nStack Trace:\n" . e($e->getTraceAsString()) . '</pre>';
+        return "<pre>Error running migrations:\n".e($e->getMessage())."\n\nStack Trace:\n".e($e->getTraceAsString()).'</pre>';
     }
 })->withoutMiddleware('web');
 
-Route::get('/test-s3', function () {
-    try {
-        $disk = Storage::disk('public');
-        $driver = config('filesystems.disks.public.driver');
+// Route::get('/test-s3', function () {
+//     try {
+//         $disk = Storage::disk('public');
+//         $driver = config('filesystems.disks.public.driver');
 
-        $testFileName = 'test_connection_' . time() . '.txt';
-        $disk->put($testFileName, 'KraveScan connection test');
+//         $testFileName = 'test_connection_' . time() . '.txt';
+//         $disk->put($testFileName, 'KraveScan connection test');
 
-        $exists = $disk->exists($testFileName);
-        $url = $disk->url($testFileName);
+//         $exists = $disk->exists($testFileName);
+//         $url = $disk->url($testFileName);
 
-        if ($exists) {
-            $disk->delete($testFileName);
-        }
+//         if ($exists) {
+//             $disk->delete($testFileName);
+//         }
 
-        return response()->json([
-            'status' => 'success',
-            'driver' => $driver,
-            'test_file_written' => $exists,
-            'resolved_url' => $url,
-            'config' => [
-                'driver' => config('filesystems.disks.public.driver'),
-                'bucket' => config('filesystems.disks.public.bucket'),
-                'region' => config('filesystems.disks.public.region'),
-                'endpoint' => config('filesystems.disks.public.endpoint'),
-                'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
-                'key_configured' => !empty(config('filesystems.disks.public.key')),
-                'secret_configured' => !empty(config('filesystems.disks.public.secret')),
-            ],
-        ]);
-    } catch (Throwable $e) {
-        return response()->json([
-            'status' => 'failed',
-            'driver' => config('filesystems.disks.public.driver'),
-            'error_message' => $e->getMessage(),
-            'error_class' => get_class($e),
-            'trace' => substr($e->getTraceAsString(), 0, 1000),
-            'config' => [
-                'driver' => config('filesystems.disks.public.driver'),
-                'bucket' => config('filesystems.disks.public.bucket'),
-                'region' => config('filesystems.disks.public.region'),
-                'endpoint' => config('filesystems.disks.public.endpoint'),
-                'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
-                'key_configured' => !empty(config('filesystems.disks.public.key')),
-                'secret_configured' => !empty(config('filesystems.disks.public.secret')),
-            ],
-        ], 500);
-    }
-})->withoutMiddleware('web');
+//         return response()->json([
+//             'status' => 'success',
+//             'driver' => $driver,
+//             'test_file_written' => $exists,
+//             'resolved_url' => $url,
+//             'config' => [
+//                 'driver' => config('filesystems.disks.public.driver'),
+//                 'bucket' => config('filesystems.disks.public.bucket'),
+//                 'region' => config('filesystems.disks.public.region'),
+//                 'endpoint' => config('filesystems.disks.public.endpoint'),
+//                 'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
+//                 'key_configured' => !empty(config('filesystems.disks.public.key')),
+//                 'secret_configured' => !empty(config('filesystems.disks.public.secret')),
+//             ],
+//         ]);
+//     } catch (Throwable $e) {
+//         return response()->json([
+//             'status' => 'failed',
+//             'driver' => config('filesystems.disks.public.driver'),
+//             'error_message' => $e->getMessage(),
+//             'error_class' => get_class($e),
+//             'trace' => substr($e->getTraceAsString(), 0, 1000),
+//             'config' => [
+//                 'driver' => config('filesystems.disks.public.driver'),
+//                 'bucket' => config('filesystems.disks.public.bucket'),
+//                 'region' => config('filesystems.disks.public.region'),
+//                 'endpoint' => config('filesystems.disks.public.endpoint'),
+//                 'use_path_style' => config('filesystems.disks.public.use_path_style_endpoint'),
+//                 'key_configured' => !empty(config('filesystems.disks.public.key')),
+//                 'secret_configured' => !empty(config('filesystems.disks.public.secret')),
+//             ],
+//         ], 500);
+//     }
+// })->withoutMiddleware('web');
 
 // Locale Switcher
 Route::get('/locale/{lang}', function (string $lang) {
@@ -139,6 +140,8 @@ Route::middleware(['auth', 'branch.staff'])->group(function () {
         Route::get('/orders', [CashierController::class, 'orders'])->name('cashier.orders');
         Route::get('/orders/{order}', [CashierController::class, 'showOrder'])->name('cashier.orders.show');
         Route::patch('/orders/{order}/status', [CashierController::class, 'updateStatus'])->name('cashier.orders.update-status');
+        Route::get('/transactions', [CashierController::class, 'transactions'])->name('cashier.transactions');
+        Route::get('/transactions/{order}', [CashierController::class, 'showTransaction'])->name('cashier.transactions.show');
         Route::post('/orders/{order}/payment', [CashierController::class, 'processPayment'])->name('cashier.orders.payment');
         Route::get('/receipts/{receipt}', [CashierController::class, 'showReceipt'])->name('cashier.receipts.show');
     });
@@ -165,7 +168,7 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     Route::post('/cart/add', [CustomerController::class, 'addToCart'])->name('customer.cart.add');
     Route::post('/cart/update', [CustomerController::class, 'updateCart'])->name('customer.cart.update');
     Route::post('/checkout', [CustomerController::class, 'checkout'])->name('customer.checkout');
-    Route::get('/order/{order}', [CustomerController::class, 'orderStatus'])->name('customer.order.status');
+    Route::get('/order/{order?}', [CustomerController::class, 'orderStatus'])->name('customer.order.status');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

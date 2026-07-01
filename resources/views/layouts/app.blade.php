@@ -136,6 +136,18 @@
                         Riwayat Transaksi
                     </a>
                 @elseif(Auth::user()->role?->name === 'cashier')
+                    <a href="{{ route('cashier.transactions') }}"
+                        class="group flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold t-size4 transition-all duration-200 relative {{ request()->routeIs('cashier.transactions*') ? 'bg-primary-soft text-accent shadow-sm' : 'text-text-muted hover:bg-surface hover:text-text hover:translate-x-0.5' }}">
+                        @if (request()->routeIs('cashier.transactions*'))
+                            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-strong rounded-r-full"></span>
+                        @endif
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        Kelola Transaksi
+                    </a>
                     <a href="{{ route('cashier.orders') }}"
                         class="group flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold t-size4 transition-all duration-200 relative {{ request()->routeIs('cashier.orders*') ? 'bg-primary-soft text-accent shadow-sm' : 'text-text-muted hover:bg-surface hover:text-text hover:translate-x-0.5' }}">
                         @if (request()->routeIs('cashier.orders*'))
@@ -146,7 +158,7 @@
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
                             </path>
                         </svg>
-                        Daftar Pesanan
+                        Kelola Pesanan
                     </a>
                 @elseif(Auth::user()->role?->name === 'kitchen')
                     <a href="{{ route('kitchen.orders') }}"

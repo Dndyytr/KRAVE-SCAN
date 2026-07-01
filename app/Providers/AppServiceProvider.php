@@ -40,10 +40,11 @@ class AppServiceProvider extends ServiceProvider
             OrderPaid::class,
             TriggerOrderAutomations::class
         );
-        Event::listen(
-            OrderCreated::class,
-            SendOrderCreatedNotifications::class
-        );
+        // Commented out to prevent double execution since Event Discovery auto-registers it
+        // Event::listen(
+        //     OrderCreated::class,
+        //     SendOrderCreatedNotifications::class
+        // );
 
         Event::listen(
             Login::class,

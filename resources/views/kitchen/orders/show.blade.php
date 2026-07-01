@@ -160,6 +160,19 @@
                         @endif
                     </div>
                 @endif
+
+                @if (in_array($order->status, ['confirmed', 'in_process']))
+                    <form action="{{ route('kitchen.orders.update-status', $order->id) }}" method="POST"
+                        onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?');" class="mt-2">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit"
+                            class="w-full bg-danger/10 hover:bg-danger/25 text-danger border border-danger/30 font-bold py-2.5 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                            ❌ {{ __('Batalkan Pesanan') }}
+                        </button>
+                    </form>
+                @endif
             </div>
 
         </div>

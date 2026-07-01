@@ -132,8 +132,27 @@
                 </div>
             </div>
 
+            <!-- Customer Information Form -->
+            <div class="bg-card border border-border rounded-3xl p-5 space-y-4 shadow-xs">
+                <h3 class="font-bold t-size4 font-heading text-accent border-b border-border pb-2">Informasi Pelanggan</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label for="customer_name" class="block text-text-muted t-size2 font-semibold mb-1">Nama Lengkap</label>
+                        <input type="text" name="customer_name" id="customer_name" required form="checkout-form"
+                            placeholder="Contoh: Budi Santoso"
+                            class="w-full bg-surface border border-border text-text rounded-2xl px-4 py-2.5 focus:outline-none focus:border-primary-soft transition">
+                    </div>
+                    <div>
+                        <label for="customer_contact" class="block text-text-muted t-size2 font-semibold mb-1">No. WhatsApp / Email</label>
+                        <input type="text" name="customer_contact" id="customer_contact" required form="checkout-form"
+                            placeholder="Contoh: 081234567890 / budi@email.com"
+                            class="w-full bg-surface border border-border text-text rounded-2xl px-4 py-2.5 focus:outline-none focus:border-primary-soft transition">
+                    </div>
+                </div>
+            </div>
+
             <!-- Checkout Form -->
-            <form action="{{ route('customer.checkout', ['branch_code' => $branch_code]) }}" method="POST">
+            <form id="checkout-form" action="{{ route('customer.checkout', ['branch_code' => $branch_code]) }}" method="POST">
                 @csrf
                 <button type="submit"
                     class="w-full bg-primary hover:bg-primary-strong text-white font-extrabold py-3.5 rounded-3xl t-size4 transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer">

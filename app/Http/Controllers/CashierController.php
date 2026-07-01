@@ -26,6 +26,8 @@ class CashierController extends Controller
 
         if ($status) {
             $query->where('status', $status);
+        } else {
+            $query->where('status', '!=', 'pending');
         }
 
         if ($startDate) {
@@ -36,12 +38,11 @@ class CashierController extends Controller
             $query->whereDate('created_at', '<=', $endDate);
         }
 
-        // Sort: pending first, then confirmed, then in_process, then others, sorted by creation time
+        // Sort: confirmed first, then in_process, then others, sorted by creation time
         $orders = $query->orderByRaw("CASE 
-                WHEN status = 'pending' THEN 0 
-                WHEN status = 'confirmed' THEN 1 
-                WHEN status = 'in_process' THEN 2 
-                ELSE 3 
+                WHEN status = 'confirmed' THEN 0 
+                WHEN status = 'in_process' THEN 1 
+                ELSE 2 
             END")
             ->orderBy('created_at', 'desc')
             ->paginate(15)
@@ -66,6 +67,10 @@ class CashierController extends Controller
             abort(404, __('Pesanan tidak ditemukan di cabang ini.'));
         }
 
+        if ($order->status === 'pending') {
+            return redirect()->route('cashier.transactions.show', $order->id);
+        }
+
         $order->load(['orderItems.menu', 'payments.receipts', 'histories.user']);
 
         return view('cashiers.orders.show', [
@@ -85,37 +90,27 @@ class CashierController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:in_process,completed,cancelled',
+            'status' => 'required|in:cancelled',
         ]);
 
         $newStatus = $request->input('status');
         $currentStatus = $order->status;
 
-        // Validate state transitions
-        if ($newStatus === 'in_process' && $currentStatus !== 'confirmed') {
-            return redirect()->back()->with('error', __('Pesanan harus berstatus Confirmed sebelum diproses.'));
-        }
-
-        if ($newStatus === 'completed' && $currentStatus !== 'in_process') {
-            return redirect()->back()->with('error', __('Pesanan harus berstatus In Process sebelum diselesaikan.'));
-        }
-
-        if ($newStatus === 'cancelled' && in_array($currentStatus, ['completed', 'cancelled'])) {
-            return redirect()->back()->with('error', __('Pesanan yang sudah selesai atau dibatalkan tidak dapat dibatalkan lagi.'));
+        if ($currentStatus !== 'pending') {
+            return redirect()->back()->with('error', __('Hanya pesanan yang belum terbayar (Pending) yang dapat dibatalkan oleh kasir.'));
         }
 
         DB::beginTransaction();
 
         try {
-            // Restore stock if transitioning to cancelled and stock was already deducted (status was confirmed or in process)
-            if ($newStatus === 'cancelled' && in_array($currentStatus, ['confirmed', 'in_process'])) {
-                $order->load('orderItems.menu');
-                foreach ($order->orderItems as $item) {
-                    if ($item->menu && $item->menu->stock_item_id) {
-                        StockItem::withoutGlobalScopes()
-                            ->where('id', $item->menu->stock_item_id)
-                            ->increment('quantity', $item->quantity);
-                    }
+            // Restore stock if transitioning to cancelled (for pending order, stock is not yet deducted, but for safety in case of custom configurations)
+            // Wait, pending order doesn't deduct stock, but if we do, we can restore it.
+            $order->load('orderItems.menu');
+            foreach ($order->orderItems as $item) {
+                if ($item->menu && $item->menu->stock_item_id) {
+                    StockItem::withoutGlobalScopes()
+                        ->where('id', $item->menu->stock_item_id)
+                        ->increment('quantity', $item->quantity);
                 }
             }
 
@@ -188,13 +183,13 @@ class CashierController extends Controller
             }
 
             // Create Payment
-            // Note: ScopedToBranch is applied on Payment, but it doesn't have a branch_id column.
-            // We set the fields defined in the migration
             $payment = Payment::create([
                 'order_id' => $order->id,
                 'amount' => $totalAmount,
                 'method' => $paymentMethod,
                 'status' => 'success',
+                'cash_received' => $amountPaid,
+                'change' => $change,
             ]);
 
             // Trigger RPA automations
@@ -230,20 +225,65 @@ class CashierController extends Controller
 
         $receipt->load(['payment.order.orderItems.menu', 'payment.order.branch']);
 
-        // Check if cash_received is passed in URL query or session flash
-        $cashReceived = request()->query('cash_received') ?? session('cash_received');
-        $change = request()->query('change') ?? session('change');
-
-        if ($cashReceived === null && $receipt->payment->method === 'cash') {
-            // Fallback: if not set, assume exact payment
-            $cashReceived = $receipt->payment->amount;
-            $change = 0;
-        }
+        $cashReceived = $receipt->payment->cash_received ?? $receipt->payment->amount;
+        $change = $receipt->payment->change ?? 0;
 
         return view('cashiers.receipts.show', [
             'receipt' => $receipt,
             'cashReceived' => $cashReceived,
             'change' => $change,
+        ]);
+    }
+
+    /**
+     * Display the list of pending transactions.
+     */
+    public function transactions(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Order::query()->where('status', 'pending')->with(['orderItems.menu']);
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('cashiers.transactions.index', [
+            'orders' => $orders,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+    }
+
+    /**
+     * Display a specific transaction for payment processing.
+     */
+    public function showTransaction(Order $order)
+    {
+        $branchId = app(BranchContext::class)->getBranchId();
+
+        if ($branchId && $order->branch_id !== $branchId) {
+            abort(404, __('Transaksi tidak ditemukan di cabang ini.'));
+        }
+
+        if ($order->status !== 'pending') {
+            return redirect()->route('cashier.orders.show', $order->id)
+                ->with('info', __('Pesanan ini sudah dibayar.'));
+        }
+
+        $order->load(['orderItems.menu', 'payments.receipts']);
+
+        return view('cashiers.transactions.show', [
+            'order' => $order,
         ]);
     }
 }

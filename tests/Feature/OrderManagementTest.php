@@ -21,6 +21,8 @@ class OrderManagementTest extends TestCase
 
     private Role $cashierRole;
 
+    private Role $kitchenRole;
+
     private Branch $branch1;
 
     private Branch $branch2;
@@ -33,6 +35,7 @@ class OrderManagementTest extends TestCase
 
         $this->adminRole = Role::create(['name' => 'admin']);
         $this->cashierRole = Role::create(['name' => 'cashier']);
+        $this->kitchenRole = Role::create(['name' => 'kitchen']);
 
         $this->branch1 = Branch::create([
             'name' => 'Branch One',
@@ -69,6 +72,17 @@ class OrderManagementTest extends TestCase
             'email' => 'cashier_'.$branch->code.'@test.com',
             'password' => bcrypt('password'),
             'role_id' => $this->cashierRole->id,
+            'branch_id' => $branch->id,
+        ]);
+    }
+
+    private function getKitchenUser(Branch $branch)
+    {
+        return User::create([
+            'name' => 'Kitchen '.$branch->code,
+            'email' => 'kitchen_'.$branch->code.'@test.com',
+            'password' => bcrypt('password'),
+            'role_id' => $this->kitchenRole->id,
             'branch_id' => $branch->id,
         ]);
     }
@@ -115,9 +129,9 @@ class OrderManagementTest extends TestCase
         $responseDate->assertDontSee('#'.$orderToday->id);
     }
 
-    public function test_cashier_can_update_order_status_sequence(): void
+    public function test_kitchen_can_update_order_status_sequence(): void
     {
-        $cashier = $this->getCashierUser($this->branch1);
+        $kitchen = $this->getKitchenUser($this->branch1);
 
         $order = Order::create([
             'branch_id' => $this->branch1->id,
@@ -127,23 +141,23 @@ class OrderManagementTest extends TestCase
         ]);
 
         // 1. confirmed -> in_process
-        $response = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+        $response = $this->actingAs($kitchen)->patch(route('kitchen.orders.update-status', $order->id), [
             'status' => 'in_process',
         ]);
-        $response->assertRedirect(route('cashier.orders.show', $order->id));
+        $response->assertRedirect(route('kitchen.orders.show', $order->id));
         $this->assertEquals('in_process', $order->refresh()->status);
 
         // 2. in_process -> completed
-        $response = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+        $response = $this->actingAs($kitchen)->patch(route('kitchen.orders.update-status', $order->id), [
             'status' => 'completed',
         ]);
-        $response->assertRedirect(route('cashier.orders.show', $order->id));
+        $response->assertRedirect(route('kitchen.orders.show', $order->id));
         $this->assertEquals('completed', $order->refresh()->status);
     }
 
     public function test_invalid_status_transitions_are_rejected(): void
     {
-        $cashier = $this->getCashierUser($this->branch1);
+        $kitchen = $this->getKitchenUser($this->branch1);
 
         $order = Order::create([
             'branch_id' => $this->branch1->id,
@@ -153,7 +167,7 @@ class OrderManagementTest extends TestCase
         ]);
 
         // Try transitioning directly to completed (violating: confirmed -> in_process -> completed)
-        $response = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+        $response = $this->actingAs($kitchen)->patch(route('kitchen.orders.update-status', $order->id), [
             'status' => 'completed',
         ]);
         $response->assertSessionHas('error');
@@ -162,7 +176,7 @@ class OrderManagementTest extends TestCase
 
     public function test_cancelling_order_restores_stock(): void
     {
-        $cashier = $this->getCashierUser($this->branch1);
+        $kitchen = $this->getKitchenUser($this->branch1);
 
         $stock = StockItem::create([
             'branch_id' => $this->branch1->id,
@@ -200,15 +214,40 @@ class OrderManagementTest extends TestCase
         $stock->update(['quantity' => 8]);
 
         // Cancel order
-        $response = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+        $response = $this->actingAs($kitchen)->patch(route('kitchen.orders.update-status', $order->id), [
             'status' => 'cancelled',
         ]);
-        $response->assertRedirect(route('cashier.orders.show', $order->id));
+        $response->assertRedirect(route('kitchen.orders.show', $order->id));
         $this->assertEquals('cancelled', $order->refresh()->status);
 
         // Stock must be restored (8 + 2 = 10)
         $stock->refresh();
         $this->assertEquals(10, $stock->quantity);
+    }
+
+    public function test_cashier_cannot_update_cooking_status(): void
+    {
+        $cashier = $this->getCashierUser($this->branch1);
+
+        $order = Order::create([
+            'branch_id' => $this->branch1->id,
+            'table_number' => 1,
+            'status' => 'confirmed',
+            'total_amount' => 10000,
+        ]);
+
+        // Try transitioning directly to in_process (validation failed / rejected because cashier only allows cancelled status)
+        $response = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+            'status' => 'in_process',
+        ]);
+        $response->assertSessionHasErrors(['status']);
+
+        // Try cancelling a confirmed order (rejected because cashier can only cancel pending orders)
+        $responseCancel = $this->actingAs($cashier)->patch(route('cashier.orders.update-status', $order->id), [
+            'status' => 'cancelled',
+        ]);
+        $responseCancel->assertSessionHas('error');
+        $this->assertEquals('confirmed', $order->refresh()->status);
     }
 
     public function test_observer_records_timeline_automatically(): void

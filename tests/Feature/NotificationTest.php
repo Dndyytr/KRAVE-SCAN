@@ -111,6 +111,9 @@ class NotificationTest extends TestCase
             OrderCreatedNotification::class
         );
 
+        Notification::assertSentToTimes($this->branchACashier, OrderCreatedNotification::class, 1);
+        Notification::assertSentToTimes($this->branchAAdmin, OrderCreatedNotification::class, 1);
+
         // Super Admin & Branch B Admin should NOT receive notification
         Notification::assertNotSentTo(
             [$this->superAdmin, $this->branchBAdmin],
