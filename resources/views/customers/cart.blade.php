@@ -138,8 +138,7 @@
                 <div class="space-y-3">
                     <div>
                         <label for="customer_name" class="block text-text-muted t-size2 font-semibold mb-1">Nama Lengkap</label>
-                        <input type="text" name="customer_name" id="customer_name" required form="checkout-form"
-                            placeholder="Contoh: Budi Santoso"
+                        <input type="text" name="customer_name" id="customer_name" required form="checkout-form" placeholder="Contoh: Budi Santoso"
                             class="w-full bg-surface border border-border text-text rounded-2xl px-4 py-2.5 focus:outline-none focus:border-primary-soft transition">
                     </div>
                     <div>

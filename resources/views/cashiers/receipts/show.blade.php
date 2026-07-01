@@ -47,7 +47,7 @@
         $contact = $order->customer_contact;
         $whatsappNumber = '';
         $emailAddress = '';
-        
+
         if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
             $emailAddress = $contact;
         } else {
@@ -66,25 +66,39 @@
             $lineItems .= "- {$item->menu->name} ({$item->quantity}x): Rp " . number_format($item->subtotal, 0, ',', '.') . "\n";
         }
 
-        $receiptText = "=== STRUK KRAVE SCAN ===\n"
-                     . "No Struk: {$receipt->receipt_number}\n"
-                     . "ID Pelanggan: CUST-{$order->id}\n"
-                     . "ID Pesanan: #{$order->id}\n"
-                     . "Nama Kasir: " . (Auth::user()->name ?? 'Kasir') . "\n"
-                     . "Nama Pelanggan: {$order->customer_name}\n"
-                     . "No Meja: Meja {$order->table_number}\n"
-                     . "Tanggal Transaksi: " . ($receipt->payment->created_at ? $receipt->payment->created_at->format('d/m/Y H:i:s') : '-') . "\n"
-                     . "-------------------------\n"
-                     . "Pesanan:\n" . $lineItems
-                     . "-------------------------\n"
-                     . "Total Harga: Rp " . number_format($order->total_amount, 0, ',', '.') . "\n"
-                     . "Metode Pembayaran: " . strtoupper($receipt->payment->method) . "\n"
-                     . "Total Bayar: Rp " . number_format($cashReceived, 0, ',', '.') . "\n"
-                     . "Kembalian: Rp " . number_format($change, 0, ',', '.') . "\n"
-                     . "No WA/Email: {$contact}\n"
-                     . "=========================\n"
-                     . "Terima kasih atas kunjungan Anda!";
-        
+        $receiptText =
+            "=== STRUK KRAVE SCAN ===\n" .
+            "No Struk: {$receipt->receipt_number}\n" .
+            "ID Pelanggan: CUST-{$order->id}\n" .
+            "ID Pesanan: #{$order->id}\n" .
+            'Nama Kasir: ' .
+            (Auth::user()->name ?? 'Kasir') .
+            "\n" .
+            "Nama Pelanggan: {$order->customer_name}\n" .
+            "No Meja: Meja {$order->table_number}\n" .
+            'Tanggal Transaksi: ' .
+            ($receipt->payment->created_at ? $receipt->payment->created_at->format('d/m/Y H:i:s') : '-') .
+            "\n" .
+            "-------------------------\n" .
+            "Pesanan:\n" .
+            $lineItems .
+            "-------------------------\n" .
+            'Total Harga: Rp ' .
+            number_format($order->total_amount, 0, ',', '.') .
+            "\n" .
+            'Metode Pembayaran: ' .
+            strtoupper($receipt->payment->method) .
+            "\n" .
+            'Total Bayar: Rp ' .
+            number_format($cashReceived, 0, ',', '.') .
+            "\n" .
+            'Kembalian: Rp ' .
+            number_format($change, 0, ',', '.') .
+            "\n" .
+            "No WA/Email: {$contact}\n" .
+            "=========================\n" .
+            'Terima kasih atas kunjungan Anda!';
+
         $encodedText = rawurlencode($receiptText);
     @endphp
 

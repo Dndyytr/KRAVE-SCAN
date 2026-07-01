@@ -15,7 +15,8 @@
     }" class="space-y-6">
 
         <!-- Date Filter Form -->
-        <form method="GET" action="{{ route('cashier.transactions') }}" class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
+        <form method="GET" action="{{ route('cashier.transactions') }}"
+            class="flex flex-wrap items-end gap-4 bg-card border border-border rounded-2xl p-4 shadow-xs">
             <div class="space-y-1">
                 <label for="start_date" class="block t-size2 font-semibold text-text-muted">{{ __('Tanggal Mulai') }}</label>
                 <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"

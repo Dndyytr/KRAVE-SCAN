@@ -159,9 +159,10 @@ Route::prefix('c/{branch_code}')->middleware('branch.customer')->group(function 
     Route::get('/', function ($branch_code) {
         $tableNumber = session('table_number', 1);
 
-        return redirect()->route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $tableNumber]);
+        return redirect()->route('customer.welcome', ['branch_code' => $branch_code, 'table_number' => $tableNumber]);
     });
 
+    Route::get('/welcome/{table_number}', [CustomerController::class, 'welcome'])->name('customer.welcome');
     Route::get('/table/{table_number}', [CustomerController::class, 'menu'])->name('customer.menu');
     Route::post('/menu/identify', [CustomerController::class, 'identifyMenu'])->name('customer.menu.identify');
     Route::get('/cart', [CustomerController::class, 'cart'])->name('customer.cart');

@@ -88,7 +88,8 @@
                                         {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </span>
                                     @if ($item->note)
-                                        <span class="block text-accent t-size1 font-semibold mt-0.5 bg-primary-soft/30 px-2 py-0.5 rounded-md inline-block border border-primary-soft/50">
+                                        <span
+                                            class="block text-accent t-size1 font-semibold mt-0.5 bg-primary-soft/30 px-2 py-0.5 rounded-md inline-block border border-primary-soft/50">
                                             Catatan: <span class="text-text font-bold">"{{ $item->note }}"</span>
                                         </span>
                                     @endif
@@ -118,7 +119,8 @@
                 <div class="relative pl-6 border-l-2 border-primary-soft/50 space-y-6">
                     @forelse($order->histories as $history)
                         <div class="relative">
-                            <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
+                            <span
+                                class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-white 
                                 @if ($history->status === 'pending') bg-warning
                                 @elseif($history->status === 'confirmed') bg-info
                                 @elseif($history->status === 'in_process') bg-accent
@@ -205,8 +207,7 @@
 
                             <a href="{{ route('cashier.receipts.show', $receipt->id) }}" target="_blank"
                                 class="w-full bg-surface border border-border hover:bg-surface-alt text-text font-bold py-3 rounded-xl t-size3 transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
-                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 17h2a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                                     </path>

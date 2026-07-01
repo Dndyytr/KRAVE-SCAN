@@ -191,19 +191,23 @@
                                 </button>
                                 @if ($order->total_amount <= 10000)
                                     <button type="button" @click="setPreset(10000)"
-                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp 10k</button>
+                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
+                                        10k</button>
                                 @endif
                                 @if ($order->total_amount <= 20000)
                                     <button type="button" @click="setPreset(20000)"
-                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp 20k</button>
+                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
+                                        20k</button>
                                 @endif
                                 @if ($order->total_amount <= 50000)
                                     <button type="button" @click="setPreset(50000)"
-                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp 50k</button>
+                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
+                                        50k</button>
                                 @endif
                                 @if ($order->total_amount <= 100000)
                                     <button type="button" @click="setPreset(100000)"
-                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp 100k</button>
+                                        class="px-3 py-1.5 border border-border bg-surface hover:bg-surface-alt rounded-lg font-semibold t-size2 text-text transition">Rp
+                                        100k</button>
                                 @endif
                             </div>
                         </div>

@@ -17,6 +17,24 @@ use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     /**
+     * Display the welcome/landing page when scanning QR code.
+     */
+    public function welcome(Request $request, $branch_code, $table_number)
+    {
+        // Save table number to session
+        session(['table_number' => $table_number]);
+
+        $branch = app(BranchContext::class)->getBranch();
+        $branchName = $branch ? $branch->name : strtoupper($branch_code);
+
+        return view('customers.welcome', [
+            'branch_code' => $branch_code,
+            'branch' => $branchName,
+            'table' => $table_number,
+        ]);
+    }
+
+    /**
      * Display the menu browsing page.
      */
     public function menu(Request $request, $branch_code, $table_number)

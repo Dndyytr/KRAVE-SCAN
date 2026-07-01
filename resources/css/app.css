@@ -262,6 +262,39 @@
     }
 }
 
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes blobPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.08);
+        opacity: 0.7;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @layer components {
     .anim-slide-left {
         animation: fadeSlideLeft 0.6s ease-out both;
@@ -290,6 +323,38 @@
     }
     .anim-slide-down {
         animation: slideDown 0.3s ease-out both;
+    }
+    .anim-float {
+        animation: float 4s ease-in-out infinite;
+    }
+    .anim-blob-pulse {
+        animation: blobPulse 6s ease-in-out infinite;
+    }
+    .anim-scale-in {
+        animation: scaleIn 0.6s ease-out both;
+    }
+
+    /* Staggered animation delay utilities */
+    .anim-delay-100 {
+        animation-delay: 0.1s;
+    }
+    .anim-delay-200 {
+        animation-delay: 0.2s;
+    }
+    .anim-delay-300 {
+        animation-delay: 0.3s;
+    }
+    .anim-delay-400 {
+        animation-delay: 0.4s;
+    }
+    .anim-delay-500 {
+        animation-delay: 0.5s;
+    }
+    .anim-delay-600 {
+        animation-delay: 0.6s;
+    }
+    .anim-delay-700 {
+        animation-delay: 0.7s;
     }
 }
 

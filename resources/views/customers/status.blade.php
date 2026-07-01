@@ -189,7 +189,8 @@
                 </div>
             @else
                 <div class="text-center pt-2">
-                    <div class="inline-flex items-center gap-2 bg-text-muted/20 text-text-muted font-semibold px-8 py-3 rounded-full t-size3 cursor-not-allowed">
+                    <div
+                        class="inline-flex items-center gap-2 bg-text-muted/20 text-text-muted font-semibold px-8 py-3 rounded-full t-size3 cursor-not-allowed">
                         Selesaikan Pembayaran untuk Memesan Menu Lain
                     </div>
                 </div>
