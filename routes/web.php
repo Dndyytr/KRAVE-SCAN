@@ -16,23 +16,23 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Artisan;
+// use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 // use Illuminate\Support\Facades\Storage;
 
 Route::redirect('/', '/login');
 
-Route::get('/run-migration', function () {
-    try {
-        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
-        $output = Artisan::output();
+// Route::get('/run-migration', function () {
+//     try {
+//         Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+//         $output = Artisan::output();
 
-        return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n" . e($output) . '</pre>';
-    } catch (Throwable $e) {
-        return "<pre>Error running migrations:\n" . e($e->getMessage()) . "\n\nStack Trace:\n" . e($e->getTraceAsString()) . '</pre>';
-    }
-})->withoutMiddleware('web');
+//         return "<pre>Database migrated and seeded successfully!\n\nCommand Output:\n" . e($output) . '</pre>';
+//     } catch (Throwable $e) {
+//         return "<pre>Error running migrations:\n" . e($e->getMessage()) . "\n\nStack Trace:\n" . e($e->getTraceAsString()) . '</pre>';
+//     }
+// })->withoutMiddleware('web');
 
 // Route::get('/test-s3', function () {
 //     try {
