@@ -222,7 +222,7 @@
         </div>
 
         <!-- Inspect details modal -->
-        <div x-show="showDetailModal" class="fixed inset-0 z-52 flex items-center justify-center bg-black/40 px-4" style="display: none;"
+        <div x-show="showDetailModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4" style="display: none;"
             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
             <div class="bg-card border border-border rounded-2xl max-w-3xl w-full p-6 shadow-lg space-y-4" @click.away="showDetailModal = false">

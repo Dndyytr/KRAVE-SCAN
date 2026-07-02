@@ -160,7 +160,7 @@
             </section>
         </div>
 
-        <div x-cloak x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 z-52 flex items-center justify-center bg-black/35 px-4">
+        <div x-cloak x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/35 px-4">
             <div class="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-lg" @click.outside="showDeleteModal = false">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft text-danger">
                     <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">

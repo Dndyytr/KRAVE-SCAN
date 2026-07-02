@@ -1,5 +1,5 @@
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-49 flex h-dvh w-[238px] shrink-0 flex-col border-r border-[#f3e2e5] bg-white transition-transform duration-300 ease-out lg:static lg:translate-x-0">
+    class="fixed inset-y-0 left-0 z-[49] flex h-dvh w-[238px] shrink-0 flex-col border-r border-[#f3e2e5] bg-white transition-transform duration-300 ease-out lg:static lg:translate-x-0">
     <div class="flex h-[154px] shrink-0 items-center justify-center border-b border-[#faeef0] px-5">
         <a href="{{ route('dashboard') }}" class="flex flex-col items-center" aria-label="Bakso Cinta Ciamis">
             <img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="" class="h-16 w-16 object-contain">

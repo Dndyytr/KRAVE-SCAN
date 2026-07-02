@@ -75,7 +75,7 @@ setInterval(() => fetchNotifications(), 10000)" class="relative">
     <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95"
         x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-lg z-52 overflow-hidden" style="display: none;">
+        class="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-lg z-[52] overflow-hidden" style="display: none;">
 
         <div class="px-4 py-3 border-b border-border flex items-center justify-between bg-surface-alt">
             <span class="font-bold text-text t-size4">Notifikasi</span>
