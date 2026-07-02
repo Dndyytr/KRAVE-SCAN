@@ -19,7 +19,7 @@
         <x-admin.sidebar />
 
         <section class="flex min-w-0 flex-1 flex-col">
-            <header class="flex h-16 shrink-0 items-center justify-between border-b border-[#f3e2e5] bg-white/90 px-4 backdrop-blur lg:hidden">
+            <header class="relative z-30 flex h-16 shrink-0 items-center justify-between border-b border-[#f3e2e5] bg-white/90 px-4 backdrop-blur lg:hidden">
                 <button type="button" @click="sidebarOpen = true" class="rounded-xl border border-[#f3e2e5] bg-white p-2 text-text" aria-label="Buka navigasi">
                     <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 6h16M4 12h16M4 18h16" />

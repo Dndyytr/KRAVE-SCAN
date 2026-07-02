@@ -22,7 +22,7 @@
                     <span class="text-text-muted t-size2 font-semibold block uppercase tracking-wider">{{ __('Total Pendapatan') }}</span>
                     <span class="text-text font-black t-size7 block mt-1">Rp
                         {{ number_format($totalRevenue, 0, ',', '.') }}</span>
-                    <span class="text-[10px] text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
+                    <span class="t-size1 text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
                     <span class="text-text-muted t-size2 font-semibold block uppercase tracking-wider">{{ __('Transaksi Tunai (Cash)') }}</span>
                     <span class="text-text font-black t-size7 block mt-1">Rp
                         {{ number_format($totalCash, 0, ',', '.') }}</span>
-                    <span class="text-[10px] text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
+                    <span class="t-size1 text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
                     <span class="text-text-muted t-size2 font-semibold block uppercase tracking-wider">{{ __('Transaksi QRIS') }}</span>
                     <span class="text-text font-black t-size7 block mt-1">Rp
                         {{ number_format($totalQris, 0, ',', '.') }}</span>
-                    <span class="text-[10px] text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
+                    <span class="t-size1 text-text-muted/60 mt-0.5 block">*{{ __('Hanya transaksi sukses') }}</span>
                 </div>
             </div>
         </div>
@@ -245,7 +245,7 @@
                                     </td>
                                     <td class="py-4 px-6 t-size2 text-text-muted">
                                         {{ $tx->created_at->format('H:i') }}
-                                        <span class="block text-[10px] text-text-muted/60">{{ $tx->created_at->format('d M Y') }}</span>
+                                        <span class="block t-size1 text-text-muted/60">{{ $tx->created_at->format('d M Y') }}</span>
                                     </td>
                                     <td class="py-4 px-6 text-right">
                                         <a href="{{ route('admin.orders.show', $tx->order_id) }}"

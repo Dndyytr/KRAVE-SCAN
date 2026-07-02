@@ -16,46 +16,47 @@
                 </div>
                 <div class="mb-[35px] mt-[68px] flex flex-col items-center"><img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt=""
                         class="size-[78px]"><strong
-                        class="-mt-[11px] font-brand text-[28px] font-extrabold italic leading-none tracking-[-.055em] text-[#e95578]">Bakso Cinta</strong><span
-                        class="mt-2 text-[8px] font-bold tracking-[.48em] text-[#ad8a6d]">— CIAMIS —</span></div>
+                        class="-mt-[11px] font-brand text-[28px] font-extrabold italic leading-none tracking-[-.055em] text-[#e95578]">Bakso
+                        Cinta</strong><span class="mt-2 text-[8px] font-bold tracking-[.48em] text-[#ad8a6d]">— CIAMIS
+                        —</span></div>
                 <div class="grid grid-cols-[48px_1fr] items-center rounded-[15px] bg-white/80 px-[14px] py-[10px] shadow-[0_5px_20px_rgba(174,111,112,.07)]">
                     <span class="grid size-11 place-items-center rounded-full bg-[#fff0ef] text-primary"><svg width="26" height="26" viewBox="0 0 32 32"
                             fill="none" stroke="currentColor" stroke-width="1.8">
                             <circle cx="16" cy="7" r="3" />
                             <path d="M10 14v11M22 14v11M8 17h16v6H8zM5 18v9M27 18v9M9 27h4M19 27h4" />
-                        </svg></span><span><small class="block text-[10px] text-[#706865]">Meja Anda</small><strong
+                        </svg></span><span><small class="block t-size1 text-[#706865]">Meja Anda</small><strong
                             class="font-heading text-[23px] font-bold leading-tight text-primary">{{ $tableLabel }}</strong></span>
                 </div>
                 <nav class="mt-[22px] grid gap-[7px]" aria-label="Navigasi pelanggan">
                     <a href="{{ route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $table]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M4 17h16M6 17a6 6 0 0 1 12 0M12 8v3M3 20h18" />
                         </svg>Menu</a>
                     <a href="{{ route('customer.ai-scan', ['branch_code' => $branch_code]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M4 7h4l1.5-2h5L16 7h4v12H4z" />
                             <circle cx="12" cy="13" r="3" />
                         </svg>AI Scan</a>
                     <a href="{{ route('customer.cart', ['branch_code' => $branch_code]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M3 4h2l2.2 10.5h10.9L21 7H6M9 20h.01M18 20h.01" />
                         </svg>Keranjang</a>
                     <a href="{{ route('customer.payment', ['branch_code' => $branch_code, 'order' => $order?->id]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] bg-[linear-gradient(100deg,#f54772,#fc708d)] px-[14px] text-[11px] font-semibold text-white shadow-[0_8px_18px_rgba(242,76,114,.18)]"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] bg-[linear-gradient(100deg,#f54772,#fc708d)] px-[14px] t-size1 font-semibold text-white shadow-[0_8px_18px_rgba(242,76,114,.18)]"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z" />
                         </svg>Pembayaran</a>
                     <a href="{{ route('customer.order.status', ['branch_code' => $branch_code, 'order' => $order?->id]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M7 3h10v18H7zM10 8h4M10 12h4" />
                         </svg>Pesanan</a>
                 </nav>
                 <div
-                    class="mt-auto rounded-[15px] bg-[linear-gradient(120deg,#fff0ee,#fde2e0)] px-[15px] py-[18px] text-center text-[10px] leading-relaxed text-[#706765]">
+                    class="mt-auto rounded-[15px] bg-[linear-gradient(120deg,#fff0ee,#fde2e0)] px-[15px] py-[18px] text-center t-size1 leading-relaxed text-[#706765]">
                     <svg class="mx-auto mb-2 size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                         <path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13h3v6H5a1 1 0 0 1-1-1v-5ZM20 13h-3v6h2a1 1 0 0 0 1-1v-5Z" />
                     </svg><strong>Butuh bantuan?</strong><br>Hubungi staf kami jika ada kendala.
@@ -72,42 +73,49 @@
                 </header>
                 <div class="hidden items-start justify-between gap-5 lg:flex">
                     <div><a href="{{ $order ? route('customer.order.status', ['branch_code' => $branch_code, 'order' => $order->id]) : route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $table]) }}"
-                            class="inline-flex items-center gap-2 text-[11px] font-semibold text-text-muted transition hover:text-primary"><span
-                                class="grid size-8 place-items-center rounded-full border border-border">←</span>Kembali ke Pesanan</a>
+                            class="inline-flex items-center gap-2 t-size1 font-semibold text-text-muted transition hover:text-primary"><span
+                                class="grid size-8 place-items-center rounded-full border border-border">←</span>Kembali
+                            ke Pesanan</a>
                         <h1 class="mt-3 font-heading text-3xl font-extrabold tracking-tight">Pembayaran ❧</h1>
                         <p class="mt-2 text-xs text-text-muted">Pilih metode pembayaran yang Anda inginkan.</p>
                     </div><x-customer.language-selector />
                 </div>
 
                 @if (session('error'))
-                    <div class="mt-4 rounded-xl border border-danger/30 bg-danger/10 p-3 text-xs font-semibold text-danger">{{ session('error') }}</div>
+                    <div class="mt-4 rounded-xl border border-danger/30 bg-danger/10 p-3 text-xs font-semibold text-danger">
+                        {{ session('error') }}</div>
                 @endif
                 @if (session('success'))
-                    <div class="mt-4 rounded-xl border border-success/30 bg-success/10 p-3 text-xs font-semibold text-success">{{ session('success') }}</div>
+                    <div class="mt-4 rounded-xl border border-success/30 bg-success/10 p-3 text-xs font-semibold text-success">
+                        {{ session('success') }}</div>
                 @endif
 
                 @if (!$order)
-                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-border bg-white p-10 text-center shadow-sm"><span
-                            class="mx-auto grid size-16 place-items-center rounded-full bg-primary-soft/30 text-primary"><svg class="size-8" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="1.8">
+                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-border bg-white p-10 text-center shadow-sm">
+                        <span class="mx-auto grid size-16 place-items-center rounded-full bg-primary-soft/30 text-primary"><svg class="size-8"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z" />
                             </svg></span>
                         <h2 class="mt-4 font-heading text-xl font-extrabold">Belum Ada Tagihan Aktif</h2>
-                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Meja Anda belum memiliki tagihan. Silakan pilih menu terlebih
+                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Meja Anda belum
+                            memiliki tagihan. Silakan pilih menu terlebih
                             dahulu.</p><a href="{{ route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $table]) }}"
-                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat Menu</a>
+                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat
+                            Menu</a>
                     </section>
                 @elseif ($order->status !== 'pending')
-                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-success/30 bg-white p-10 text-center shadow-sm"><span
-                            class="mx-auto grid size-16 place-items-center rounded-full bg-success/10 text-success"><svg class="size-8" viewBox="0 0 24 24"
+                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-success/30 bg-white p-10 text-center shadow-sm">
+                        <span class="mx-auto grid size-16 place-items-center rounded-full bg-success/10 text-success"><svg class="size-8" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="9" />
                                 <path d="m8 12 3 3 5-6" />
                             </svg></span>
                         <h2 class="mt-4 font-heading text-xl font-extrabold">Pembayaran Telah Selesai</h2>
-                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Pesanan #{{ $order->id }} telah dibayar atau sedang
+                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Pesanan
+                            #{{ $order->id }} telah dibayar atau sedang
                             diproses.</p><a href="{{ route('customer.order.status', ['branch_code' => $branch_code, 'order' => $order->id]) }}"
-                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat Status Pesanan</a>
+                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat
+                            Status Pesanan</a>
                     </section>
                 @else
                     <div class="mt-6 grid gap-5 md:grid-cols-[minmax(0,1.25fr)_minmax(280px,.75fr)]" x-data="{ payMethod: 'qris' }">
@@ -115,27 +123,31 @@
                             <h2 class="font-heading text-sm font-bold md:text-base">Pilih Metode Pembayaran</h2>
                             <div class="mt-4 grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-[#fffaf8] p-1">
                                 <button type="button" @click="payMethod='qris'"
-                                    :class="payMethod === 'qris' ? 'bg-primary text-white shadow-md' : 'text-text-muted hover:text-primary'"
-                                    class="flex min-h-12 items-center justify-center gap-2 rounded-[10px] text-[10px] font-bold transition duration-200 md:text-xs"><svg
+                                    :class="payMethod === 'qris' ? 'bg-primary text-white shadow-md' :
+                                        'text-text-muted hover:text-primary'"
+                                    class="flex min-h-12 items-center justify-center gap-2 rounded-[10px] t-size1 font-bold transition duration-200 md:text-xs"><svg
                                         class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                         <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM15 14h2v2h-2zM19 14h1v6h-6v-2" />
                                     </svg>QRIS</button>
                                 <button type="button" @click="payMethod='cashier'"
-                                    :class="payMethod === 'cashier' ? 'bg-primary text-white shadow-md' : 'text-text-muted hover:text-primary'"
-                                    class="flex min-h-12 items-center justify-center gap-2 rounded-[10px] text-[10px] font-bold transition duration-200 md:text-xs"><svg
+                                    :class="payMethod === 'cashier' ? 'bg-primary text-white shadow-md' :
+                                        'text-text-muted hover:text-primary'"
+                                    class="flex min-h-12 items-center justify-center gap-2 rounded-[10px] t-size1 font-bold transition duration-200 md:text-xs"><svg
                                         class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                         <path d="M4 7h16v12H4zM7 4h10v3M8 11h8M8 15h4" />
                                     </svg>Tunai di Kasir</button>
                             </div>
 
                             <div x-show="payMethod==='qris'" x-transition class="mt-4 flex flex-col items-center">
-                                <p class="text-center text-[9px] text-text-muted md:text-[10px]">Scan kode QRIS menggunakan aplikasi pembayaran Anda.</p>
+                                <p class="text-center text-[9px] text-text-muted md:t-size1">Scan kode QRIS menggunakan
+                                    aplikasi pembayaran Anda.</p>
                                 <div
                                     class="mt-3 w-full rounded-2xl border border-[#f2dfe0] bg-[radial-gradient(circle_at_50%_35%,#fff,#fff9f7)] p-4 text-center">
                                     <div class="mx-auto flex items-center justify-center"><img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt=""
-                                            class="size-11"><span class="-ml-1 font-brand text-xl font-extrabold italic text-primary">Bakso Cinta</span></div>
-                                    <small class="mt-2 block text-[9px] text-text-muted">Total Pembayaran</small><strong
-                                        class="font-heading text-2xl font-extrabold text-primary md:text-3xl">Rp
+                                            class="size-11"><span class="-ml-1 font-brand text-xl font-extrabold italic text-primary">Bakso
+                                            Cinta</span></div>
+                                    <small class="mt-2 block text-[9px] text-text-muted">Total
+                                        Pembayaran</small><strong class="font-heading text-2xl font-extrabold text-primary md:text-3xl">Rp
                                         {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                                     <div
                                         class="mx-auto mt-3 grid aspect-square w-full max-w-[270px] place-items-center rounded-2xl border-2 border-primary/35 bg-white p-3 shadow-[0_8px_24px_rgba(241,77,115,.12)]">
@@ -164,7 +176,8 @@
                                             <rect x="80" y="80" width="10" height="10" fill="white" />
                                         </svg>
                                     </div>
-                                    <small class="mt-2 block text-[8px] text-text-muted">QRIS simulasi untuk proses pembayaran mandiri</small>
+                                    <small class="mt-2 block text-[8px] text-text-muted">QRIS simulasi untuk proses
+                                        pembayaran mandiri</small>
                                 </div>
                                 <form action="{{ route('customer.pay-qris', ['branch_code' => $branch_code, 'order' => $order->id]) }}" method="POST"
                                     class="mt-4 w-full">@csrf<button type="submit"
@@ -182,13 +195,15 @@
                                         <path d="M4 7h16v12H4zM7 4h10v3M8 11h8M8 15h4" />
                                     </svg></span>
                                 <h3 class="mt-5 font-heading text-lg font-extrabold">Bayar Tunai di Kasir</h3>
-                                <p class="mx-auto mt-2 max-w-sm text-[10px] leading-relaxed text-text-muted">Datangi kasir dan sebutkan nomor meja serta nomor
+                                <p class="mx-auto mt-2 max-w-sm t-size1 leading-relaxed text-text-muted">Datangi kasir
+                                    dan sebutkan nomor meja serta nomor
                                     pesanan Anda.</p>
                                 <div class="mx-auto mt-5 grid max-w-sm grid-cols-2 gap-3"><span
                                         class="rounded-xl bg-white p-3 text-[9px] text-text-muted shadow-sm">Meja<strong
                                             class="mt-1 block font-heading text-xl text-primary">{{ $tableLabel }}</strong></span><span
                                         class="rounded-xl bg-white p-3 text-[9px] text-text-muted shadow-sm">Pesanan<strong
-                                            class="mt-1 block font-heading text-xl text-primary">#{{ $order->id }}</strong></span></div>
+                                            class="mt-1 block font-heading text-xl text-primary">#{{ $order->id }}</strong></span>
+                                </div>
                                 <a href="{{ route('customer.order.status', ['branch_code' => $branch_code, 'order' => $order->id]) }}"
                                     class="mx-auto mt-6 flex h-11 max-w-sm items-center justify-center rounded-xl border border-primary text-xs font-bold text-primary transition duration-200 hover:bg-primary hover:text-white">Cek
                                     Status Pesanan</a>
@@ -216,26 +231,30 @@
                                                 @endif
                                             </div>
                                             <div class="min-w-0 flex-1">
-                                                <h3 class="truncate text-[10px] font-bold md:text-xs">{{ $item->menu?->name ?? 'Menu tidak tersedia' }}</h3>
+                                                <h3 class="truncate t-size1 font-bold md:text-xs">
+                                                    {{ $item->menu?->name ?? 'Menu tidak tersedia' }}</h3>
                                                 <span class="mt-1 block text-[9px] text-text-muted">x{{ $item->quantity }}</span>
-                                            </div><strong class="text-[10px] md:text-xs">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
+                                            </div><strong class="t-size1 md:text-xs">Rp
+                                                {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
                                         </article>
                                     @endforeach
                                 </div>
-                                <div class="mt-2 space-y-3 border-t border-dashed border-border pt-4 text-[10px] text-text-muted">
-                                    <div class="flex justify-between"><span>Subtotal ({{ $order->orderItems->sum('quantity') }} item)</span><span
-                                            class="font-semibold text-text">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span></div>
+                                <div class="mt-2 space-y-3 border-t border-dashed border-border pt-4 t-size1 text-text-muted">
+                                    <div class="flex justify-between"><span>Subtotal
+                                            ({{ $order->orderItems->sum('quantity') }} item)</span><span class="font-semibold text-text">Rp
+                                            {{ number_format($order->total_amount, 0, ',', '.') }}</span></div>
                                 </div>
                                 <div class="mt-4 flex items-center justify-between border-t border-border pt-4"><strong class="text-sm">Total
                                         Pembayaran</strong><strong class="font-heading text-xl font-extrabold text-primary">Rp
                                         {{ number_format($order->total_amount, 0, ',', '.') }}</strong></div>
-                                <div class="mt-5 flex items-center justify-between rounded-xl bg-[linear-gradient(100deg,#fff0ef,#fde1df)] p-4"><span
-                                        class="flex items-center gap-3 text-xs font-bold"><svg class="size-6 text-primary" viewBox="0 0 24 24"
+                                <div class="mt-5 flex items-center justify-between rounded-xl bg-[linear-gradient(100deg,#fff0ef,#fde1df)] p-4">
+                                    <span class="flex items-center gap-3 text-xs font-bold"><svg class="size-6 text-primary" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="1.8">
                                             <circle cx="7" cy="8" r="2" />
                                             <circle cx="17" cy="8" r="2" />
                                             <path d="M5 13h14v6H5zM3 14v7M21 14v7M9 13v8M15 13v8" />
-                                        </svg>Meja Anda</span><strong class="font-heading text-xl text-primary">{{ $tableLabel }}</strong></div>
+                                        </svg>Meja Anda</span><strong class="font-heading text-xl text-primary">{{ $tableLabel }}</strong>
+                                </div>
                             </section>
                             <div
                                 class="flex items-start gap-3 rounded-2xl border border-warning/40 bg-warning/10 p-4 text-[9px] leading-relaxed text-text-muted">
@@ -243,18 +262,21 @@
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                         <path
                                             d="M9 18h6M10 22h4M8 14c-1.3-1.1-2-2.6-2-4.5a6 6 0 1 1 12 0c0 1.9-.7 3.4-2 4.5-.8.7-1 1.3-1 2H9c0-.7-.2-1.3-1-2Z" />
-                                    </svg></span><span><strong class="block text-xs text-text">Tips</strong>Pastikan koneksi internet stabil sebelum
+                                    </svg></span><span><strong class="block text-xs text-text">Tips</strong>Pastikan
+                                    koneksi internet stabil sebelum
                                     mengonfirmasi pembayaran.</span>
                             </div>
                         </aside>
                     </div>
-                    <div class="mt-4 flex items-center gap-3 rounded-2xl border border-success/40 bg-success/10 p-4 text-[9px] text-text-muted"><span
-                            class="grid size-9 shrink-0 place-items-center rounded-full bg-white text-success"><svg class="size-5" viewBox="0 0 24 24"
+                    <div class="mt-4 flex items-center gap-3 rounded-2xl border border-success/40 bg-success/10 p-4 text-[9px] text-text-muted">
+                        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-white text-success"><svg class="size-5" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M12 3 5 6v5c0 4.8 2.8 8.4 7 10 4.2-1.6 7-5.2 7-10V6l-7-3Z" />
                                 <path d="m9.5 12 1.6 1.6 3.6-4" />
-                            </svg></span><span><strong class="block text-xs text-text">Transaksi aman & terpercaya</strong>Data pembayaran Anda dilindungi
-                            selama proses transaksi.</span></div>
+                            </svg></span><span><strong class="block text-xs text-text">Transaksi aman &
+                                terpercaya</strong>Data pembayaran Anda dilindungi
+                            selama proses transaksi.</span>
+                    </div>
                 @endif
             </main>
         </div>

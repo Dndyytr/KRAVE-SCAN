@@ -61,7 +61,7 @@
         <button type="submit"
             class="h-[60px] w-full rounded-xl bg-gradient-to-r from-[#eb6f8c] to-[#e86686] text-[16px] font-bold text-white shadow-[0_9px_18px_rgba(232,108,137,.18)] hover:-translate-y-px hover:shadow-[0_12px_24px_rgba(232,108,137,.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{{ __('auth_page.login_button') }}</button>
         <div class="my-10 flex items-center gap-5"><span class="h-px flex-1 bg-[#d9d4d1]"></span><span
-                class="whitespace-nowrap text-[13px] font-medium text-[#77716f]">{{ __('auth_page.or_login_with') }}</span><span
+                class="whitespace-nowrap t-size2 font-medium text-[#77716f]">{{ __('auth_page.or_login_with') }}</span><span
                 class="h-px flex-1 bg-[#d9d4d1]"></span></div>
         <button type="button"
             class="flex h-[60px] w-full items-center justify-center gap-4 rounded-xl border border-[#f0c4cb] bg-white text-[16px] font-bold text-[#ed7f97] hover:border-primary hover:bg-[#fffafa]">

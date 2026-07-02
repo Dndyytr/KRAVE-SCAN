@@ -117,16 +117,16 @@ class OrderManagementTest extends TestCase
 
         $response = $this->actingAs($cashier)->get(route('cashier.orders', ['status' => 'pending']));
         $response->assertStatus(200);
-        $response->assertSee('#'.$orderToday->id);
-        $response->assertDontSee('#'.$orderYesterday->id);
+        $response->assertSeeText('#'.$orderToday->id);
+        $response->assertDontSeeText('#'.$orderYesterday->id);
 
         $responseDate = $this->actingAs($cashier)->get(route('cashier.orders', [
             'start_date' => now()->subDay()->format('Y-m-d'),
             'end_date' => now()->subDay()->format('Y-m-d'),
         ]));
         $responseDate->assertStatus(200);
-        $responseDate->assertSee('#'.$orderYesterday->id);
-        $responseDate->assertDontSee('#'.$orderToday->id);
+        $responseDate->assertSeeText('#'.$orderYesterday->id);
+        $responseDate->assertDontSeeText('#'.$orderToday->id);
     }
 
     public function test_kitchen_can_update_order_status_sequence(): void

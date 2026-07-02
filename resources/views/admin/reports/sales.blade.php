@@ -116,7 +116,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Penjualan</span>
                         <span class="text-accent font-extrabold t-size5 block mt-1">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 18.6% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 18.6% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 2: Total Transaksi -->
@@ -125,7 +125,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Transaksi</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">{{ number_format($totalOrders, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 12.8% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 12.8% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 3: Rata-rata Transaksi -->
@@ -134,7 +134,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Rata-rata Transaksi</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">Rp {{ number_format($avgOrder, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 5.7% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 5.7% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 4: Total Item Terjual -->
@@ -143,7 +143,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Item Terjual</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">{{ number_format($totalItemsSold, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 14.3% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 14.3% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 5: Total Diskon -->
@@ -152,7 +152,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Diskon</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">Rp 0</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 10.2% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 10.2% dari sebelumnya</span>
                     </div>
                 </div>
             </div>
@@ -411,7 +411,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Pendapatan</span>
                         <span class="text-accent font-extrabold t-size5 block mt-1">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 18.6% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 18.6% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 2: Total Pengeluaran -->
@@ -420,7 +420,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Total Pengeluaran</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 9.3% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 9.3% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 3: Laba Bersih -->
@@ -429,7 +429,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Laba Bersih</span>
                         <span class="text-success font-extrabold t-size5 block mt-1">Rp {{ number_format($netProfit, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 23.7% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 23.7% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 4: Margin Laba -->
@@ -438,7 +438,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Margin Laba</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">{{ number_format($profitMargin, 1, ',', '.') }}%</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 3.2% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 3.2% dari sebelumnya</span>
                     </div>
                 </div>
                 <!-- Card 5: Rata-rata Harian -->
@@ -447,7 +447,7 @@
                     <div>
                         <span class="text-text-muted t-size2 font-bold uppercase tracking-wider block">Rata-rata Harian</span>
                         <span class="text-text font-extrabold t-size5 block mt-1">Rp {{ number_format($dailyAvg, 0, ',', '.') }}</span>
-                        <span class="text-success text-[10px] font-bold block mt-0.5">▲ 15.4% dari sebelumnya</span>
+                        <span class="text-success t-size1 font-bold block mt-0.5">▲ 15.4% dari sebelumnya</span>
                     </div>
                 </div>
             </div>
@@ -683,7 +683,7 @@
 
         <!-- Footer Callout -->
         <div class="bg-card border border-border rounded-2xl p-5 shadow-xs flex items-center gap-3">
-            <span class="text-accent text-lg">💡</span>
+            <span class="text-accent t-size5">💡</span>
             <span class="text-text-muted t-size3 font-semibold">
                 {{ __('Tips: Pantau laporan performa outlet secara berkala untuk menjaga kesehatan bisnis & kelancaran rantai pasok.') }}
             </span>

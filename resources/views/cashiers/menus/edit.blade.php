@@ -99,7 +99,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-text-muted t-size1">Jika dihubungkan, stok barang ini akan berkurang otomatis ketika ada pelanggan yang membeli menu ini
+                        <p class="text-text-muted t-size1">Jika dihubungkan, stok barang ini akan berkurang otomatis
+                            ketika ada pelanggan yang membeli menu ini
                             dan status pembayaran dikonfirmasi.</p>
                         @error('stock_item_id')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
@@ -166,12 +167,13 @@
                             <svg class="w-8 h-8 text-primary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                </path>
                             </svg>
                             <span class="font-bold t-size3 text-primary">Upload Foto</span>
                             <span x-show="fileName" x-text="fileName" class="t-size2 text-text-muted mt-1 truncate max-w-full"></span>
                         </label>
-                        <p class="text-text-muted text-[11px] font-semibold">Format: JPG, PNG, WEBP. Ukuran maks 2MB.</p>
+                        <p class="text-text-muted t-size1 font-semibold">Format: JPG, PNG, WEBP. Ukuran maks 2MB.</p>
                         @error('image')
                             <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                         @enderror
@@ -204,7 +206,8 @@
                             <div class="p-3 space-y-1">
                                 <p class="font-bold t-size3 text-text truncate">{{ $menu->name }}</p>
                                 <div class="flex items-center justify-between">
-                                    <span class="font-extrabold text-accent t-size4">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+                                    <span class="font-extrabold text-accent t-size4">Rp
+                                        {{ number_format($menu->price, 0, ',', '.') }}</span>
                                     <span
                                         class="{{ $menu->is_active ? 'bg-success/15 text-success border-success/30' : 'bg-danger/15 text-danger border-danger/30' }} t-size1 font-bold px-2 py-0.5 rounded-full border">
                                         {{ $menu->is_active ? 'Tersedia' : 'Nonaktif' }}
@@ -255,7 +258,8 @@
                 <button type="submit"
                     class="bg-primary hover:bg-primary-strong text-white font-extrabold px-10 py-3 rounded-full transition shadow-xs cursor-pointer t-size4 flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                        </path>
                     </svg>
                     Simpan Perubahan
                 </button>

@@ -11,7 +11,12 @@
 
         {{-- Order Progress Timeline --}}
         @php
-            $statusSteps = ['pending' => 'Diterima', 'confirmed' => 'Diproses', 'in_process' => 'Siap', 'completed' => 'Selesai'];
+            $statusSteps = [
+                'pending' => 'Diterima',
+                'confirmed' => 'Diproses',
+                'in_process' => 'Siap',
+                'completed' => 'Selesai',
+            ];
             $statusOrder = array_keys($statusSteps);
             $currentIndex = array_search($order->status, $statusOrder);
             if ($currentIndex === false) {
@@ -26,7 +31,8 @@
                     {{-- Progress Line --}}
                     <div class="absolute top-5 left-[10%] right-[10%] h-0.5 bg-border z-0"></div>
                     <div class="absolute top-5 left-[10%] h-0.5 bg-primary z-0 transition-all duration-500"
-                        style="width: {{ $currentIndex >= 0 ? min(($currentIndex / (count($statusSteps) - 1)) * 80, 80) : 0 }}%"></div>
+                        style="width: {{ $currentIndex >= 0 ? min(($currentIndex / (count($statusSteps) - 1)) * 80, 80) : 0 }}%">
+                    </div>
 
                     @foreach ($statusSteps as $key => $label)
                         @php
@@ -128,9 +134,12 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-span-2 text-center font-semibold t-size3 text-text">{{ $item->quantity }}</div>
-                                <div class="col-span-2 text-right text-text-muted t-size3">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                                <div class="col-span-3 text-right font-bold t-size3 text-text">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
+                                <div class="col-span-2 text-center font-semibold t-size3 text-text">
+                                    {{ $item->quantity }}</div>
+                                <div class="col-span-2 text-right text-text-muted t-size3">Rp
+                                    {{ number_format($item->price, 0, ',', '.') }}</div>
+                                <div class="col-span-3 text-right font-bold t-size3 text-text">Rp
+                                    {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                             </div>
                         @endforeach
                     </div>
@@ -145,7 +154,8 @@
                     <div class="space-y-3 t-size3">
                         <div class="flex justify-between items-center">
                             <span class="text-text-muted">Subtotal</span>
-                            <span class="font-semibold text-text">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            <span class="font-semibold text-text">Rp
+                                {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-text-muted">Pajak (10%)</span>
@@ -153,7 +163,8 @@
                         </div>
                         <div class="border-t border-border pt-3 flex justify-between items-center">
                             <span class="font-bold text-text t-size4">Total</span>
-                            <span class="font-extrabold text-accent t-size6">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            <span class="font-extrabold text-accent t-size6">Rp
+                                {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>
@@ -228,7 +239,8 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-text-muted">{{ __('Uang Bayar') }}</span>
                                     <span class="font-bold text-text">
-                                        Rp {{ number_format($payment->cash_received ?? $payment->amount, 0, ',', '.') }}
+                                        Rp
+                                        {{ number_format($payment->cash_received ?? $payment->amount, 0, ',', '.') }}
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center border-t border-border pt-2">
@@ -304,13 +316,13 @@
                                         <span class="font-extrabold text-text t-size3">
                                             {{ ucfirst(str_replace('_', ' ', $history->status)) }}
                                         </span>
-                                        <span class="text-text-muted text-[11px]">
+                                        <span class="text-text-muted t-size1">
                                             {{ $history->created_at->format('H:i') }}
                                         </span>
                                     </div>
                                     <p class="text-text-muted t-size2 mt-0.5">{{ $history->notes }}</p>
                                     @if ($history->user)
-                                        <span class="text-[10px] text-text-muted/60 mt-0.5 block">
+                                        <span class="t-size1 text-text-muted/60 mt-0.5 block">
                                             oleh {{ $history->user->name }}
                                         </span>
                                     @endif

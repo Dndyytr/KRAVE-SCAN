@@ -20,7 +20,8 @@
                             <span class="text-accent font-extrabold t-size5">🍽️</span>
                         </div>
                         <div>
-                            <h3 class="font-extrabold text-text t-size5 font-heading">{{ config('app.name', 'KraveScan') }}</h3>
+                            <h3 class="font-extrabold text-text t-size5 font-heading">
+                                {{ config('app.name', 'KraveScan') }}</h3>
                             <p class="text-text-muted t-size2">Sistem Pemesanan Digital</p>
                         </div>
                     </div>
@@ -76,8 +77,10 @@
                                 @endif
                                 <span class="font-bold t-size3 text-text">{{ $item->menu->name }}</span>
                             </div>
-                            <div class="col-span-2 text-center font-semibold t-size3 text-text">{{ $item->quantity }}</div>
-                            <div class="col-span-4 text-right font-bold t-size3 text-text">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
+                            <div class="col-span-2 text-center font-semibold t-size3 text-text">{{ $item->quantity }}
+                            </div>
+                            <div class="col-span-4 text-right font-bold t-size3 text-text">Rp
+                                {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                         </div>
                     @endforeach
                 </div>
@@ -86,7 +89,8 @@
                 <div class="border-t border-border pt-4 space-y-2 t-size3">
                     <div class="flex justify-between items-center">
                         <span class="text-text-muted">Subtotal</span>
-                        <span class="font-semibold text-text">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                        <span class="font-semibold text-text">Rp
+                            {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-text-muted">Pajak (10%)</span>
@@ -94,7 +98,8 @@
                     </div>
                     <div class="border-t border-border pt-3 flex justify-between items-center">
                         <span class="font-extrabold text-text t-size5">TOTAL BAYAR</span>
-                        <span class="font-extrabold text-accent t-size6">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                        <span class="font-extrabold text-accent t-size6">Rp
+                            {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
@@ -133,11 +138,13 @@
                             </div>
                             <div class="border-t border-border pt-2 flex justify-between items-center">
                                 <span class="text-text-muted">Total Bayar</span>
-                                <span class="font-bold text-text">Rp {{ number_format($payment->cash_received ?? $payment->amount, 0, ',', '.') }}</span>
+                                <span class="font-bold text-text">Rp
+                                    {{ number_format($payment->cash_received ?? $payment->amount, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-muted">Kembalian</span>
-                                <span class="font-bold text-text">Rp {{ number_format($payment->change ?? 0, 0, ',', '.') }}</span>
+                                <span class="font-bold text-text">Rp
+                                    {{ number_format($payment->change ?? 0, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     @endforeach
@@ -227,7 +234,8 @@
                             <div x-show="paymentMethod === 'qris'" x-transition class="bg-surface rounded-xl p-4 border border-border text-center space-y-2">
                                 <span class="text-2xl block">📱</span>
                                 <h4 class="font-bold text-text t-size3">Simulasi QRIS</h4>
-                                <p class="text-text-muted t-size2">Verifikasi pembayaran QRIS pada EDC / Aplikasi Merchant.</p>
+                                <p class="text-text-muted t-size2">Verifikasi pembayaran QRIS pada EDC / Aplikasi
+                                    Merchant.</p>
                             </div>
 
                             <button type="submit"
@@ -289,11 +297,13 @@
                     class="flex items-center justify-between bg-surface border border-border rounded-xl p-3 hover:bg-surface-alt transition group">
                     <div>
                         <span class="font-extrabold text-accent t-size3 block">#ORD-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</span>
-                        <span class="text-text-muted t-size2">Meja {{ $order->table_number }} • {{ $order->customer_name ?? '-' }} •
+                        <span class="text-text-muted t-size2">Meja {{ $order->table_number }} •
+                            {{ $order->customer_name ?? '-' }} •
                             {{ $order->orderItems->count() }} item</span>
                     </div>
                     <svg class="w-5 h-5 text-text-muted group-hover:text-accent transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                        </path>
                     </svg>
                 </a>
             </div>
@@ -310,9 +320,9 @@
                         <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-white bg-info"></span>
                         <div>
                             <span class="font-extrabold text-text t-size3">Pesanan dibuat</span>
-                            <span class="text-text-muted text-[11px] ml-1">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                            <span class="text-text-muted t-size1 ml-1">{{ $order->created_at->format('d M Y, H:i') }}</span>
                             @if ($order->histories->first() && $order->histories->first()->user)
-                                <span class="text-[10px] text-text-muted/60 block mt-0.5">oleh
+                                <span class="t-size1 text-text-muted/60 block mt-0.5">oleh
                                     {{ $order->histories->first()->user->name ?? $order->customer_name }}</span>
                             @endif
                         </div>
@@ -324,8 +334,9 @@
                             <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-white bg-success"></span>
                             <div>
                                 <span class="font-extrabold text-text t-size3">Pembayaran diterima
-                                    ({{ $payment->method === 'cash' ? 'Tunai' : 'QRIS' }})</span>
-                                <span class="text-text-muted text-[11px] ml-1">{{ $payment->created_at->format('d M Y, H:i') }}</span>
+                                    ({{ $payment->method === 'cash' ? 'Tunai' : 'QRIS' }})
+                                </span>
+                                <span class="text-text-muted t-size1 ml-1">{{ $payment->created_at->format('d M Y, H:i') }}</span>
                             </div>
                         </div>
                     @endforeach
@@ -337,7 +348,7 @@
                                 <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-white bg-accent"></span>
                                 <div>
                                     <span class="font-extrabold text-text t-size3">Struk dicetak</span>
-                                    <span class="text-text-muted text-[11px] ml-1">{{ $receipt->created_at->format('d M Y, H:i') }}</span>
+                                    <span class="text-text-muted t-size1 ml-1">{{ $receipt->created_at->format('d M Y, H:i') }}</span>
                                 </div>
                             </div>
                         @endforeach

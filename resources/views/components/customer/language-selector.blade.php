@@ -17,7 +17,7 @@
         class="absolute right-0 top-[53px] z-30 w-[210px] origin-top-right overflow-hidden rounded-[14px] border border-[#ebddda] bg-white py-1 shadow-[0_14px_32px_rgba(87,53,52,.14)]">
         @foreach (['id' => 'Bahasa Indonesia', 'en' => 'English'] as $locale => $label)
             <a href="{{ route('locale.switch', $locale) }}"
-                class="flex min-h-[42px] items-center justify-between px-[14px] py-2 text-[11px] font-semibold transition duration-200 {{ app()->getLocale() === $locale ? 'bg-[#fff4f3] text-primary' : 'text-[#4d4240] hover:bg-[#fff4f3] hover:text-primary' }}">
+                class="flex min-h-[42px] items-center justify-between px-[14px] py-2 t-size1 font-semibold transition duration-200 {{ app()->getLocale() === $locale ? 'bg-[#fff4f3] text-primary' : 'text-[#4d4240] hover:bg-[#fff4f3] hover:text-primary' }}">
                 <span>{{ $label }}</span>
                 @if (app()->getLocale() === $locale)
                     <span class="font-extrabold" aria-hidden="true">✓</span>

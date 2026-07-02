@@ -532,7 +532,7 @@
             <div class="auth-slot w-full max-w-[484px]">{{ $slot }}</div>
         </section>
     </main>
-    <footer class="mt-6 text-center text-[13px] font-medium text-[#777270]">
+    <footer class="mt-6 text-center t-size2 font-medium text-[#777270]">
         {{ __('auth_page.copyright', ['year' => date('Y')]) }}</footer>
 </body>
 

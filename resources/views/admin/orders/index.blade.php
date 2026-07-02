@@ -151,7 +151,7 @@
                                     </td>
                                     <td class="py-4 px-6 t-size2 text-text-muted">
                                         {{ $order->created_at->format('H:i') }}
-                                        <span class="block text-[10px] text-text-muted/60">{{ $order->created_at->format('d M Y') }}</span>
+                                        <span class="block t-size1 text-text-muted/60">{{ $order->created_at->format('d M Y') }}</span>
                                     </td>
                                     <td class="py-4 px-6 text-right">
                                         <a href="{{ route('admin.orders.show', $order->id) }}"

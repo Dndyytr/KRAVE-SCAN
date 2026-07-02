@@ -1,173 +1,152 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h2 class="font-extrabold t-size8 font-heading text-text flex items-center gap-2">
-                    <span class="w-10 h-10 rounded-xl bg-primary-soft/40 flex items-center justify-center text-accent t-size5">📋</span>
-                    {{ __('Kelola Pesanan') }}
-                </h2>
-                <p class="text-text-muted t-size3 mt-1">Pantau, proses, dan konfirmasi pesanan pelanggan secara real-time.</p>
-            </div>
-            <div class="hidden sm:block">
-                <div class="bg-card border border-border px-4 py-2 rounded-2xl flex items-center gap-2 t-size2 font-semibold text-text">
-                    <span class="text-primary">📅</span>
-                    {{ now()->translatedFormat('l, d M Y') }}
-                </div>
-            </div>
-        </div>
-    </x-slot>
-
-    <div x-data="{
+    <div class="anim-fade space-y-6" x-data="{
         init() {
-            // Auto refresh order list every 15 seconds to fetch new orders
-            setInterval(() => {
-                window.location.reload();
-            }, 15000);
+            setInterval(() => window.location.reload(), 15000);
         }
-    }" class="space-y-6 anim-fade">
+    }">
+        <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="t-size4 font-bold text-primary-strong">Kasir</p>
+                <h1 class="mt-1 font-heading t-size8 font-extrabold tracking-tight text-text">Kelola Pesanan</h1>
+                <p class="mt-2 max-w-2xl t-size3 leading-7 text-text-muted">Pantau pesanan, item, status proses, dan waktu masuk secara real-time.</p>
+            </div>
+            <div class="inline-flex min-h-12 items-center gap-3 rounded-xl border border-border bg-card px-4 shadow-sm">
+                <svg viewBox="0 0 24 24" class="h-5 w-5 text-primary-strong" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="5" width="18" height="16" rx="2" />
+                    <path d="M16 3v4M8 3v4M3 10h18" />
+                </svg>
+                <span class="t-size3 font-bold text-text">{{ now()->translatedFormat('d M Y') }}</span>
+            </div>
+        </header>
 
-        <!-- Date Filter Form -->
-        <div class="bg-card border border-border rounded-3xl p-6 shadow-xs space-y-4">
-            <h3 class="font-bold t-size5 text-text font-heading">
-                Filter Rentang Tanggal
-            </h3>
-            <form method="GET" action="{{ route('cashier.orders') }}" class="flex flex-wrap items-center gap-3">
-                @if ($currentStatus)
-                    <input type="hidden" name="status" value="{{ $currentStatus }}">
-                @endif
-
-                <div class="flex items-center bg-card border border-border rounded-xl px-3.5 py-1.5 gap-2 shrink-0">
-                    <span class="text-text-muted">📅</span>
-                    <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
-                        class="bg-transparent border-0 p-0 text-text font-semibold t-size3 focus:ring-0 focus:outline-none">
-                    <span class="text-text-muted font-bold t-size2">-</span>
-                    <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
-                        class="bg-transparent border-0 p-0 text-text font-semibold t-size3 focus:ring-0 focus:outline-none">
+        <section class="rounded-2xl border border-border bg-card p-4 shadow-[0_10px_30px_var(--color-shadow)] md:p-5" aria-label="Filter pesanan">
+            <form method="GET" action="{{ route('cashier.orders') }}" class="space-y-4">
+                <div class="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_auto]">
+                    <label>
+                        <span class="mb-1.5 block t-size2 font-bold text-text-muted">Tanggal awal</span>
+                        <input type="date" name="start_date" value="{{ $startDate }}"
+                            class="h-12 w-full rounded-xl border-border bg-card px-4 t-size3 font-semibold text-text focus:border-primary focus:ring-primary">
+                    </label>
+                    <label>
+                        <span class="mb-1.5 block t-size2 font-bold text-text-muted">Tanggal akhir</span>
+                        <input type="date" name="end_date" value="{{ $endDate }}"
+                            class="h-12 w-full rounded-xl border-border bg-card px-4 t-size3 font-semibold text-text focus:border-primary focus:ring-primary">
+                    </label>
+                    <div class="flex gap-2 md:self-end">
+                        @if ($currentStatus)
+                            <input type="hidden" name="status" value="{{ $currentStatus }}">
+                        @endif
+                        <button type="submit"
+                            class="min-h-12 flex-1 rounded-xl bg-primary px-5 t-size3 font-bold text-white hover:bg-primary-strong md:flex-none">Terapkan</button>
+                        @if ($startDate || $endDate)
+                            <a href="{{ route('cashier.orders', array_filter(['status' => $currentStatus])) }}"
+                                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-border bg-card px-4 t-size3 font-bold text-text-muted hover:bg-surface hover:text-text">Reset</a>
+                        @endif
+                    </div>
                 </div>
 
-                <div class="flex gap-2">
-                    <button type="submit"
-                        class="bg-primary hover:bg-primary-strong text-white font-extrabold px-6 py-2.5 rounded-xl t-size3 transition cursor-pointer shadow-xs">
-                        Filter
-                    </button>
-                    @if ($startDate || $endDate)
-                        <a href="{{ route('cashier.orders', array_filter(['status' => $currentStatus])) }}"
-                            class="bg-surface border border-border hover:bg-border text-text-muted hover:text-text px-5 py-2.5 rounded-xl transition cursor-pointer text-center flex items-center justify-center font-bold">
-                            Reset
+                <div class="flex flex-wrap items-center gap-2 border-t border-border pt-4">
+                    @php
+                        $statusFilters = [
+                            '' => 'Semua Aktif',
+                            'confirmed' => 'Dikonfirmasi',
+                            'in_process' => 'Diproses',
+                            'completed' => 'Selesai',
+                            'cancelled' => 'Dibatalkan',
+                        ];
+                    @endphp
+                    @foreach ($statusFilters as $status => $label)
+                        <a href="{{ route('cashier.orders', array_filter(['status' => $status, 'start_date' => $startDate, 'end_date' => $endDate], fn($value) => $value !== null && $value !== '')) }}"
+                            class="rounded-xl border px-4 py-2 t-size3 font-bold transition {{ ($status === '' && is_null($currentStatus)) || $currentStatus === $status ? 'border-primary bg-primary text-white' : 'border-border bg-surface text-text-muted hover:border-primary-soft hover:text-text' }}">
+                            {{ $label }}
                         </a>
-                    @endif
+                    @endforeach
+                    <span class="ml-auto inline-flex items-center gap-2 rounded-xl bg-surface px-3 py-2 t-size2 font-semibold text-text-muted">
+                        <span class="h-2 w-2 animate-pulse rounded-full bg-success"></span>Auto-refresh 15 detik
+                    </span>
                 </div>
             </form>
-        </div>
+        </section>
 
-        <!-- Status Filter Bar (Excludes Pending) -->
-        <div class="flex flex-wrap gap-3 items-center justify-between bg-card border border-border rounded-3xl p-6 shadow-xs">
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ route('cashier.orders', array_filter(['start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition border {{ is_null($currentStatus) ? 'bg-primary text-white border-primary' : 'bg-surface border-border text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Semua Aktif') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'confirmed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition border {{ $currentStatus === 'confirmed' ? 'bg-info text-white border-info' : 'bg-surface border-border text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Confirmed') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'in_process', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition border {{ $currentStatus === 'in_process' ? 'bg-accent text-white border-accent' : 'bg-surface border-border text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('In Process') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'completed', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition border {{ $currentStatus === 'completed' ? 'bg-success text-white border-success' : 'bg-surface border-border text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Completed') }}
-                </a>
-                <a href="{{ route('cashier.orders', array_filter(['status' => 'cancelled', 'start_date' => $startDate, 'end_date' => $endDate])) }}"
-                    class="px-4 py-2 rounded-xl t-size3 font-semibold transition border {{ $currentStatus === 'cancelled' ? 'bg-danger text-white border-danger' : 'bg-surface border-border text-text-muted hover:bg-surface-alt hover:text-text' }}">
-                    {{ __('Cancelled') }}
-                </a>
+        <section class="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_10px_32px_var(--color-shadow)]" aria-labelledby="orders-table-title">
+            <div class="flex items-center justify-between border-b border-border px-5 py-4 md:px-6">
+                <div>
+                    <h2 id="orders-table-title" class="font-heading t-size6 font-bold text-text">Data Pesanan</h2>
+                    <p class="mt-1 t-size3 text-text-muted">{{ $orders->total() }} pesanan ditemukan</p>
+                </div>
             </div>
 
-            <div class="text-text-muted t-size2 font-semibold bg-surface border border-border px-3.5 py-1.5 rounded-xl">
-                🔄 {{ __('Auto-refresh aktif (15s)') }}
-            </div>
-        </div>
-
-        <!-- Orders Table / List -->
-        <div class="bg-card border border-border rounded-3xl overflow-hidden shadow-xs">
             @if ($orders->isEmpty())
-                <div class="p-12 text-center space-y-3">
-                    <div class="w-16 h-16 bg-surface-alt text-text-muted/60 rounded-full flex items-center justify-center mx-auto text-2xl">
-                        📋
+                <div class="px-6 py-16 text-center">
+                    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-surface text-primary-strong">
+                        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" />
+                        </svg>
                     </div>
-                    <h3 class="font-bold t-size4 text-text">{{ __('Tidak Ada Pesanan') }}</h3>
-                    <p class="text-text-muted t-size2 max-w-sm mx-auto">
-                        Belum ada pesanan dengan status terpilih untuk saat ini di cabang Anda.
-                    </p>
+                    <p class="mt-3 t-size5 font-bold text-text">Pesanan tidak ditemukan</p>
+                    <p class="mt-1 t-size3 text-text-muted">Coba ubah tanggal atau status pesanan.</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-surface-alt border-b border-border text-text-muted t-size2 font-bold uppercase tracking-wider">
-                                <th class="py-4 px-6">{{ __('Pesanan') }}</th>
-                                <th class="py-4 px-6">{{ __('Pelanggan') }}</th>
-                                <th class="py-4 px-6">{{ __('Meja') }}</th>
-                                <th class="py-4 px-6">{{ __('Item Pesanan') }}</th>
-                                <th class="py-4 px-6">{{ __('Total') }}</th>
-                                <th class="py-4 px-6">{{ __('Status') }}</th>
-                                <th class="py-4 px-6">{{ __('Waktu') }}</th>
-                                <th class="py-4 px-6 text-right">{{ __('Aksi') }}</th>
+                    <table class="w-full min-w-[1180px] border-separate border-spacing-0 text-left">
+                        <thead class="bg-surface-alt">
+                            <tr>
+                                <th class="border-b border-border px-6 py-4 t-size3 font-bold text-text">Pesanan</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Pelanggan</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Meja</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Item Pesanan</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Total</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Status</th>
+                                <th class="border-b border-border px-5 py-4 t-size3 font-bold text-text">Waktu</th>
+                                <th class="border-b border-border px-6 py-4 text-right t-size3 font-bold text-text">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-border">
                             @foreach ($orders as $order)
-                                <tr class="hover:bg-surface/30 transition">
-                                    <!-- Order ID -->
-                                    <td class="py-4 px-6 font-bold text-text t-size3">
-                                        #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                                <tr class="transition-colors duration-200 hover:bg-surface/60">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft/30 text-primary-strong">
+                                                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                    <path d="M6 3h12v18H6zM9 7h6M9 11h6" />
+                                                </svg>
+                                            </span>
+                                            <span class="whitespace-nowrap t-size3 font-extrabold text-text">#{{ $order->id }}</span>
+                                        </div>
                                     </td>
-
-                                    <!-- Customer details -->
-                                    <td class="py-4 px-6">
-                                        <div class="font-bold text-text t-size3.5">{{ $order->customer_name ?? '-' }}</div>
-                                        <div class="text-text-muted t-size1 mt-0.5">{{ $order->customer_contact ?? '-' }}</div>
+                                    <td class="px-5 py-4">
+                                        <p class="t-size3 font-bold text-text">{{ $order->customer_name ?? 'Pelanggan umum' }}</p>
+                                        <p class="mt-1 t-size2 text-text-muted">{{ $order->customer_contact ?? 'Kontak tidak tersedia' }}</p>
                                     </td>
-
-                                    <!-- Table Number -->
-                                    <td class="py-4 px-6">
-                                        <span class="bg-primary-soft/50 text-accent font-extrabold px-3 py-1 rounded-full t-size2 border border-primary-soft">
-                                            {{ __('Meja') }} {{ $order->table_number }}
-                                        </span>
+                                    <td class="px-5 py-4">
+                                        <span
+                                            class="inline-flex rounded-full border border-primary-soft bg-primary-soft/30 px-3 py-1.5 t-size3 font-bold text-accent">Meja
+                                            {{ $order->table_number }}</span>
                                     </td>
-
-                                    <!-- Order Items summary -->
-                                    <td class="py-4 px-6 max-w-xs truncate t-size3 text-text-muted"
-                                        title="@foreach ($order->orderItems as $item){{ $item->menu->name }} ({{ $item->quantity }}){{ !$loop->last ? ', ' : '' }} @endforeach">
-                                        @foreach ($order->orderItems as $item)
-                                            {{ $item->menu->name }}
-                                            <span class="font-bold text-accent">({{ $item->quantity }})</span>{{ !$loop->last ? ',' : '' }}
-                                        @endforeach
+                                    <td class="max-w-sm px-5 py-4">
+                                        <p class="line-clamp-2 t-size3 leading-6 text-text-muted"
+                                            title="@foreach ($order->orderItems as $item){{ $item->menu?->name }} ({{ $item->quantity }}){{ !$loop->last ? ', ' : '' }} @endforeach">
+                                            @foreach ($order->orderItems as $item)
+                                                <span class="font-semibold text-text">{{ $item->menu?->name ?? 'Menu dihapus' }}</span>
+                                                <span class="font-bold text-primary-strong">({{ $item->quantity }})</span>{{ !$loop->last ? ',' : '' }}
+                                            @endforeach
+                                        </p>
                                     </td>
-
-                                    <!-- Total Amount -->
-                                    <td class="py-4 px-6 font-extrabold text-accent t-size3.5">
-                                        Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                    <td class="px-5 py-4 t-size4 font-extrabold text-primary-strong">Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                                     </td>
-
-                                    <!-- Status -->
-                                    <td class="py-4 px-6">
-                                        <x-status-badge :status="$order->status" />
+                                    <td class="px-5 py-4"><x-status-badge :status="$order->status" /></td>
+                                    <td class="px-5 py-4">
+                                        <p class="t-size3 font-bold text-text">{{ $order->created_at->format('H:i') }} WIB</p>
+                                        <p class="mt-1 t-size2 text-text-muted">{{ $order->created_at->translatedFormat('d M Y') }}</p>
                                     </td>
-
-                                    <!-- Order Time -->
-                                    <td class="py-4 px-6 t-size2 text-text-muted">
-                                        <div class="font-bold text-text">{{ $order->created_at->format('H:i') }} WIB</div>
-                                        <div class="text-[10px] text-text-muted/60 mt-0.5">{{ $order->created_at->format('d M Y') }}</div>
-                                    </td>
-
-                                    <!-- Action -->
-                                    <td class="py-4 px-6 text-right">
-                                        <a href="{{ route('cashier.orders.show', $order->id) }}"
-                                            class="bg-surface border border-border text-text hover:bg-surface-alt font-extrabold px-4 py-2 rounded-xl t-size2 transition">
-                                            {{ __('Detail') }}
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('cashier.orders.show', $order) }}" title="Lihat detail"
+                                            aria-label="Lihat pesanan {{ $order->id }}"
+                                            class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-primary bg-card text-primary-strong hover:bg-primary-soft/20">
+                                            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                                <circle cx="12" cy="12" r="2.5" />
+                                            </svg>
                                         </a>
                                     </td>
                                 </tr>
@@ -175,15 +154,12 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Pagination -->
-                @if ($orders->hasPages())
-                    <div class="bg-surface-alt border-t border-border px-6 py-4">
-                        {{ $orders->links() }}
-                    </div>
-                @endif
+                <footer class="flex flex-col gap-3 border-t border-border bg-bg/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between md:px-6">
+                    <p class="t-size3 font-medium text-text-muted">Menampilkan {{ $orders->firstItem() }}–{{ $orders->lastItem() }} dari
+                        {{ $orders->total() }} pesanan</p>
+                    {{ $orders->links() }}
+                </footer>
             @endif
-        </div>
-
+        </section>
     </div>
 </x-app-layout>

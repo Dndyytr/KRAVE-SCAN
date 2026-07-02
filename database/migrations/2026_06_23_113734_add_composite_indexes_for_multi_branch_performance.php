@@ -26,13 +26,28 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropIndex(['branch_id', 'status']);
-            $table->dropIndex(['branch_id', 'created_at']);
-        });
+        try {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->dropIndex(['branch_id', 'status']);
+            });
+        } catch (\Exception $e) {
+            // Ignore if index doesn't exist
+        }
 
-        Schema::table('automation_logs', function (Blueprint $table) {
-            $table->dropIndex(['branch_id', 'status']);
-        });
+        try {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->dropIndex(['branch_id', 'created_at']);
+            });
+        } catch (\Exception $e) {
+            // Ignore if index doesn't exist
+        }
+
+        try {
+            Schema::table('automation_logs', function (Blueprint $table) {
+                $table->dropIndex(['branch_id', 'status']);
+            });
+        } catch (\Exception $e) {
+            // Ignore if index doesn't exist
+        }
     }
 };

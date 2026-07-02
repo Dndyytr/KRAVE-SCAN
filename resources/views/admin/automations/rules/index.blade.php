@@ -81,13 +81,13 @@
                                     </td>
                                     <td class="py-4 px-6 font-semibold whitespace-nowrap text-accent">
                                         {{ class_basename($rule->trigger_event) }}
-                                        <span class="text-text-muted text-[10px] block font-normal">{{ $rule->trigger_event }}</span>
+                                        <span class="text-text-muted t-size1 block font-normal">{{ $rule->trigger_event }}</span>
                                     </td>
                                     <td class="py-4 px-6">
                                         <div class="t-size2">
                                             @if ($rule->condition_type === 'always')
                                                 <span
-                                                    class="inline-flex px-2 py-0.5 rounded-md bg-info/10 text-info border border-info/20 font-bold uppercase text-[10px]">{{ __('Tanpa Kondisi') }}</span>
+                                                    class="inline-flex px-2 py-0.5 rounded-md bg-info/10 text-info border border-info/20 font-bold uppercase t-size1">{{ __('Tanpa Kondisi') }}</span>
                                             @elseif($rule->condition_type === 'payment_method_equals')
                                                 <span class="font-bold text-text">{{ __('Metode') }}:</span> <span
                                                     class="bg-surface border border-border px-1.5 py-0.5 rounded text-mono font-bold">{{ strtoupper($rule->condition_value['payment_method'] ?? '') }}</span>
@@ -99,7 +99,7 @@
                                     </td>
                                     <td class="py-4 px-6 font-semibold text-text whitespace-nowrap">
                                         {{ class_basename($rule->action_job) }}
-                                        <span class="text-text-muted text-[10px] block font-normal">{{ $rule->action_job }}</span>
+                                        <span class="text-text-muted t-size1 block font-normal">{{ $rule->action_job }}</span>
                                     </td>
                                     <td class="py-4 px-6 whitespace-nowrap">
                                         {{ $rule->branch->name ?? __('Semua Cabang / HQ') }}

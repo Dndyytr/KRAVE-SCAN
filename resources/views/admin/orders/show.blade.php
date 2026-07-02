@@ -112,14 +112,14 @@
                                     <span class="font-extrabold text-text t-size3">
                                         {{ ucfirst(str_replace('_', ' ', $history->status)) }}
                                     </span>
-                                    <span class="text-text-muted text-[11px]">
+                                    <span class="text-text-muted t-size1">
                                         {{ $history->created_at->format('H:i') }}
                                         ({{ $history->created_at->diffForHumans() }})
                                     </span>
                                 </div>
                                 <p class="text-text-muted t-size2 mt-0.5">{{ $history->notes }}</p>
                                 @if ($history->user)
-                                    <span class="text-[10px] text-text-muted/60 mt-1 block">
+                                    <span class="t-size1 text-text-muted/60 mt-1 block">
                                         👤 {{ __('Diperbarui oleh') }}: {{ $history->user->name }}
                                     </span>
                                 @endif

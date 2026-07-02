@@ -24,7 +24,7 @@
     @endphp
 
     <div class="anim-fade space-y-5">
-        <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header class="relative z-30 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="font-heading t-size8 font-extrabold tracking-tight text-[#21171a]">
                     Selamat datang, {{ Auth::user()->name }}! <span aria-hidden="true">👋</span>
@@ -46,7 +46,8 @@
                             class="h-12 rounded-xl border-[#f2d9df] bg-white px-4 t-size1 font-semibold text-text shadow-sm focus:border-[#ff6385] focus:ring-[#ff6385]">
                             <option value="">Semua Cabang</option>
                             @foreach ($globalBranches as $branch)
-                                <option value="{{ $branch->id }}" @selected(session('active_branch_id') == $branch->id)>{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" @selected(session('active_branch_id') == $branch->id)>{{ $branch->name }}
+                                </option>
                             @endforeach
                         </select>
                     </form>
@@ -59,7 +60,7 @@
                     </svg>
                     <div>
                         <p class="t-size1 font-bold text-text">{{ now()->translatedFormat('l, d F Y') }}</p>
-                        <p class="text-[10px] text-text-muted">{{ now()->format('H:i') }} WIB</p>
+                        <p class="t-size1 text-text-muted">{{ now()->format('H:i') }} WIB</p>
                     </div>
                 </div>
                 <div class="hidden lg:block"><x-notification-bell /></div>
@@ -79,7 +80,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <h2 class="font-heading t-size4 font-bold">Pesanan Aktif</h2>
-                            <span class="rounded-full bg-[#ff3868] px-2 py-0.5 text-[10px] font-bold text-white">{{ $activeOrdersCount }}</span>
+                            <span class="rounded-full bg-[#ff3868] px-2 py-0.5 t-size1 font-bold text-white">{{ $activeOrdersCount }}</span>
                         </div>
                         <a href="{{ route('cashier.orders') }}" class="t-size1 font-bold text-[#ff3868] hover:text-[#dd244e]">Lihat Semua</a>
                     </div>
@@ -96,12 +97,14 @@
                                     <span class="block truncate t-size1 font-bold text-text">
                                         {{ $order->orderItems->pluck('menu.name')->filter()->join(', ') ?: 'Pesanan meja ' . $order->table_number }}
                                     </span>
-                                    <span class="mt-1 block text-[10px] text-text-muted">{{ $order->created_at->format('H:i') }} WIB</span>
+                                    <span class="mt-1 block t-size1 text-text-muted">{{ $order->created_at->format('H:i') }}
+                                        WIB</span>
                                 </span>
                                 <x-status-badge :status="$order->status" />
                             </a>
                         @empty
-                            <div class="rounded-xl bg-[#ecfaf1] px-4 py-12 text-center t-size2 font-semibold text-emerald-700">Tidak ada pesanan aktif.</div>
+                            <div class="rounded-xl bg-[#ecfaf1] px-4 py-12 text-center t-size2 font-semibold text-emerald-700">
+                                Tidak ada pesanan aktif.</div>
                         @endforelse
                     </div>
                 </article>
@@ -114,7 +117,8 @@
                         <h2 class="font-heading t-size4 font-bold">Grafik Penjualan</h2>
                         <p class="mt-1 t-size1 text-text-muted">Pembayaran berhasil selama 7 hari terakhir</p>
                     </div>
-                    <span class="rounded-lg border border-[#f1e2e4] px-3 py-2 t-size1 font-semibold text-text-muted">7 Hari Terakhir</span>
+                    <span class="rounded-lg border border-[#f1e2e4] px-3 py-2 t-size1 font-semibold text-text-muted">7
+                        Hari Terakhir</span>
                 </div>
                 <div id="revenue-chart" class="mt-4 h-[280px] w-full md:h-[330px]"></div>
             </article>
@@ -137,12 +141,15 @@
                                 </svg>
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="truncate t-size1 font-bold text-text">#BC-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
-                                <p class="truncate text-[10px] text-text-muted">Meja {{ $order->table_number }} · {{ $order->created_at->format('H:i') }} WIB
+                                <p class="truncate t-size1 font-bold text-text">
+                                    #BC-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                                <p class="truncate t-size1 text-text-muted">Meja {{ $order->table_number }} ·
+                                    {{ $order->created_at->format('H:i') }} WIB
                                 </p>
                             </div>
                             <div class="text-right">
-                                <p class="t-size1 font-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                                <p class="t-size1 font-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                </p>
                                 <div class="mt-1"><x-status-badge :status="$order->status" /></div>
                             </div>
                         </div>
@@ -159,7 +166,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <h2 class="font-heading t-size4 font-bold">Pesanan Aktif</h2>
-                            <span class="rounded-full bg-[#ff3868] px-2 py-0.5 text-[10px] font-bold text-white">{{ $activeOrdersCount }}</span>
+                            <span class="rounded-full bg-[#ff3868] px-2 py-0.5 t-size1 font-bold text-white">{{ $activeOrdersCount }}</span>
                         </div>
                         <a href="{{ route('cashier.orders') }}" class="t-size1 font-bold text-[#ff3868] hover:text-[#dd244e]">Lihat Semua</a>
                     </div>
@@ -176,12 +183,14 @@
                                     <span class="block truncate t-size1 font-bold text-text">
                                         {{ $order->orderItems->pluck('menu.name')->filter()->join(', ') ?: 'Pesanan meja ' . $order->table_number }}
                                     </span>
-                                    <span class="mt-1 block text-[10px] text-text-muted">{{ $order->created_at->format('H:i') }} WIB</span>
+                                    <span class="mt-1 block t-size1 text-text-muted">{{ $order->created_at->format('H:i') }}
+                                        WIB</span>
                                 </span>
                                 <x-status-badge :status="$order->status" />
                             </a>
                         @empty
-                            <div class="rounded-xl bg-[#ecfaf1] px-4 py-12 text-center t-size2 font-semibold text-emerald-700">Tidak ada pesanan aktif.</div>
+                            <div class="rounded-xl bg-[#ecfaf1] px-4 py-12 text-center t-size2 font-semibold text-emerald-700">
+                                Tidak ada pesanan aktif.</div>
                         @endforelse
                     </div>
                 </article>
@@ -194,7 +203,8 @@
                         <h2 class="font-heading t-size4 font-bold">Aktivitas Pesanan</h2>
                         <p class="mt-1 t-size1 text-text-muted">Jumlah pesanan masuk selama 7 hari terakhir</p>
                     </div>
-                    <span class="rounded-lg bg-[#fff1f4] px-3 py-2 t-size1 font-bold text-[#ff3868]">{{ $ordersTrend->sum('orders') }} Pesanan</span>
+                    <span class="rounded-lg bg-[#fff1f4] px-3 py-2 t-size1 font-bold text-[#ff3868]">{{ $ordersTrend->sum('orders') }}
+                        Pesanan</span>
                 </div>
                 <div id="orders-chart" class="mt-4 h-[245px] w-full"></div>
             </article>
@@ -221,13 +231,15 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="truncate t-size1 font-bold">{{ $item->name }}</p>
-                                <p class="text-[10px] text-text-muted">Minimum {{ number_format($item->minimum_quantity, 0, ',', '.') }}</p>
+                                <p class="t-size1 text-text-muted">Minimum
+                                    {{ number_format($item->minimum_quantity, 0, ',', '.') }}</p>
                             </div>
                             <span
                                 class="rounded-full bg-white px-2.5 py-1 t-size1 font-extrabold text-[#ef6b39]">{{ number_format($item->quantity, 0, ',', '.') }}</span>
                         </div>
                     @empty
-                        <div class="rounded-xl bg-[#ecfaf1] px-4 py-10 text-center t-size2 font-semibold text-emerald-700">Semua stok dalam kondisi aman.</div>
+                        <div class="rounded-xl bg-[#ecfaf1] px-4 py-10 text-center t-size2 font-semibold text-emerald-700">
+                            Semua stok dalam kondisi aman.</div>
                     @endforelse
                 </div>
             </article>
@@ -268,7 +280,8 @@
                         },
                         tooltip: {
                             trigger: 'axis',
-                            formatter: p => `${p[0].name}<br><b>Rp ${Number(p[0].value).toLocaleString('id-ID')}</b>`
+                            formatter: p =>
+                                `${p[0].name}<br><b>Rp ${Number(p[0].value).toLocaleString('id-ID')}</b>`
                         },
                         xAxis: Object.assign({}, axis, {
                             type: 'category',

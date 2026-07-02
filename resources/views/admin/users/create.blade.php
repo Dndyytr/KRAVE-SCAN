@@ -65,7 +65,8 @@
                         <div class="flex flex-col sm:flex-row gap-6">
                             <!-- Foto Profil (Visual Only) -->
                             <div class="flex flex-col items-center shrink-0">
-                                <label class="block font-bold t-size2 text-text-muted mb-2 text-center sm:text-left w-full">Foto Profil</label>
+                                <label class="block font-bold t-size2 text-text-muted mb-2 text-center sm:text-left w-full">Foto
+                                    Profil</label>
                                 <div
                                     class="relative w-36 h-36 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center bg-surface-alt/10 hover:border-primary transition cursor-pointer p-4 text-center">
                                     <div class="w-10 h-10 rounded-full bg-primary-soft/30 flex items-center justify-center text-accent mb-2">
@@ -94,7 +95,8 @@
                                     <label class="font-bold t-size3 text-text-muted">Username <span class="text-danger">*</span></label>
                                     <input type="text" disabled placeholder="Masukkan username"
                                         class="w-full bg-surface border border-border rounded-xl px-4 py-2.5 t-size4 outline-hidden transition text-text-muted cursor-not-allowed">
-                                    <p class="text-[10px] text-text-muted font-semibold">Username disinkronkan otomatis dari email.</p>
+                                    <p class="t-size1 text-text-muted font-semibold">Username disinkronkan otomatis dari
+                                        email.</p>
                                 </div>
 
                                 {{-- Email --}}
@@ -142,7 +144,8 @@
                                         <span x-text="showPass ? '👁️' : '👁️‍🗨️'"></span>
                                     </button>
                                 </div>
-                                <span class="t-size1 text-text-muted block mt-1">Minimal 8 karakter dengan kombinasi huruf dan angka</span>
+                                <span class="t-size1 text-text-muted block mt-1">Minimal 8 karakter dengan kombinasi
+                                    huruf dan angka</span>
                                 @error('password')
                                     <span class="text-danger t-size2 font-semibold mt-1 block">{{ $message }}</span>
                                 @enderror
@@ -150,8 +153,8 @@
 
                             <!-- Confirm Password -->
                             <div class="space-y-1.5" x-data="{ showConfirm: false }">
-                                <label for="password_confirmation" class="font-bold t-size3 text-text-muted">Konfirmasi Password <span
-                                        class="text-danger">*</span></label>
+                                <label for="password_confirmation" class="font-bold t-size3 text-text-muted">Konfirmasi
+                                    Password <span class="text-danger">*</span></label>
                                 <div class="relative">
                                     <input :type="showConfirm ? 'text' : 'password'" id="password_confirmation" name="password_confirmation" required
                                         placeholder="Konfirmasi password"
@@ -161,7 +164,8 @@
                                         <span x-text="showConfirm ? '👁️' : '👁️‍🗨️'"></span>
                                     </button>
                                 </div>
-                                <span class="t-size1 text-text-muted block mt-1">Pastikan password yang Anda masukkan sudah benar</span>
+                                <span class="t-size1 text-text-muted block mt-1">Pastikan password yang Anda masukkan
+                                    sudah benar</span>
                             </div>
                         </div>
                     </div>
@@ -194,7 +198,8 @@
                             <!-- Cabang / Outlet -->
                             @if (auth()->user()->branch_id === null)
                                 <div class="space-y-1.5">
-                                    <label for="branch_id" class="font-bold t-size3 text-text-muted">Cabang / Outlet</label>
+                                    <label for="branch_id" class="font-bold t-size3 text-text-muted">Cabang /
+                                        Outlet</label>
                                     <select id="branch_id" name="branch_id"
                                         class="w-full bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-3 py-2.5 t-size4 outline-hidden transition cursor-pointer @error('branch_id') border-danger @enderror">
                                         <option value="">Super Admin (Semua Cabang / Tanpa Cabang)</option>
@@ -263,7 +268,8 @@
                         <h3 class="font-bold t-size4 text-text font-heading border-b border-border pb-3 text-left">
                             🛡️ Ringkasan Hak Akses
                         </h3>
-                        <p class="text-text-muted t-size2 text-left">Preview hak akses berdasarkan role yang dipilih.</p>
+                        <p class="text-text-muted t-size2 text-left">Preview hak akses berdasarkan role yang dipilih.
+                        </p>
 
                         <div
                             class="bg-surface rounded-2xl p-5 border border-border flex flex-col items-center justify-center min-h-[200px] space-y-4 transition-all">
@@ -307,7 +313,8 @@
                                 🔒 Keamanan data adalah prioritas kami.
                             </div>
                             <p class="t-size1 leading-relaxed">
-                                Pastikan hanya memberikan hak akses pengguna yang berwenang memiliki akses ke sistem KraveScan.
+                                Pastikan hanya memberikan hak akses pengguna yang berwenang memiliki akses ke sistem
+                                KraveScan.
                             </p>
                         </div>
                     </div>

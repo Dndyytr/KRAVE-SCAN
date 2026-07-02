@@ -129,7 +129,7 @@
                                 <tr class="hover:bg-surface/50 transition">
                                     <td class="py-4 px-6 font-semibold whitespace-nowrap">
                                         {{ $log->created_at->format('d M Y, H:i:s') }}
-                                        <span class="text-text-muted text-[10px] block font-normal">{{ $log->created_at->diffForHumans() }}</span>
+                                        <span class="text-text-muted t-size1 block font-normal">{{ $log->created_at->diffForHumans() }}</span>
                                     </td>
                                     <td class="py-4 px-6 font-bold text-accent whitespace-nowrap">
                                         {{ $log->task_name }}
@@ -147,7 +147,7 @@
                                         </span>
                                     </td>
                                     <td class="py-4 px-6 min-w-[300px]">
-                                        <div class="bg-surface border border-border rounded-lg p-2 font-mono text-[11px] max-h-32 overflow-y-auto select-all">
+                                        <div class="bg-surface border border-border rounded-lg p-2 font-mono t-size1 max-h-32 overflow-y-auto select-all">
                                             @php
                                                 $decodedDetails = json_decode($log->details, true);
                                             @endphp

@@ -155,7 +155,8 @@
                                     <span class="w-8 h-8 rounded-lg bg-primary-soft/40 flex items-center justify-center text-accent t-size3">🔑</span>
                                     Hak Modul
                                 </h3>
-                                <p class="text-text-muted t-size2 mt-0.5">Atur hak akses untuk setiap modul berdasarkan kebutuhan.</p>
+                                <p class="text-text-muted t-size2 mt-0.5">Atur hak akses untuk setiap modul berdasarkan
+                                    kebutuhan.</p>
                             </div>
                             <div class="flex gap-3">
                                 <button type="button" @click="selectAll()" class="text-primary hover:text-primary-strong text-xs font-bold transition">
@@ -251,7 +252,7 @@
                                 </svg>
                                 <div class="absolute flex flex-col items-center justify-center">
                                     <span class="font-extrabold text-accent t-size5" x-text="checkedCount"></span>
-                                    <span class="text-text-muted text-[10px] font-bold">Izin Terpilih</span>
+                                    <span class="text-text-muted t-size1 font-bold">Izin Terpilih</span>
                                 </div>
                             </div>
 
@@ -279,7 +280,8 @@
                             <div class="flex items-center gap-1.5 text-accent font-extrabold t-size3">
                                 ℹ️ Informasi
                             </div>
-                            <p>Izin akses di atas mengontrol kemampuan pengguna dalam mengakses halaman admin, kasir, dapur, dan modul-modul lainnya secara
+                            <p>Izin akses di atas mengontrol kemampuan pengguna dalam mengakses halaman admin, kasir,
+                                dapur, dan modul-modul lainnya secara
                                 menyeluruh.</p>
                         </div>
                     </div>

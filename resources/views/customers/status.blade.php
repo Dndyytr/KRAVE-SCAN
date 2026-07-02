@@ -25,46 +25,47 @@
                 </div>
                 <div class="mb-[35px] mt-[68px] flex flex-col items-center"><img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt=""
                         class="size-[78px]"><strong
-                        class="-mt-[11px] font-brand text-[28px] font-extrabold italic leading-none tracking-[-.055em] text-[#e95578]">Bakso Cinta</strong><span
-                        class="mt-2 text-[8px] font-bold tracking-[.48em] text-[#ad8a6d]">— CIAMIS —</span></div>
+                        class="-mt-[11px] font-brand text-[28px] font-extrabold italic leading-none tracking-[-.055em] text-[#e95578]">Bakso
+                        Cinta</strong><span class="mt-2 text-[8px] font-bold tracking-[.48em] text-[#ad8a6d]">— CIAMIS
+                        —</span></div>
                 <div class="grid grid-cols-[48px_1fr] items-center rounded-[15px] bg-white/80 px-[14px] py-[10px] shadow-[0_5px_20px_rgba(174,111,112,.07)]">
                     <span class="grid size-11 place-items-center rounded-full bg-[#fff0ef] text-primary"><svg width="26" height="26" viewBox="0 0 32 32"
                             fill="none" stroke="currentColor" stroke-width="1.8">
                             <circle cx="16" cy="7" r="3" />
                             <path d="M10 14v11M22 14v11M8 17h16v6H8zM5 18v9M27 18v9M9 27h4M19 27h4" />
-                        </svg></span><span><small class="block text-[10px] text-[#706865]">Meja Anda</small><strong
+                        </svg></span><span><small class="block t-size1 text-[#706865]">Meja Anda</small><strong
                             class="font-heading text-[23px] font-bold leading-tight text-primary">{{ $tableLabel }}</strong></span>
                 </div>
                 <nav class="mt-[22px] grid gap-[7px]" aria-label="Navigasi pelanggan">
                     <a href="{{ route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $table]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M4 17h16M6 17a6 6 0 0 1 12 0M12 8v3M3 20h18" />
                         </svg>Menu</a>
                     <a href="{{ route('customer.ai-scan', ['branch_code' => $branch_code]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M4 7h4l1.5-2h5L16 7h4v12H4z" />
                             <circle cx="12" cy="13" r="3" />
                         </svg>AI Scan</a>
                     <a href="{{ route('customer.cart', ['branch_code' => $branch_code]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M3 4h2l2.2 10.5h10.9L21 7H6M9 20h.01M18 20h.01" />
                         </svg>Keranjang</a>
                     <a href="{{ route('customer.payment', ['branch_code' => $branch_code, 'order' => $order?->id]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] text-[11px] font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] px-[14px] t-size1 font-semibold text-[#4c403e] transition duration-200 hover:bg-[#fff0f0] hover:text-primary"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z" />
                         </svg>Pembayaran</a>
                     <a href="{{ route('customer.order.status', ['branch_code' => $branch_code, 'order' => $order?->id]) }}"
-                        class="flex min-h-11 items-center gap-3 rounded-[9px] bg-[linear-gradient(100deg,#f54772,#fc708d)] px-[14px] text-[11px] font-semibold text-white shadow-[0_8px_18px_rgba(242,76,114,.18)]"><svg
+                        class="flex min-h-11 items-center gap-3 rounded-[9px] bg-[linear-gradient(100deg,#f54772,#fc708d)] px-[14px] t-size1 font-semibold text-white shadow-[0_8px_18px_rgba(242,76,114,.18)]"><svg
                             class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M7 3h10v18H7zM10 8h4M10 12h4" />
                         </svg>Pesanan</a>
                 </nav>
                 <div
-                    class="mt-auto rounded-[15px] bg-[linear-gradient(120deg,#fff0ee,#fde2e0)] px-[15px] py-[18px] text-center text-[10px] leading-relaxed text-[#706765]">
+                    class="mt-auto rounded-[15px] bg-[linear-gradient(120deg,#fff0ee,#fde2e0)] px-[15px] py-[18px] text-center t-size1 leading-relaxed text-[#706765]">
                     <svg class="mx-auto mb-2 size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                         <path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13h3v6H5a1 1 0 0 1-1-1v-5ZM20 13h-3v6h2a1 1 0 0 0 1-1v-5Z" />
                     </svg><strong>Butuh bantuan?</strong><br>Hubungi staf kami jika ada kendala.
@@ -89,37 +90,43 @@
                 </div>
 
                 @if (session('error'))
-                    <div class="mt-4 rounded-xl border border-danger/30 bg-danger/10 p-3 text-xs font-semibold text-danger">{{ session('error') }}</div>
+                    <div class="mt-4 rounded-xl border border-danger/30 bg-danger/10 p-3 text-xs font-semibold text-danger">
+                        {{ session('error') }}</div>
                 @endif
                 @if (session('success'))
-                    <div class="mt-4 rounded-xl border border-success/30 bg-success/10 p-3 text-xs font-semibold text-success">{{ session('success') }}</div>
+                    <div class="mt-4 rounded-xl border border-success/30 bg-success/10 p-3 text-xs font-semibold text-success">
+                        {{ session('success') }}</div>
                 @endif
 
                 @if (!$order)
-                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-border bg-white p-10 text-center shadow-sm"><span
-                            class="mx-auto grid size-16 place-items-center rounded-full bg-primary-soft/30 text-primary"><svg class="size-8" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="1.8">
+                    <section class="mx-auto mt-10 max-w-xl rounded-3xl border border-border bg-white p-10 text-center shadow-sm">
+                        <span class="mx-auto grid size-16 place-items-center rounded-full bg-primary-soft/30 text-primary"><svg class="size-8"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M7 3h10v18H7zM10 8h4M10 12h4" />
                             </svg></span>
                         <h2 class="mt-4 font-heading text-xl font-extrabold">Belum Ada Pesanan Aktif</h2>
-                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Meja Anda belum memiliki pesanan yang dapat dilacak.</p><a
+                        <p class="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-text-muted">Meja Anda belum
+                            memiliki pesanan yang dapat dilacak.</p><a
                             href="{{ route('customer.menu', ['branch_code' => $branch_code, 'table_number' => $table]) }}"
-                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat Menu</a>
+                            class="mt-6 inline-flex rounded-full bg-primary px-7 py-3 text-xs font-bold text-white">Lihat
+                            Menu</a>
                     </section>
                 @else
                     <div
                         class="mt-5 flex flex-col gap-3 rounded-2xl border border-[#f0e5e2] bg-white p-4 shadow-[0_6px_22px_rgba(113,74,69,.07)] md:flex-row md:items-center md:justify-between">
                         <div><small class="text-[9px] text-text-muted">No. Pesanan</small><strong
-                                class="mt-1 block font-heading text-base text-primary">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</strong></div>
+                                class="mt-1 block font-heading text-base text-primary">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</strong>
+                        </div>
                         <div class="text-left md:text-right"><small class="text-[9px] text-text-muted">Dibuat</small><span
-                                class="mt-1 block text-[10px] font-semibold">{{ $order->created_at->translatedFormat('d M Y • H:i') }} WIB</span></div>
+                                class="mt-1 block t-size1 font-semibold">{{ $order->created_at->translatedFormat('d M Y • H:i') }}
+                                WIB</span></div>
                     </div>
 
                     @if ($activeOrders->count() > 1)
                         <div class="mt-3 flex gap-2 overflow-x-auto pb-1">
                             @foreach ($activeOrders as $activeOrder)
                                 <a href="{{ route('customer.order.status', ['branch_code' => $branch_code, 'order' => $activeOrder->id]) }}"
-                                    class="shrink-0 rounded-xl border px-4 py-2 text-[10px] font-bold {{ $activeOrder->id === $order->id ? 'border-primary bg-primary text-white' : 'border-border bg-white text-text-muted' }}">#{{ str_pad($activeOrder->id, 5, '0', STR_PAD_LEFT) }}</a>
+                                    class="shrink-0 rounded-xl border px-4 py-2 t-size1 font-bold {{ $activeOrder->id === $order->id ? 'border-primary bg-primary text-white' : 'border-border bg-white text-text-muted' }}">#{{ str_pad($activeOrder->id, 5, '0', STR_PAD_LEFT) }}</a>
                             @endforeach
                         </div>
                     @endif
@@ -127,14 +134,16 @@
                     <section class="mt-4 rounded-2xl border border-[#f0e5e2] bg-white p-4 shadow-[0_7px_22px_rgba(113,74,69,.08)] md:p-5">
                         <h2 class="font-heading text-sm font-bold">Status Pesanan</h2>
                         @if ($order->status === 'cancelled')
-                            <div class="mt-5 flex items-start gap-3 rounded-xl border border-danger/30 bg-danger/10 p-4"><span
-                                    class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-danger"><svg class="size-5"
+                            <div class="mt-5 flex items-start gap-3 rounded-xl border border-danger/30 bg-danger/10 p-4">
+                                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-danger"><svg class="size-5"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="12" cy="12" r="9" />
                                         <path d="M8 8l8 8M16 8l-8 8" />
                                     </svg></span><span><strong class="text-sm text-danger">Pesanan Dibatalkan</strong>
-                                    <p class="mt-1 text-[10px] text-text-muted">Hubungi staf jika Anda membutuhkan bantuan.</p>
-                                </span></div>
+                                    <p class="mt-1 t-size1 text-text-muted">Hubungi staf jika Anda membutuhkan bantuan.
+                                    </p>
+                                </span>
+                            </div>
                         @else
                             <ol class="relative mt-5 grid gap-0 md:grid-cols-4 md:gap-3">
                                 @foreach ($steps as $key => $step)
@@ -175,7 +184,7 @@
                                             @endif
                                         </span>
                                         <span class="pt-1 md:mt-3 md:block md:pt-0"><strong
-                                                class="block text-[10px] {{ $current ? 'text-primary' : 'text-text' }}">{{ $step['label'] }}</strong><small
+                                                class="block t-size1 {{ $current ? 'text-primary' : 'text-text' }}">{{ $step['label'] }}</strong><small
                                                 class="mt-1 block text-[8px] text-text-muted">{{ $step['description'] }}</small>
                                             @if ($current)
                                                 <small class="mt-1 block text-[8px] font-semibold text-primary">{{ $order->updated_at->format('H:i') }}
@@ -185,14 +194,16 @@
                                     </li>
                                 @endforeach
                             </ol>
-                            <div class="mt-5 flex items-start gap-3 rounded-xl bg-[linear-gradient(100deg,#fff1f0,#fde7e4)] p-4"><span
-                                    class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-primary"><svg class="size-5"
+                            <div class="mt-5 flex items-start gap-3 rounded-xl bg-[linear-gradient(100deg,#fff1f0,#fde7e4)] p-4">
+                                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-primary"><svg class="size-5"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                         <path d="M4 17h16M6 17a6 6 0 0 1 12 0M12 8v3M3 20h18" />
                                     </svg></span><span><strong class="text-xs">{{ $steps[$order->status]['label'] }}</strong>
-                                    <p class="mt-1 text-[9px] text-text-muted">{{ $steps[$order->status]['description'] }}. Halaman diperbarui otomatis setiap
+                                    <p class="mt-1 text-[9px] text-text-muted">
+                                        {{ $steps[$order->status]['description'] }}. Halaman diperbarui otomatis setiap
                                         15 detik.</p>
-                                </span></div>
+                                </span>
+                            </div>
                         @endif
                     </section>
                     <div class="mt-4 grid gap-4 md:grid-cols-[minmax(0,1fr)_330px]">
@@ -216,13 +227,17 @@
                                             @endif
                                         </div>
                                         <div class="min-w-0 flex-1">
-                                            <h3 class="truncate text-[10px] font-bold md:text-xs">{{ $item->menu?->name ?? 'Menu tidak tersedia' }}</h3><span
-                                                class="mt-1 block text-[9px] text-text-muted">{{ $item->quantity }} × Rp
+                                            <h3 class="truncate t-size1 font-bold md:text-xs">
+                                                {{ $item->menu?->name ?? 'Menu tidak tersedia' }}</h3><span
+                                                class="mt-1 block text-[9px] text-text-muted">{{ $item->quantity }} ×
+                                                Rp
                                                 {{ number_format($item->price, 0, ',', '.') }}</span>
                                             @if ($item->note)
-                                                <p class="mt-1 line-clamp-2 text-[8px] font-semibold text-primary">Catatan: {{ $item->note }}</p>
+                                                <p class="mt-1 line-clamp-2 text-[8px] font-semibold text-primary">
+                                                    Catatan: {{ $item->note }}</p>
                                             @endif
-                                        </div><strong class="text-[10px] md:text-xs">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
+                                        </div><strong class="t-size1 md:text-xs">Rp
+                                            {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
                                     </article>
                                 @endforeach
                             </div>
@@ -234,22 +249,25 @@
                         <aside class="space-y-4">
                             <section class="rounded-2xl border border-[#f0e5e2] bg-white p-4 shadow-[0_6px_20px_rgba(113,74,69,.06)]">
                                 <h2 class="font-heading text-sm font-bold">Informasi Pesanan</h2>
-                                <dl class="mt-4 space-y-3 text-[10px] text-text-muted">
+                                <dl class="mt-4 space-y-3 t-size1 text-text-muted">
                                     <div class="flex justify-between gap-4">
                                         <dt>Meja</dt>
                                         <dd class="font-bold text-text">{{ $tableLabel }}</dd>
                                     </div>
                                     <div class="flex justify-between gap-4">
                                         <dt>Nama Pelanggan</dt>
-                                        <dd class="max-w-[170px] truncate font-bold text-text">{{ $order->customer_name }}</dd>
+                                        <dd class="max-w-[170px] truncate font-bold text-text">
+                                            {{ $order->customer_name }}</dd>
                                     </div>
                                     <div class="flex justify-between gap-4">
                                         <dt>Kontak</dt>
-                                        <dd class="max-w-[170px] truncate font-bold text-text">{{ $order->customer_contact }}</dd>
+                                        <dd class="max-w-[170px] truncate font-bold text-text">
+                                            {{ $order->customer_contact }}</dd>
                                     </div>
                                     <div class="flex justify-between gap-4">
                                         <dt>Cabang</dt>
-                                        <dd class="max-w-[170px] truncate font-bold text-text">{{ $branch }}</dd>
+                                        <dd class="max-w-[170px] truncate font-bold text-text">{{ $branch }}
+                                        </dd>
                                     </div>
                                 </dl>
                             </section>
@@ -264,11 +282,13 @@
                             @endif
                         </aside>
                     </div>
-                    <div class="mt-4 flex items-center gap-3 rounded-2xl bg-[linear-gradient(100deg,#fff4f1,#fde7e3)] p-4"><img
-                            src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="" class="size-12 shrink-0"><span><strong class="text-xs">Terima
+                    <div class="mt-4 flex items-center gap-3 rounded-2xl bg-[linear-gradient(100deg,#fff4f1,#fde7e3)] p-4">
+                        <img src="{{ asset('svg/bakso_cinta_icon.svg') }}" alt="" class="size-12 shrink-0"><span><strong class="text-xs">Terima
                                 kasih telah memesan di Bakso Cinta!</strong>
-                            <p class="mt-1 text-[9px] leading-relaxed text-text-muted">Kami selalu berusaha memberikan pelayanan terbaik untuk Anda.</p>
-                        </span></div>
+                            <p class="mt-1 text-[9px] leading-relaxed text-text-muted">Kami selalu berusaha memberikan
+                                pelayanan terbaik untuk Anda.</p>
+                        </span>
+                    </div>
                 @endif
             </main>
         </div>
